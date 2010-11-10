@@ -6,12 +6,43 @@ echo rex_title($I18N->msg('developer_name'));
 
 if (rex_post('func', 'string') == 'update') 
 {
+  require_once $REX['INCLUDE_PATH'] .'/addons/developer/classes/class.rex_developer_manager.inc.php';
+
   $settings = (array)rex_post('settings','array',array());
   $settings['dir'] = trim($settings['dir'],'/');
-  if (rex_developer_manager::saveSettings($settings))
-    echo rex_info($I18N->msg('developer_saved'));
-  else 
-    echo rex_warning($I18N->msg('developer_error'));
+  $save = true;
+  
+  if ($settings['templates'] || $settings['modules'])
+  {
+    $sync_dir = $REX['INCLUDE_PATH'] .'/'. $settings['dir'];
+  
+    if (!@is_dir($sync_dir))
+    {
+      @mkdir($sync_dir, $REX['DIRPERM'], true);
+    }
+  
+    if (!@is_dir($sync_dir))
+    {
+      echo rex_warning($I18N->msg('developer_install_make_dir', $settings['dir']));
+      $save = false;
+    }
+    elseif (!@is_writable($sync_dir .'/.'))
+    {
+      echo rex_warning($I18N->msg('developer_install_perm_dir', $settings['dir']));
+      $save = false;
+    }
+  }
+  if ($save)
+  {
+    if (rex_developer_manager::saveSettings($settings))
+    {
+      echo rex_info($I18N->msg('developer_saved'));
+    }
+    else
+    {
+      echo rex_warning($I18N->msg('developer_error'));
+    }
+  }
 }
 
 $templates = '';

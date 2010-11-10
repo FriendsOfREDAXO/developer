@@ -223,11 +223,9 @@ class rex_developer_synchronizer
   function _checkDir($dir)
   {
     global $REX;
-    $success = true;
     if (!is_dir($dir)) {
-      $success = mkdir($dir);
-      chmod($dir, $REX['DIRPERM']);
+      return mkdir($dir, $REX['DIRPERM'], true);
     }
-    return $success;
+    return true;
   }
 }
