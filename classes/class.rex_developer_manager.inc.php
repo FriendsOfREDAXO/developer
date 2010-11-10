@@ -1,0 +1,60 @@
+<?php
+
+class rex_developer_manager
+{
+  function saveConfig($config = array())
+  {
+    global $REX;
+    $mypage = 'developer';
+    $REX['ADDON'][$mypage]['config'] = array_merge((array)$REX['ADDON'][$mypage]['config'], (array)$config);
+    $content = '';
+    foreach ((array)$REX['ADDON'][$mypage]['config'] as $key=>$value)
+      $content .= "\$REX['ADDON']['$mypage']['config']['$key'] = \"".$value."\";\n";
+    $file = $REX['INCLUDE_PATH']."/addons/$mypage/config.inc.php";
+    return rex_replace_dynamic_contents($file, $content);
+  }
+  
+  function sync()
+  {
+    global $REX;
+    $page = rex_request('page', 'string');
+    $subpage = rex_request('subpage', 'string');
+    $function = rex_request('function','string','');
+    $save = rex_request('save','string','');
+
+    if ($page == 'import_export')
+      rex_register_extension('A1_AFTER_DB_IMPORT', array('rex_developer_manager', 'deleteFiles'));
+
+    if (($page == 'template' && ((($function=='add' || $function=='edit') && $save=='ja') || $function=='delete'))
+      || ($page == 'module' && !$subpage && ((($function=='add' || $function=='edit') && $save=='1') || $function=='delete'))
+      || ($page == 'import_export' && $subpage == 'import')
+      || $page == 'developer') 
+    {
+      rex_register_extension('OUTPUT_FILTER_CACHE', array('rex_developer_manager', '_sync'));
+    }
+    else
+    {
+      rex_developer_manager::_sync();
+    }
+  }
+  
+  function _sync()
+  {
+    global $REX;
+    require_once $REX['INCLUDE_PATH'] .'/addons/developer/classes/class.rex_developer_synchronizer.inc.php';
+    $sync = new rex_developer_synchronizer();
+    if ($REX['ADDON']['developer']['config']['templates'])
+      $sync->syncTemplates();
+    if ($REX['ADDON']['developer']['config']['modules'])
+      $sync->syncModules();
+  }
+  
+  function deleteFiles()
+  {
+    global $REX;
+    require_once $REX['INCLUDE_PATH'] .'/addons/developer/classes/class.rex_developer_synchronizer.inc.php';
+    $sync = new rex_developer_synchronizer();
+    $sync->deleteTemplateFiles();
+    $sync->deleteModuleFiles();
+  }
+}

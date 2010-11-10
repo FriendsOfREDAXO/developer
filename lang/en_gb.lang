@@ -1,0 +1,10 @@
+# addon:developer en_gb
+
+developer_name = Developer 
+developer_config = Settings 
+developer_templates = synchronize templates 
+developer_modules = synchronize modules 
+developer_dir = directory 
+developer_save = save settings 
+developer_saved = settings have been saved 
+developer_error = an error occured
