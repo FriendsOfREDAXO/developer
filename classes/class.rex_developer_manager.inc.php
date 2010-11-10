@@ -2,15 +2,15 @@
 
 class rex_developer_manager
 {
-  function saveConfig($config = array())
+  function saveSettings($settings = array())
   {
     global $REX;
     $mypage = 'developer';
-    $REX['ADDON'][$mypage]['config'] = array_merge((array)$REX['ADDON'][$mypage]['config'], (array)$config);
+    $REX['ADDON']['settings'][$mypage] = array_merge((array)$REX['ADDON']['settings'][$mypage], (array)$settings);
     $content = '';
-    foreach ((array)$REX['ADDON'][$mypage]['config'] as $key=>$value)
-      $content .= "\$REX['ADDON']['$mypage']['config']['$key'] = \"".$value."\";\n";
-    $file = $REX['INCLUDE_PATH']."/addons/$mypage/config.inc.php";
+    foreach ((array)$REX['ADDON']['settings'][$mypage] as $key=>$value)
+      $content .= "\$REX['ADDON']['settings']['$mypage']['$key'] = \"".$value."\";\n";
+    $file = $REX['INCLUDE_PATH']."/addons/$mypage/settings.inc.php";
     return rex_replace_dynamic_contents($file, $content);
   }
   
@@ -43,9 +43,9 @@ class rex_developer_manager
     global $REX;
     require_once $REX['INCLUDE_PATH'] .'/addons/developer/classes/class.rex_developer_synchronizer.inc.php';
     $sync = new rex_developer_synchronizer();
-    if ($REX['ADDON']['developer']['config']['templates'])
+    if ($REX['ADDON']['settings']['developer']['templates'])
       $sync->syncTemplates();
-    if ($REX['ADDON']['developer']['config']['modules'])
+    if ($REX['ADDON']['settings']['developer']['modules'])
       $sync->syncModules();
   }
   

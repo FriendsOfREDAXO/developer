@@ -12,7 +12,7 @@ class rex_developer_synchronizer
   function rex_developer_synchronizer() 
   {
     global $REX;
-    $this->dir = $REX['INCLUDE_PATH'] .'/'. $REX['ADDON']['developer']['config']['dir'];
+    $this->dir = $REX['INCLUDE_PATH'] .'/'. $REX['ADDON']['settings']['developer']['dir'];
     $this->templatePath = $this->dir .'/templates/';
     $this->modulePath = $this->dir .'/modules/';
     $this->_checkDir($this->dir);

@@ -14,13 +14,9 @@ $REX['ADDON']['perm'][$mypage] = "admin[]";
 $REX['ADDON']['author'][$mypage] = 'Gregor Harlan';
 $REX['ADDON']['version'][$mypage] = '2.1';
 
-// --- DYN
-$REX['ADDON']['developer']['config']['templates'] = "1";
-$REX['ADDON']['developer']['config']['modules'] = "1";
-$REX['ADDON']['developer']['config']['dir'] = "developer_files";
-// --- /DYN
+require_once dirname(__FILE__) .'/settings.inc.php';
 
-if ($REX['ADDON']['developer']['config']['templates'] || $REX['ADDON']['developer']['config']['modules'])
+if ($REX['ADDON']['settings']['developer']['templates'] || $REX['ADDON']['settings']['developer']['modules'])
 {
   $loggedIn = true;
   if (!isset($REX['LOGIN']) || !$REX['LOGIN'])

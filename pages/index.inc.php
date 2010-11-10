@@ -6,26 +6,26 @@ echo rex_title($I18N->msg('developer_name'));
 
 if (rex_post('func', 'string') == 'update') 
 {
-  $config = (array)rex_post('config','array',array());
-  $config['dir'] = trim($config['dir'],'/');
-  if (rex_developer_manager::saveConfig($config))
+  $settings = (array)rex_post('settings','array',array());
+  $settings['dir'] = trim($settings['dir'],'/');
+  if (rex_developer_manager::saveSettings($settings))
     echo rex_info($I18N->msg('developer_saved'));
   else 
     echo rex_warning($I18N->msg('developer_error'));
 }
 
 $templates = '';
-if ($REX['ADDON']['developer']['config']['templates']=="1")
+if ($REX['ADDON']['settings']['developer']['templates']=="1")
   $templates = ' checked="checked"';
 $modules = '';
-if ($REX['ADDON']['developer']['config']['modules']=="1")
+if ($REX['ADDON']['settings']['developer']['modules']=="1")
   $modules = ' checked="checked"';
 
 echo '
 
 <div class="rex-addon-output">
 
-<h2 class="rex-hl2">'. $I18N->msg('developer_config') .'</h2>
+<h2 class="rex-hl2">'. $I18N->msg('developer_settings') .'</h2>
 
 <div class="rex-area">
   <div class="rex-form">
@@ -38,16 +38,16 @@ echo '
         
         <div class="rex-form-row">
           <p class="rex-form-checkbox rex-form-label-right">
-            <input type="hidden" name="config[templates]" value="0" />
-            <input class="rex-form-checkbox" type="checkbox" id="templates" name="config[templates]" value="1"'.$templates.' />
+            <input type="hidden" name="settings[templates]" value="0" />
+            <input class="rex-form-checkbox" type="checkbox" id="templates" name="settings[templates]" value="1"'.$templates.' />
             <label for="templates">'.$I18N->msg('developer_templates').'</label>
           </p>
         </div>
         
         <div class="rex-form-row">
           <p class="rex-form-checkbox rex-form-label-right">
-            <input type="hidden" name="config[modules]" value="0" />
-            <input class="rex-form-checkbox" type="checkbox" id="modules" name="config[modules]" value="1"'.$modules.' />
+            <input type="hidden" name="settings[modules]" value="0" />
+            <input class="rex-form-checkbox" type="checkbox" id="modules" name="settings[modules]" value="1"'.$modules.' />
             <label for="modules">'.$I18N->msg('developer_modules').'</label>
           </p>
         </div>
@@ -55,7 +55,7 @@ echo '
         <div class="rex-form-row">
           <p class="rex-form-text">
             <label for="dir">'.$I18N->msg('developer_dir').':</label>
-            /redaxo/include/ <input type="text" id="dir" name="config[dir]" value="'.$REX['ADDON']['developer']['config']['dir'].'" />  
+            /redaxo/include/ <input type="text" id="dir" name="settings[dir]" value="'.$REX['ADDON']['settings']['developer']['dir'].'" />  
           </p>
         </div>
         

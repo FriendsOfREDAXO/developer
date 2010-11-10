@@ -1,7 +1,7 @@
 # addon:developer de_de
 
 developer_name = Developer
-developer_config = Einstellungen
+developer_settings = Einstellungen
 developer_templates = Templates synchronisieren
 developer_modules = Module synchronisieren
 developer_dir = Ordner
