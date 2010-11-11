@@ -57,7 +57,8 @@ class rex_developer_synchronizer
         {
           unlink($files[$id]);
         }
-        rex_put_file_contents($file, $sql->getValue('content'));
+        file_put_contents($file, $sql->getValue('content'));
+        @chmod($file, $REX['ADDON']['fileperm']['developer']);
         $this->_updateTemplateInDB($id, filemtime($file));
       }
       elseif ($fileUpdated > $dbUpdated)
@@ -104,7 +105,8 @@ class rex_developer_synchronizer
         $input = $sql->getValue('eingabe');
         if ($nameChanged || !file_exists($file) || rex_get_file_contents($file) !== $input)
         {
-          rex_put_file_contents($file, $input);
+          file_put_contents($file, $input);
+          @chmod($file, $REX['ADDON']['fileperm']['developer']);
           $newUpdatedate = filemtime($file);
         }
       }
@@ -126,7 +128,8 @@ class rex_developer_synchronizer
         $output = $sql->getValue('ausgabe');
         if ($nameChanged || !file_exists($file) || rex_get_file_contents($file) !== $output)
         {
-          rex_put_file_contents($file, $output);
+          file_put_contents($file, $output);
+          @chmod($file, $REX['ADDON']['fileperm']['developer']);
           $newUpdatedate = max($newUpdatedate, filemtime($file));
         }
       }
@@ -224,7 +227,7 @@ class rex_developer_synchronizer
   {
     global $REX;
     if (!is_dir($dir)) {
-      return mkdir($dir, $REX['DIRPERM'], true);
+      return mkdir($dir, $REX['ADDON']['dirperm']['developer'], true);
     }
     return true;
   }

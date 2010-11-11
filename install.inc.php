@@ -17,7 +17,7 @@ if ($REX['ADDON']['settings']['developer']['templates'] || $REX['ADDON']['settin
   
   if (!@is_dir($sync_dir))
   {
-    @mkdir($sync_dir, $REX['DIRPERM'], true);
+    @mkdir($sync_dir, $REX['ADDON']['dirperm']['developer'], true);
   }
   
   if (!@is_dir($sync_dir))
