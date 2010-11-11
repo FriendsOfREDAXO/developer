@@ -13,7 +13,7 @@ class rex_developer_manager
     $file = $REX['INCLUDE_PATH']."/addons/$mypage/settings.inc.php";
     return rex_replace_dynamic_contents($file, $content);
   }
-  
+
   function sync()
   {
     global $REX;
@@ -37,7 +37,7 @@ class rex_developer_manager
       rex_developer_manager::_sync();
     }
   }
-  
+
   function _sync()
   {
     global $REX;
@@ -48,7 +48,7 @@ class rex_developer_manager
     if ($REX['ADDON']['settings']['developer']['modules'])
       $sync->syncModules();
   }
-  
+
   function deleteFiles()
   {
     global $REX;
@@ -56,5 +56,38 @@ class rex_developer_manager
     $sync = new rex_developer_synchronizer();
     $sync->deleteTemplateFiles();
     $sync->deleteModuleFiles();
+  }
+
+  function checkDir($dir)
+  {
+    global $REX, $I18N;
+    $path = $REX['INCLUDE_PATH'] .'/'. $dir;
+    if (!@is_dir($path))
+    {
+      @mkdir($path, $REX['ADDON']['dirperm']['developer'], true);
+    }
+    if (!@is_dir($path))
+    {
+      return $I18N->msg('developer_install_make_dir', $dir);
+    }
+    elseif (!@is_writable($path .'/.'))
+    {
+      return $I18N->msg('developer_install_perm_dir', $dir);
+    }
+    return '';
+  }
+
+  function deleteDir($dir)
+  {
+    global $REX;
+    $path = $REX['INCLUDE_PATH'] .'/'. $dir;
+    $files = glob($path .'/*');
+    $files = array_flip($files);
+    unset($files[$path .'/templates']);
+    unset($files[$path .'/modules']);
+    if (count($files) == 0)
+    {
+      rex_deleteDir($path, true);
+    }
   }
 }

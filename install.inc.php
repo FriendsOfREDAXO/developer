@@ -13,21 +13,9 @@ if (!@is_writeable($dir .'/settings.inc.php'))
 
 if ($REX['ADDON']['settings']['developer']['templates'] || $REX['ADDON']['settings']['developer']['modules'])
 {
-  $sync_dir = $REX['INCLUDE_PATH'] .'/'. $REX['ADDON']['settings']['developer']['dir'];
+  require_once $dir .'/classes/class.rex_developer_manager.inc.php';
   
-  if (!@is_dir($sync_dir))
-  {
-    @mkdir($sync_dir, $REX['ADDON']['dirperm']['developer'], true);
-  }
-  
-  if (!@is_dir($sync_dir))
-  {
-    $msg = $I18N->msg('developer_install_make_dir', $REX['ADDON']['settings']['developer']['dir']);
-  }
-  elseif (!@is_writable($sync_dir .'/.'))
-  {
-    $msg = $I18N->msg('developer_install_perm_dir', $REX['ADDON']['settings']['developer']['dir']);
-  }
+  $msg .= rex_developer_manager::checkDir($REX['ADDON']['settings']['developer']['dir']);
 }
 
 if ($msg != '') 
