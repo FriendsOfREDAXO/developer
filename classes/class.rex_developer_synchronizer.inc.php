@@ -202,12 +202,15 @@ class rex_developer_synchronizer
   {
     $glob = glob($pattern);
     $files = array();
-    foreach($glob as $file)
+    if (is_array($glob))
     {
-      $filename = basename($file);
-      $id = (int) substr($filename, 0, strpos($filename,'.'));
-      if ($id)
-        $files[$id] = $file;
+      foreach($glob as $file)
+      {
+        $filename = basename($file);
+        $id = (int) substr($filename, 0, strpos($filename,'.'));
+        if ($id)
+          $files[$id] = $file;
+      }
     }
     return $files;
   }

@@ -81,10 +81,14 @@ class rex_developer_manager
   {
     global $REX;
     $path = $REX['INCLUDE_PATH'] .'/'. $dir;
-    $files = glob($path .'/*');
-    $files = array_flip($files);
-    unset($files[$path .'/templates']);
-    unset($files[$path .'/modules']);
+    $files = array();
+    $glob = glob($path .'/*');
+    if (is_array($glob))
+    {
+      $files = array_flip($glob);
+      unset($files[$path .'/templates']);
+      unset($files[$path .'/modules']);
+    }
     if (count($files) == 0)
     {
       rex_deleteDir($path, true);
