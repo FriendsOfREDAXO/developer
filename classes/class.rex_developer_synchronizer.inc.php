@@ -230,7 +230,9 @@ class rex_developer_synchronizer
   {
     global $REX;
     if (!is_dir($dir)) {
-      return mkdir($dir, $REX['ADDON']['dirperm']['developer'], true);
+      $ret = mkdir($dir, $REX['ADDON']['dirperm']['developer'], true);
+      @chmod($dir, $REX['ADDON']['dirperm']['developer']);
+      return $ret;
     }
     return true;
   }
