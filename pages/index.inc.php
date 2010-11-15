@@ -10,6 +10,7 @@ if (rex_post('func', 'string') == 'update')
 
   $settings = (array)rex_post('settings','array',array());
   $settings['dir'] = trim($settings['dir'],'/');
+  $msg = '';
   
   if ($settings['templates'] || $settings['modules'])
   {
@@ -25,7 +26,7 @@ if (rex_post('func', 'string') == 'update')
     if (rex_developer_manager::saveSettings($settings))
     {
       echo rex_info($I18N->msg('developer_saved'));
-      if ($old_dir != $settings['dir'])
+      if ($old_dir != $settings['dir'] || (!$settings['templates'] && !$settings['modules']))
       {
         rex_developer_manager::deleteDir($old_dir);
       }

@@ -41,12 +41,15 @@ class rex_developer_manager
   function _sync()
   {
     global $REX;
-    require_once $REX['INCLUDE_PATH'] .'/addons/developer/classes/class.rex_developer_synchronizer.inc.php';
-    $sync = new rex_developer_synchronizer();
-    if ($REX['ADDON']['settings']['developer']['templates'])
-      $sync->syncTemplates();
-    if ($REX['ADDON']['settings']['developer']['modules'])
-      $sync->syncModules();
+    if ($REX['ADDON']['settings']['developer']['templates'] || $REX['ADDON']['settings']['developer']['modules'])
+    {
+      require_once $REX['INCLUDE_PATH'] .'/addons/developer/classes/class.rex_developer_synchronizer.inc.php';
+      $sync = new rex_developer_synchronizer();
+      if ($REX['ADDON']['settings']['developer']['templates'])
+        $sync->syncTemplates();
+      if ($REX['ADDON']['settings']['developer']['modules'])
+        $sync->syncModules();
+    }
   }
 
   function deleteFiles()
