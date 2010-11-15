@@ -41,7 +41,7 @@ class rex_developer_synchronizer
   {
     global $REX;
     $files = $this->_getFiles($this->templatePattern);
-    $sql = rex_sql::factory();
+    $sql = $this->_sqlFactory();
     //$sql->debugsql = true;
     $sql->setQuery('SELECT id, name, content, updatedate FROM '.$REX['TABLE_PREFIX'].'template');
     $rows = $sql->getRows();
@@ -77,11 +77,11 @@ class rex_developer_synchronizer
     global $REX;
     $inputFiles = $this->_getFiles($this->moduleInputPattern);
     $outputFiles = $this->_getFiles($this->moduleOutputPattern);
-    $sql = rex_sql::factory();
+    $sql = $this->_sqlFactory();
     //$sql->debugsql = true;
     $sql->setQuery('SELECT id, name, eingabe, ausgabe, updatedate FROM '.$REX['TABLE_PREFIX'].'module');
     $rows = $sql->getRows();
-    $sql2 = rex_sql::factory();
+    $sql2 = $this->_sqlFactory();
     for($i = 0; $i < $rows; ++$i)
     {
       $id = $sql->getValue('id');
@@ -155,7 +155,7 @@ class rex_developer_synchronizer
     global $REX;
     $template = new rex_template($id);
     $template->deleteCache();
-    $sql = rex_sql::factory();
+    $sql = $this->_sqlFactory();
     $sql->setTable($REX['TABLE_PREFIX'].'template');
     $sql->setWhere('id = '. $id);
     if ($content !== null)
@@ -168,7 +168,7 @@ class rex_developer_synchronizer
   function _updateModuleInDB($id, $updatedate, $input = null, $output = null)
   {
     global $REX;
-    $sql = rex_sql::factory();
+    $sql = $this->_sqlFactory();
     $sql->setTable($REX['TABLE_PREFIX'].'module');
     $sql->setWhere('id = '. $id);
     if ($input !== null)
@@ -229,11 +229,22 @@ class rex_developer_synchronizer
   function _checkDir($dir)
   {
     global $REX;
-    if (!is_dir($dir)) {
+    if (!is_dir($dir)) 
+    {
       $ret = mkdir($dir, $REX['ADDON']['dirperm']['developer'], true);
       @chmod($dir, $REX['ADDON']['dirperm']['developer']);
       return $ret;
     }
     return true;
+  }
+  
+  function _sqlFactory()
+  {
+    if (method_exists('rex_sql', 'factory'))
+    {
+      return rex_sql::factory();
+      echo 1;
+    }
+    return new rex_sql;
   }
 }
