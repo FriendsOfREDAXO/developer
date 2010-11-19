@@ -11,7 +11,9 @@ if (!@is_writeable($dir .'/settings.inc.php'))
   $msg = $I18N->msg('developer_install_perm_settings');
 }
 
-if ($REX['ADDON']['settings']['developer']['templates'] || $REX['ADDON']['settings']['developer']['modules'])
+if ($REX['ADDON']['settings']['developer']['templates'] 
+  || $REX['ADDON']['settings']['developer']['modules']
+  || $REX['ADDON']['settings']['developer']['actions'])
 {
   require_once $dir .'/classes/class.rex_developer_manager.inc.php';
   

@@ -12,7 +12,7 @@ if (rex_post('func', 'string') == 'update')
   $settings['dir'] = trim($settings['dir'],'/');
   $msg = '';
   
-  if ($settings['templates'] || $settings['modules'])
+  if ($settings['templates'] || $settings['modules'] || $settings['actions'])
   {
     $msg = rex_developer_manager::checkDir($settings['dir']);
     if ($msg != '')
@@ -26,7 +26,7 @@ if (rex_post('func', 'string') == 'update')
     if (rex_developer_manager::saveSettings($settings))
     {
       echo rex_info($I18N->msg('developer_saved'));
-      if ($old_dir != $settings['dir'] || (!$settings['templates'] && !$settings['modules']))
+      if ($old_dir != $settings['dir'] || (!$settings['templates'] && !$settings['modules'] && !$settings['actions']))
       {
         rex_developer_manager::deleteDir($old_dir);
       }
@@ -44,6 +44,9 @@ if ($REX['ADDON']['settings']['developer']['templates']=="1")
 $modules = '';
 if ($REX['ADDON']['settings']['developer']['modules']=="1")
   $modules = ' checked="checked"';
+$actions = '';
+if ($REX['ADDON']['settings']['developer']['actions']=="1")
+  $actions = ' checked="checked"';
 
 echo '
 
@@ -73,6 +76,14 @@ echo '
             <input type="hidden" name="settings[modules]" value="0" />
             <input class="rex-form-checkbox" type="checkbox" id="modules" name="settings[modules]" value="1"'.$modules.' />
             <label for="modules">'.$I18N->msg('developer_modules').'</label>
+          </p>
+        </div>
+        
+        <div class="rex-form-row">
+          <p class="rex-form-checkbox rex-form-label-right">
+            <input type="hidden" name="settings[actions]" value="0" />
+            <input class="rex-form-checkbox" type="checkbox" id="actions" name="settings[actions]" value="1"'.$actions.' />
+            <label for="actions">'.$I18N->msg('developer_actions').'</label>
           </p>
         </div>
         

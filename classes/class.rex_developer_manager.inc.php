@@ -26,7 +26,7 @@ class rex_developer_manager
       rex_register_extension('A1_AFTER_DB_IMPORT', array('rex_developer_manager', 'deleteFiles'));
 
     if (($page == 'template' && ((($function=='add' || $function=='edit') && $save=='ja') || $function=='delete'))
-      || ($page == 'module' && !$subpage && ((($function=='add' || $function=='edit') && $save=='1') || $function=='delete'))
+      || ($page == 'module' && ((($function=='add' || $function=='edit') && $save=='1') || $function=='delete'))
       || ($page == 'import_export' && $subpage == 'import')
       || $page == 'developer') 
     {
@@ -41,7 +41,9 @@ class rex_developer_manager
   function _sync()
   {
     global $REX;
-    if ($REX['ADDON']['settings']['developer']['templates'] || $REX['ADDON']['settings']['developer']['modules'])
+    if ($REX['ADDON']['settings']['developer']['templates'] 
+      || $REX['ADDON']['settings']['developer']['modules']
+      || $REX['ADDON']['settings']['developer']['actions'])
     {
       require_once $REX['INCLUDE_PATH'] .'/addons/developer/classes/class.rex_developer_synchronizer.inc.php';
       $sync = new rex_developer_synchronizer();
@@ -49,6 +51,8 @@ class rex_developer_manager
         $sync->syncTemplates();
       if ($REX['ADDON']['settings']['developer']['modules'])
         $sync->syncModules();
+      if ($REX['ADDON']['settings']['developer']['actions'])
+        $sync->syncActions();
     }
   }
 
@@ -59,6 +63,7 @@ class rex_developer_manager
     $sync = new rex_developer_synchronizer();
     $sync->deleteTemplateFiles();
     $sync->deleteModuleFiles();
+    $sync->deleteActionFiles();
   }
 
   function checkDir($dir)
@@ -91,6 +96,7 @@ class rex_developer_manager
       $files = array_flip($glob);
       unset($files[$path .'/templates']);
       unset($files[$path .'/modules']);
+      unset($files[$path .'/actions']);
     }
     if (count($files) == 0)
     {

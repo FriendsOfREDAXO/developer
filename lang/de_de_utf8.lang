@@ -4,6 +4,7 @@ developer_name = Developer
 developer_settings = Einstellungen
 developer_templates = Templates synchronisieren
 developer_modules = Module synchronisieren
+developer_actions = Actions synchronisieren
 developer_dir = Ordner
 developer_save = Einstellungen speichern
 developer_saved = Die Einstellungen wurden gespeichert.

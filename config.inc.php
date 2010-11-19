@@ -16,7 +16,9 @@ $REX['ADDON']['version'][$mypage] = '2.1';
 
 require_once dirname(__FILE__) .'/settings.inc.php';
 
-if ($REX['ADDON']['settings']['developer']['templates'] || $REX['ADDON']['settings']['developer']['modules'])
+if ($REX['ADDON']['settings']['developer']['templates'] 
+  || $REX['ADDON']['settings']['developer']['modules']
+  || $REX['ADDON']['settings']['developer']['actions'])
 {
   $loggedIn = true;
   if (!isset($REX['LOGIN']) || !$REX['LOGIN'])
