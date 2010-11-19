@@ -16,8 +16,6 @@ class rex_developer_synchronizer
     $this->templatePath = $this->dir .'/templates/';
     $this->modulePath = $this->dir .'/modules/';
     $this->_checkDir($this->dir);
-    $this->_checkDir($this->templatePath);
-    $this->_checkDir($this->modulePath);
     $this->templatePattern = $this->templatePath .'*.*.php';
     $this->moduleInputPattern = $this->modulePath .'*.input.*.php';
     $this->moduleOutputPattern = $this->modulePath .'*.output.*.php';
@@ -40,6 +38,7 @@ class rex_developer_synchronizer
   function syncTemplates()
   {
     global $REX;
+    $this->_checkDir($this->templatePath);
     $files = $this->_getFiles($this->templatePattern);
     $sql = $this->_sqlFactory();
     //$sql->debugsql = true;
@@ -75,6 +74,7 @@ class rex_developer_synchronizer
   function syncModules()
   {
     global $REX;
+    $this->_checkDir($this->modulePath);
     $inputFiles = $this->_getFiles($this->moduleInputPattern);
     $outputFiles = $this->_getFiles($this->moduleOutputPattern);
     $sql = $this->_sqlFactory();
@@ -243,7 +243,6 @@ class rex_developer_synchronizer
     if (method_exists('rex_sql', 'factory'))
     {
       return rex_sql::factory();
-      echo 1;
     }
     return new rex_sql;
   }
