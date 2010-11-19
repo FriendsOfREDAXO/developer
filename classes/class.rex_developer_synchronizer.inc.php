@@ -29,21 +29,29 @@ class rex_developer_synchronizer
     $this->actionPostsavePattern = $this->actionPath .'*.postsave.*.php';
   }
   
-  function deleteTemplateFiles()
+  function deleteTemplateFiles($deleteDir = false)
   {
     $files = $this->_getFiles($this->templatePattern);
     array_map('unlink', $files);
+    if ($deleteDir)
+    {
+      $this->_deleteDir($this->templatePath);
+    }
   }
   
-  function deleteModuleFiles()
+  function deleteModuleFiles($deleteDir = false)
   {
     $inputFiles = $this->_getFiles($this->moduleInputPattern);
     $outputFiles = $this->_getFiles($this->moduleOutputPattern);
     array_map('unlink', $inputFiles);
     array_map('unlink', $outputFiles);
+    if ($deleteDir)
+    {
+      $this->_deleteDir($this->modulePath);
+    }
   }
   
-  function deleteActionFiles()
+  function deleteActionFiles($deleteDir = false)
   {
     $previewFiles = $this->_getFiles($this->actionPreviewPattern);
     $presaveFiles = $this->_getFiles($this->actionPresavePattern);
@@ -51,6 +59,10 @@ class rex_developer_synchronizer
     array_map('unlink', $previewFiles);
     array_map('unlink', $presaveFiles);
     array_map('unlink', $postsaveFiles);
+    if ($deleteDir)
+    {
+      $this->_deleteDir($this->actionPath);
+    }
   }
 
   function syncTemplates()
@@ -288,6 +300,15 @@ class rex_developer_synchronizer
       return $ret;
     }
     return true;
+  }
+  
+  function _deleteDir($dir)
+  {
+    $glob = glob($dir .'*');
+    if (!is_array($glob) || empty($glob))
+    {
+      rex_deleteDir($dir, true);
+    }
   }
   
   function _sqlFactory()

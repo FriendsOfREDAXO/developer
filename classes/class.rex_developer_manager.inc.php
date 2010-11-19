@@ -56,14 +56,17 @@ class rex_developer_manager
     }
   }
 
-  function deleteFiles()
+  function deleteFiles($check = false, $deleteDir = false)
   {
     global $REX;
     require_once $REX['INCLUDE_PATH'] .'/addons/developer/classes/class.rex_developer_synchronizer.inc.php';
     $sync = new rex_developer_synchronizer();
-    $sync->deleteTemplateFiles();
-    $sync->deleteModuleFiles();
-    $sync->deleteActionFiles();
+    if (!$check || !$REX['ADDON']['settings']['developer']['templates'])
+      $sync->deleteTemplateFiles($deleteDir);
+    if (!$check || !$REX['ADDON']['settings']['developer']['modules'])
+      $sync->deleteModuleFiles($deleteDir);
+    if (!$check || !$REX['ADDON']['settings']['developer']['actions'])
+      $sync->deleteActionFiles($deleteDir);
   }
 
   function checkDir($dir)

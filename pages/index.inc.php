@@ -30,6 +30,10 @@ if (rex_post('func', 'string') == 'update')
       {
         rex_developer_manager::deleteDir($old_dir);
       }
+      else
+      {
+        rex_developer_manager::deleteFiles(true, true);
+      }
     }
     else
     {
