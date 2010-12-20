@@ -11,22 +11,26 @@ if ($REX['REDAXO']) {
 
 $REX['ADDON']['perm'][$mypage] = "admin[]";
 $REX['ADDON']['author'][$mypage] = 'Gregor Harlan';
-$REX['ADDON']['version'][$mypage] = '2.2.0';
+$REX['ADDON']['version'][$mypage] = '2.2.1';
 
 require_once dirname(__FILE__) .'/settings.inc.php';
 
-if ($REX['ADDON']['settings']['developer']['templates'] 
+if (($REX['ADDON']['settings']['developer']['templates']
   || $REX['ADDON']['settings']['developer']['modules']
   || $REX['ADDON']['settings']['developer']['actions'])
+  && (!$REX['REDAXO'] || is_object($REX['LOGIN'])))
 {
   rex_register_extension('ADDONS_INCLUDED', 'rex_developer_start');
-  
+
   function rex_developer_start($params)
   {
-    global $REX;
-    $loggedIn = true;
-    if (!isset($REX['LOGIN']) || !$REX['LOGIN'])
+    global $REX, $I18N;
+    if (session_id() == '')
+      session_start();
+    $loggedIn = rex_hasBackendSession();
+    if ($loggedIn && (!isset($REX['LOGIN']) || !is_object($REX['LOGIN'])))
     {
+      $I18N = rex_create_lang($REX['LANG']);
       $REX['LOGIN'] = new rex_backend_login($REX['TABLE_PREFIX'] .'user');
       $loggedIn = $REX['LOGIN']->checkLogin();
     }
