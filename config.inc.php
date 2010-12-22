@@ -27,7 +27,7 @@ if (($REX['ADDON']['settings']['developer']['templates']
     global $REX, $I18N;
     if (session_id() == '')
       session_start();
-    $loggedIn = rex_hasBackendSession();
+    $loggedIn = isset($_SESSION[$REX['INSTNAME']]['UID']) && $_SESSION[$REX['INSTNAME']]['UID'] > 0;
     if ($loggedIn && (!isset($REX['LOGIN']) || !is_object($REX['LOGIN'])))
     {
       $I18N = rex_create_lang($REX['LANG']);
