@@ -30,7 +30,8 @@ if (($REX['ADDON']['settings']['developer']['templates']
     $loggedIn = isset($_SESSION[$REX['INSTNAME']]['UID']) && $_SESSION[$REX['INSTNAME']]['UID'] > 0;
     if ($loggedIn && (!isset($REX['LOGIN']) || !is_object($REX['LOGIN'])))
     {
-      $I18N = rex_create_lang($REX['LANG']);
+      if(!is_object($I18N))
+        $I18N = rex_create_lang($REX['LANG']);
       $REX['LOGIN'] = new rex_backend_login($REX['TABLE_PREFIX'] .'user');
       $loggedIn = $REX['LOGIN']->checkLogin();
     }
