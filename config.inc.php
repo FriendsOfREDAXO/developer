@@ -25,6 +25,11 @@ if (($REX['ADDON']['settings']['developer']['templates']
   function rex_developer_start($params)
   {
     global $REX, $I18N;
+    if(rex_request('function')=='dbimport'){
+      require_once $REX['INCLUDE_PATH'] .'/addons/developer/classes/class.rex_developer_manager.inc.php';
+      rex_developer_manager::deleteFiles();
+      return;
+    }
     if (session_id() == '')
       session_start();
     $loggedIn = isset($_SESSION[$REX['INSTNAME']]['UID']) && $_SESSION[$REX['INSTNAME']]['UID'] > 0;
