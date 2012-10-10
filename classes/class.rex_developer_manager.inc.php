@@ -23,12 +23,12 @@ class rex_developer_manager
     $save = rex_request('save','string','');
 
     if ($page == 'import_export')
-      rex_register_extension('A1_AFTER_DB_IMPORT', array('rex_developer_manager', 'deleteFiles'));
+      rex_register_extension('A1_AFTER_DB_IMPORT', create_function('', 'rex_developer_manager::deleteFiles();'));
 
     if (($page == 'template' && ((($function=='add' || $function=='edit') && $save=='ja') || $function=='delete'))
       || ($page == 'module' && ((($function=='add' || $function=='edit') && $save=='1') || $function=='delete'))
       || ($page == 'import_export' && $subpage == 'import')
-      || $page == 'developer') 
+      || $page == 'developer')
     {
       rex_register_extension('OUTPUT_FILTER_CACHE', array('rex_developer_manager', '_sync'));
     }
@@ -41,7 +41,7 @@ class rex_developer_manager
   function _sync()
   {
     global $REX;
-    if ($REX['ADDON']['settings']['developer']['templates'] 
+    if ($REX['ADDON']['settings']['developer']['templates']
       || $REX['ADDON']['settings']['developer']['modules']
       || $REX['ADDON']['settings']['developer']['actions'])
     {
