@@ -10,6 +10,7 @@ developer_save = save settings
 developer_saved = settings have been saved
 developer_error = an error occured
 
+developer_install_php_version = Requires at least PHP 5.3.0!
 developer_install_perm_settings = The file "settings.inc.php" needs write access!
 developer_install_make_dir = The folder "/redaxo/include/{0}/" can not be created, check for write access or create the folder manually!
 developer_install_perm_dir = The folder "/redaxo/include/{0}/" needs write access!

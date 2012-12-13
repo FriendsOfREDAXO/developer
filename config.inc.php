@@ -2,10 +2,8 @@
 
 $mypage = 'developer';
 
-$REX['ADDON']['rxid'][$mypage] = '338';
-
 if ($REX['REDAXO']) {
-  $I18N->appendFile($REX['INCLUDE_PATH'] . '/addons/' . $mypage . '/lang/');
+  $I18N->appendFile(__DIR__ . '/lang/');
   $REX['ADDON']['name'][$mypage] = $I18N->msg('developer_name');
 }
 
@@ -13,17 +11,14 @@ $REX['ADDON']['perm'][$mypage] = 'admin[]';
 $REX['ADDON']['author'][$mypage] = 'Gregor Harlan';
 $REX['ADDON']['version'][$mypage] = '3.0 dev';
 
-require_once dirname(__FILE__) . '/settings.inc.php';
+require_once __DIR__ . '/settings.inc.php';
 
 if (($REX['ADDON']['settings']['developer']['templates']
   || $REX['ADDON']['settings']['developer']['modules']
   || $REX['ADDON']['settings']['developer']['actions'])
   && (!$REX['REDAXO'] || is_object($REX['LOGIN']))
 ) {
-  rex_register_extension('ADDONS_INCLUDED', 'rex_developer_start');
-
-  function rex_developer_start($params)
-  {
+  rex_register_extension('ADDONS_INCLUDED', function ($params) {
     global $REX, $I18N;
     if (session_id() == '')
       session_start();
@@ -35,8 +30,8 @@ if (($REX['ADDON']['settings']['developer']['templates']
       $loggedIn = $REX['LOGIN']->checkLogin();
     }
     if ($loggedIn && $REX['LOGIN']->USER->isAdmin()) {
-      require_once $REX['INCLUDE_PATH'] . '/addons/developer/classes/class.rex_developer_manager.inc.php';
+      require_once __DIR__ . '/classes/class.rex_developer_manager.inc.php';
       rex_developer_manager::sync();
     }
-  }
+  });
 }
