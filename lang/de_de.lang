@@ -10,6 +10,6 @@ developer_save = Einstellungen speichern
 developer_saved = Die Einstellungen wurden gespeichert.
 developer_error = Es ist ein Fehler aufgetreten.
 
-developer_install_perm_settings = Die Datei "settings.inc.php" benötigt Schreibrechte!
-developer_install_make_dir = Der Ordner "/redaxo/include/{0}/" kann nicht angelegt werden, überprüfen Sie die Schreibrechte oder legen Sie den Ordner von Hand an und geben ihm Schreibrechte.
-developer_install_perm_dir = Der Ordner "/redaxo/include/{0}/" benötigt Schreibrechte!
+developer_install_perm_settings = Die Datei "settings.inc.php" benÃ¶tigt Schreibrechte!
+developer_install_make_dir = Der Ordner "/redaxo/include/{0}/" kann nicht angelegt werden, Ã¼berprÃ¼fen Sie die Schreibrechte oder legen Sie den Ordner von Hand an und geben ihm Schreibrechte.
+developer_install_perm_dir = Der Ordner "/redaxo/include/{0}/" benÃ¶tigt Schreibrechte!

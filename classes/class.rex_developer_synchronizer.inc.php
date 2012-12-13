@@ -16,25 +16,24 @@ class rex_developer_synchronizer
   function rex_developer_synchronizer()
   {
     global $REX;
-    $this->dir = $REX['INCLUDE_PATH'] .'/'. $REX['ADDON']['settings']['developer']['dir'];
-    $this->templatePath = $this->dir .'/templates/';
-    $this->modulePath = $this->dir .'/modules/';
-    $this->actionPath = $this->dir .'/actions/';
+    $this->dir = $REX['INCLUDE_PATH'] . '/' . $REX['ADDON']['settings']['developer']['dir'];
+    $this->templatePath = $this->dir . '/templates/';
+    $this->modulePath = $this->dir . '/modules/';
+    $this->actionPath = $this->dir . '/actions/';
     $this->_checkDir($this->dir);
-    $this->templatePattern = $this->templatePath .'*.*.php';
-    $this->moduleInputPattern = $this->modulePath .'*.input.*.php';
-    $this->moduleOutputPattern = $this->modulePath .'*.output.*.php';
-    $this->actionPreviewPattern = $this->actionPath .'*.preview.*.php';
-    $this->actionPresavePattern = $this->actionPath .'*.presave.*.php';
-    $this->actionPostsavePattern = $this->actionPath .'*.postsave.*.php';
+    $this->templatePattern = $this->templatePath . '*.*.php';
+    $this->moduleInputPattern = $this->modulePath . '*.input.*.php';
+    $this->moduleOutputPattern = $this->modulePath . '*.output.*.php';
+    $this->actionPreviewPattern = $this->actionPath . '*.preview.*.php';
+    $this->actionPresavePattern = $this->actionPath . '*.presave.*.php';
+    $this->actionPostsavePattern = $this->actionPath . '*.postsave.*.php';
   }
 
   function deleteTemplateFiles($deleteDir = false)
   {
     $files = $this->_getFiles($this->templatePattern);
     array_map('unlink', $files);
-    if ($deleteDir)
-    {
+    if ($deleteDir) {
       $this->_deleteDir($this->templatePath);
     }
   }
@@ -45,8 +44,7 @@ class rex_developer_synchronizer
     $outputFiles = $this->_getFiles($this->moduleOutputPattern);
     array_map('unlink', $inputFiles);
     array_map('unlink', $outputFiles);
-    if ($deleteDir)
-    {
+    if ($deleteDir) {
       $this->_deleteDir($this->modulePath);
     }
   }
@@ -59,8 +57,7 @@ class rex_developer_synchronizer
     array_map('unlink', $previewFiles);
     array_map('unlink', $presaveFiles);
     array_map('unlink', $postsaveFiles);
-    if ($deleteDir)
-    {
+    if ($deleteDir) {
       $this->_deleteDir($this->actionPath);
     }
   }
@@ -72,16 +69,15 @@ class rex_developer_synchronizer
     $files = $this->_getFiles($this->templatePattern);
     $sql = $this->_sqlFactory();
     //$sql->debugsql = true;
-    $sql->setQuery('SELECT id, name, content, updatedate FROM '.$REX['TABLE_PREFIX'].'template');
+    $sql->setQuery('SELECT id, name, content, updatedate FROM ' . $REX['TABLE_PREFIX'] . 'template');
     $rows = $sql->getRows();
-    for($i = 0; $i < $rows; ++$i)
-    {
+    for ($i = 0; $i < $rows; ++$i) {
       $id = $sql->getValue('id');
       $name = $sql->getValue('name');
       $dbUpdated = max(1, $sql->getValue('updatedate'));
 
       $file = isset($files[$id]) ? $files[$id] : null;
-      $newFile = $this->templatePath . $this->_getFilename($name .'.'. $id .'.php');
+      $newFile = $this->templatePath . $this->_getFilename($name . '.' . $id . '.php');
       list($newUpdatedate, $newContent) = $this->_syncFile($file, $newFile, $dbUpdated, $sql->getValue('content'));
 
       if ($newUpdatedate)
@@ -101,20 +97,19 @@ class rex_developer_synchronizer
     $outputFiles = $this->_getFiles($this->moduleOutputPattern);
     $sql = $this->_sqlFactory();
     //$sql->debugsql = true;
-    $sql->setQuery('SELECT id, name, eingabe, ausgabe, updatedate FROM '.$REX['TABLE_PREFIX'].'module');
+    $sql->setQuery('SELECT id, name, eingabe, ausgabe, updatedate FROM ' . $REX['TABLE_PREFIX'] . 'module');
     $rows = $sql->getRows();
-    for($i = 0; $i < $rows; ++$i)
-    {
+    for ($i = 0; $i < $rows; ++$i) {
       $id = $sql->getValue('id');
       $name = $sql->getValue('name');
       $dbUpdated = max(1, $sql->getValue('updatedate'));
 
       $file = isset($inputFiles[$id]) ? $inputFiles[$id] : null;
-      $newFile = $this->modulePath . $this->_getFilename($name .'.input.'. $id .'.php');
+      $newFile = $this->modulePath . $this->_getFilename($name . '.input.' . $id . '.php');
       list($newUpdatedate1, $newInput) = $this->_syncFile($file, $newFile, $dbUpdated, $sql->getValue('eingabe'));
 
       $file = isset($outputFiles[$id]) ? $outputFiles[$id] : null;
-      $newFile = $this->modulePath . $this->_getFilename($name .'.output.'. $id .'.php');
+      $newFile = $this->modulePath . $this->_getFilename($name . '.output.' . $id . '.php');
       list($newUpdatedate2, $newOutput) = $this->_syncFile($file, $newFile, $dbUpdated, $sql->getValue('ausgabe'));
 
       $newUpdatedate = max($newUpdatedate1, $newUpdatedate2);
@@ -138,24 +133,23 @@ class rex_developer_synchronizer
     $postsaveFiles = $this->_getFiles($this->actionPostsavePattern);
     $sql = $this->_sqlFactory();
     //$sql->debugsql = true;
-    $sql->setQuery('SELECT id, name, preview, presave, postsave, updatedate FROM '.$REX['TABLE_PREFIX'].'action');
+    $sql->setQuery('SELECT id, name, preview, presave, postsave, updatedate FROM ' . $REX['TABLE_PREFIX'] . 'action');
     $rows = $sql->getRows();
-    for($i = 0; $i < $rows; ++$i)
-    {
+    for ($i = 0; $i < $rows; ++$i) {
       $id = $sql->getValue('id');
       $name = $sql->getValue('name');
       $dbUpdated = max(1, $sql->getValue('updatedate'));
 
       $file = isset($previewFiles[$id]) ? $previewFiles[$id] : null;
-      $newFile = $this->actionPath . $this->_getFilename($name .'.preview.'. $id .'.php');
+      $newFile = $this->actionPath . $this->_getFilename($name . '.preview.' . $id . '.php');
       list($newUpdatedate1, $newPreview) = $this->_syncFile($file, $newFile, $dbUpdated, $sql->getValue('preview'));
 
       $file = isset($presaveFiles[$id]) ? $presaveFiles[$id] : null;
-      $newFile = $this->actionPath . $this->_getFilename($name .'.presave.'. $id .'.php');
+      $newFile = $this->actionPath . $this->_getFilename($name . '.presave.' . $id . '.php');
       list($newUpdatedate2, $newPresave) = $this->_syncFile($file, $newFile, $dbUpdated, $sql->getValue('presave'));
 
       $file = isset($postsaveFiles[$id]) ? $postsaveFiles[$id] : null;
-      $newFile = $this->actionPath . $this->_getFilename($name .'.postsave.'. $id .'.php');
+      $newFile = $this->actionPath . $this->_getFilename($name . '.postsave.' . $id . '.php');
       list($newUpdatedate3, $newPostsave) = $this->_syncFile($file, $newFile, $dbUpdated, $sql->getValue('postsave'));
 
       $newUpdatedate = max($newUpdatedate1, $newUpdatedate2, $newUpdatedate3);
@@ -176,23 +170,18 @@ class rex_developer_synchronizer
   {
     global $REX;
     $fileUpdated = file_exists($file) ? filemtime($file) : 0;
-    if ($fileUpdated < $dbUpdated)
-    {
+    if ($fileUpdated < $dbUpdated) {
       $nameChanged = false;
-      if ($newFile != $file)
-      {
+      if ($newFile != $file) {
         @unlink($file);
         $nameChanged = true;
       }
-      if ($nameChanged || !file_exists($newFile) || rex_get_file_contents($newFile) !== $content)
-      {
+      if ($nameChanged || !file_exists($newFile) || rex_get_file_contents($newFile) !== $content) {
         file_put_contents($newFile, $content);
         @chmod($newFile, $REX['ADDON']['fileperm']['developer']);
         return array(filemtime($newFile), null);
       }
-    }
-    elseif ($fileUpdated > $dbUpdated)
-    {
+    } elseif ($fileUpdated > $dbUpdated) {
       return array($fileUpdated, addslashes(rex_get_file_contents($file)));
     }
   }
@@ -203,8 +192,8 @@ class rex_developer_synchronizer
     $template = new rex_template($id);
     $template->deleteCache();
     $sql = $this->_sqlFactory();
-    $sql->setTable($REX['TABLE_PREFIX'].'template');
-    $sql->setWhere('id = '. $id);
+    $sql->setTable($REX['TABLE_PREFIX'] . 'template');
+    $sql->setWhere('id = ' . $id);
     if ($content !== null)
       $sql->setValue('content', $content);
     $sql->setValue('updatedate', $updatedate);
@@ -216,8 +205,8 @@ class rex_developer_synchronizer
   {
     global $REX;
     $sql = $this->_sqlFactory();
-    $sql->setTable($REX['TABLE_PREFIX'].'module');
-    $sql->setWhere('id = '. $id);
+    $sql->setTable($REX['TABLE_PREFIX'] . 'module');
+    $sql->setWhere('id = ' . $id);
     if ($input !== null)
       $sql->setValue('eingabe', $input);
     if ($output !== null)
@@ -225,20 +214,18 @@ class rex_developer_synchronizer
     $sql->setValue('updatedate', $updatedate);
     $sql->setValue('updateuser',  $REX['LOGIN']->USER->getValue('login'));
     $success = $sql->update();
-    if ($input !== null || $output !== null)
-    {
+    if ($input !== null || $output !== null) {
       $sql->setQuery('
         SELECT     DISTINCT(article.id)
-        FROM       '. $REX['TABLE_PREFIX'] .'article article
-        LEFT JOIN  '. $REX['TABLE_PREFIX'] .'article_slice slice
+        FROM       ' . $REX['TABLE_PREFIX'] . 'article article
+        LEFT JOIN  ' . $REX['TABLE_PREFIX'] . 'article_slice slice
         ON         article.id = slice.article_id
-        WHERE      slice.modultyp_id='. $id
+        WHERE      slice.modultyp_id=' . $id
       );
       $rows = $sql->getRows();
-      require_once $REX['INCLUDE_PATH'] .'/functions/function_rex_generate.inc.php';
-      for ($i = 0; $i < $rows; ++$i)
-      {
-    	  rex_deleteCacheArticle($sql->getValue('article.id'));
+      require_once $REX['INCLUDE_PATH'] . '/functions/function_rex_generate.inc.php';
+      for ($i = 0; $i < $rows; ++$i) {
+        rex_deleteCacheArticle($sql->getValue('article.id'));
         $sql->next();
       }
     }
@@ -249,8 +236,8 @@ class rex_developer_synchronizer
   {
     global $REX;
     $sql = $this->_sqlFactory();
-    $sql->setTable($REX['TABLE_PREFIX'].'action');
-    $sql->setWhere('id = '. $id);
+    $sql->setTable($REX['TABLE_PREFIX'] . 'action');
+    $sql->setWhere('id = ' . $id);
     if ($preview !== null)
       $sql->setValue('preview', $preview);
     if ($presave !== null)
@@ -266,14 +253,11 @@ class rex_developer_synchronizer
   {
     $glob = glob($pattern);
     $files = array();
-    if (is_array($glob))
-    {
-      foreach($glob as $file)
-      {
+    if (is_array($glob)) {
+      foreach ($glob as $file) {
         $filename = basename($file);
         $parts = explode('.', basename($file));
-        if (isset($parts[count($parts) - 2]))
-        {
+        if (isset($parts[count($parts) - 2])) {
           $id = (int) $parts[count($parts) - 2];
           if ($id)
             $files[$id] = $file;
@@ -297,8 +281,7 @@ class rex_developer_synchronizer
   function _checkDir($dir)
   {
     global $REX;
-    if (!is_dir($dir))
-    {
+    if (!is_dir($dir)) {
       $ret = mkdir($dir, $REX['ADDON']['dirperm']['developer'], true);
       @chmod($dir, $REX['ADDON']['dirperm']['developer']);
       return $ret;
@@ -308,17 +291,15 @@ class rex_developer_synchronizer
 
   function _deleteDir($dir)
   {
-    $glob = glob($dir .'*');
-    if (!is_array($glob) || empty($glob))
-    {
+    $glob = glob($dir . '*');
+    if (!is_array($glob) || empty($glob)) {
       rex_deleteDir($dir, true);
     }
   }
 
   function _sqlFactory()
   {
-    if (method_exists('rex_sql', 'factory'))
-    {
+    if (method_exists('rex_sql', 'factory')) {
       return rex_sql::factory();
     }
     return new rex_sql;
