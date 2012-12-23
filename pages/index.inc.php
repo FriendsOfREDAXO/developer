@@ -2,30 +2,26 @@
 
 require $REX['INCLUDE_PATH'] . '/layout/top.php';
 
-echo rex_title($I18N->msg('developer_name'));
+rex_title($I18N->msg('developer_name'));
 
 if (rex_post('func', 'string') == 'update') {
-  require_once $REX['INCLUDE_PATH'] . '/addons/developer/classes/class.rex_developer_manager.inc.php';
-
   $settings = (array) rex_post('settings', 'array', array());
   $settings['dir'] = trim($settings['dir'], '/');
   $msg = '';
 
-  if ($settings['templates'] || $settings['modules'] || $settings['actions']) {
-    $msg = rex_developer_manager::checkDir($settings['dir']);
-    if ($msg != '') {
-      echo rex_warning($msg);
-    }
+  $msg = rex_developer_manager::checkDir($settings['dir']);
+  if ($msg != '') {
+    echo rex_warning($msg);
   }
+
   if ($msg == '') {
-    $old_dir = $REX['ADDON']['settings']['developer']['dir'];
-    if (rex_developer_manager::saveSettings($settings)) {
+    $REX['ADDON']['settings']['developer'] = array_merge((array) $REX['ADDON']['settings']['developer'], (array) $settings);
+    $content = '';
+    foreach ((array) $REX['ADDON']['settings']['developer'] as $key => $value)
+      $content .= "\$REX['ADDON']['settings']['developer']['$key'] = '" . $value . "';\n";
+    $file = $REX['INCLUDE_PATH'] . '/addons/developer/settings.inc.php';
+    if (rex_replace_dynamic_contents($file, $content)) {
       echo rex_info($I18N->msg('developer_saved'));
-      if ($old_dir != $settings['dir'] || (!$settings['templates'] && !$settings['modules'] && !$settings['actions'])) {
-        rex_developer_manager::deleteDir($old_dir);
-      } else {
-        rex_developer_manager::deleteFiles(true, true);
-      }
     } else {
       echo rex_warning($I18N->msg('developer_error'));
     }

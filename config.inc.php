@@ -13,11 +13,12 @@ $REX['ADDON']['version'][$mypage] = '3.0 dev';
 
 require_once __DIR__ . '/settings.inc.php';
 
-if (($REX['ADDON']['settings']['developer']['templates']
-  || $REX['ADDON']['settings']['developer']['modules']
-  || $REX['ADDON']['settings']['developer']['actions'])
-  && (!$REX['REDAXO'] || is_object($REX['LOGIN']))
-) {
+require_once __DIR__ . '/lib/manager.php';
+require_once __DIR__ . '/lib/synchronizer.php';
+require_once __DIR__ . '/lib/synchronizer_default.php';
+require_once __DIR__ . '/lib/synchronizer_item.php';
+
+if (!$REX['REDAXO'] || is_object($REX['LOGIN'])) {
   rex_register_extension('ADDONS_INCLUDED', function ($params) {
     global $REX, $I18N;
     if (session_id() == '')
@@ -30,8 +31,7 @@ if (($REX['ADDON']['settings']['developer']['templates']
       $loggedIn = $REX['LOGIN']->checkLogin();
     }
     if ($loggedIn && $REX['LOGIN']->USER->isAdmin()) {
-      require_once __DIR__ . '/classes/class.rex_developer_manager.inc.php';
-      rex_developer_manager::sync();
+      rex_developer_manager::start();
     }
   });
 }
