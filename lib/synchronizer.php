@@ -101,7 +101,7 @@ abstract class rex_developer_synchronizer
         }
         touch($filePath, $updated);
       }
-      if ($add && $id = $this->addItem(new rex_developer_synchronizer_item(null, basename($dir), $updated, $addFiles))) {
+      if ($add && $id = $this->addItem(new rex_developer_synchronizer_item(null, strtr(basename($dir), '_', ' '), $updated, $addFiles))) {
         self::putFile($dir . self::ID_FILE, $id);
         $idList[$id] = true;
       }
@@ -138,8 +138,7 @@ abstract class rex_developer_synchronizer
 
   static protected function getPath($dir, $name)
   {
-    $filename = strtolower($name);
-    $filename = str_replace(array('ä', 'ö', 'ü', 'ß'), array('ae', 'oe', 'ue', 'ss'), $filename);
+    $filename = str_replace(array('ä', 'ö', 'ü', 'ß'), array('ae', 'oe', 'ue', 'ss'), $name);
     $filename = preg_replace('/[^a-zA-Z0-9.\-+]/', '_', $filename);
     $path = $dir . $filename;
     if (file_exists($path)) {
