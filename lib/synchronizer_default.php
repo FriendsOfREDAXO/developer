@@ -5,6 +5,8 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
   protected
     $table,
     $columns,
+    $addedCallback,
+    $editedCallback,
     $idColumn = 'id',
     $nameColumn = 'name',
     $updatedColumn = 'updatedate',
@@ -16,6 +18,16 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
 
     $this->table = $table;
     $this->columns = array_flip($files);
+  }
+
+  public function setAddedCallback($callback)
+  {
+    $this->addedCallback = $callback;
+  }
+
+  public function setEditedCallback($callback)
+  {
+    $this->editedCallback = $callback;
   }
 
   public function setIdColumn($idColumn)
@@ -77,7 +89,12 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
       $sql->setValue($this->columns[$file], $sql->escape($content));
     }
     if ($sql->insert()) {
-      return $sql->getLastId();
+      $id = $sql->getLastId();
+      $item->setId($id);
+      if ($this->addedCallback) {
+        call_user_func($this->addedCallback, $item);
+      }
+      return $id;
     }
     return null;
   }
@@ -98,5 +115,8 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
       $sql->setValue($this->columns[$file], $sql->escape($content));
     }
     $sql->update();
+    if ($this->editedCallback) {
+      call_user_func($this->editedCallback, $item);
+    }
   }
 }

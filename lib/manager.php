@@ -18,20 +18,43 @@ abstract class rex_developer_manager
     $save = rex_request('save', 'string', '');
 
     if ($REX['ADDON']['settings']['developer']['templates']) {
+      $synchronizer = new rex_developer_synchronizer_default('templates', $REX['TABLE_PREFIX'] . 'template', array('content' => 'template.php'));
+      $synchronizer->setEditedCallback(function (rex_developer_synchronizer_item $item) {
+        $template = new rex_template($item->getId());
+        $template->deleteCache();
+      });
       self::register(
-        new rex_developer_synchronizer_default('templates', $REX['TABLE_PREFIX'] . 'template', array('content' => 'template.php')),
+        $synchronizer,
         $page == 'template' && ((($function == 'add' || $function == 'edit') && $save == 'ja') || $function == 'delete')
       );
     }
     if ($REX['ADDON']['settings']['developer']['modules']) {
+      $synchronizer = new rex_developer_synchronizer_default('modules', $REX['TABLE_PREFIX'] . 'module', array('eingabe' => 'input.php', 'ausgabe' => 'output.php'));
+      $synchronizer->setEditedCallback(function (rex_developer_synchronizer_item $item) {
+        global $REX;
+        $sql = rex_sql::factory();
+        $sql->setQuery('
+          SELECT     DISTINCT(article.id)
+          FROM       ' . $REX['TABLE_PREFIX'] . 'article article
+          LEFT JOIN  ' . $REX['TABLE_PREFIX'] . 'article_slice slice
+          ON         article.id = slice.article_id
+          WHERE      slice.modultyp_id=' . $item->getId()
+        );
+        require_once $REX['INCLUDE_PATH'] . '/functions/function_rex_generate.inc.php';
+        for ($i = 0, $rows = $sql->getRows(); $i < $rows; ++$i) {
+          rex_deleteCacheArticle($sql->getValue('article.id'));
+          $sql->next();
+        }
+      });
       self::register(
-        new rex_developer_synchronizer_default('modules', $REX['TABLE_PREFIX'] . 'module', array('eingabe' => 'input.php', 'ausgabe' => 'output.php')),
+        $synchronizer,
         $page == 'module' && $subpage != 'actions' && ((($function == 'add' || $function == 'edit') && $save == '1') || $function == 'delete')
       );
     }
     if ($REX['ADDON']['settings']['developer']['actions']) {
+      $synchronizer = new rex_developer_synchronizer_default('actions', $REX['TABLE_PREFIX'] . 'action', array('preview' => 'preview.php', 'presave' => 'presave.php', 'postsave' => 'postsave.php'));
       self::register(
-        new rex_developer_synchronizer_default('actions', $REX['TABLE_PREFIX'] . 'action', array('preview' => 'preview.php', 'presave' => 'presave.php', 'postsave' => 'postsave.php')),
+        $synchronizer,
         $page == 'module' && $subpage == 'actions' && ((($function == 'add' || $function == 'edit') && $save == '1') || $function == 'delete')
       );
     }
@@ -42,7 +65,7 @@ abstract class rex_developer_manager
     self::registerDefault();
     self::synchronize(false);
     rex_register_extension('OUTPUT_FILTER_CACHE', function () {
-        rex_developer_manager::synchronize(true);
+      rex_developer_manager::synchronize(true);
     });
   }
 
