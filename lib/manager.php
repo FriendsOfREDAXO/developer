@@ -18,7 +18,12 @@ abstract class rex_developer_manager
     $save = rex_request('save', 'string', '');
 
     if ($REX['ADDON']['settings']['developer']['templates']) {
-      $synchronizer = new rex_developer_synchronizer_default('templates', $REX['TABLE_PREFIX'] . 'template', array('content' => 'template.php'));
+      $synchronizer = new rex_developer_synchronizer_default(
+        'templates',
+        $REX['TABLE_PREFIX'] . 'template',
+        array('content' => 'template.php'),
+        array('active' => 'boolean', 'attributes' => 'serialize')
+      );
       $synchronizer->setEditedCallback(function (rex_developer_synchronizer_item $item) {
         $template = new rex_template($item->getId());
         $template->deleteCache();
@@ -28,8 +33,13 @@ abstract class rex_developer_manager
         $page == 'template' && ((($function == 'add' || $function == 'edit') && $save == 'ja') || $function == 'delete')
       );
     }
+
     if ($REX['ADDON']['settings']['developer']['modules']) {
-      $synchronizer = new rex_developer_synchronizer_default('modules', $REX['TABLE_PREFIX'] . 'module', array('eingabe' => 'input.php', 'ausgabe' => 'output.php'));
+      $synchronizer = new rex_developer_synchronizer_default(
+        'modules',
+        $REX['TABLE_PREFIX'] . 'module',
+        array('eingabe' => 'input.php', 'ausgabe' => 'output.php')
+      );
       $synchronizer->setEditedCallback(function (rex_developer_synchronizer_item $item) {
         global $REX;
         $sql = rex_sql::factory();
@@ -51,8 +61,14 @@ abstract class rex_developer_manager
         $page == 'module' && $subpage != 'actions' && ((($function == 'add' || $function == 'edit') && $save == '1') || $function == 'delete')
       );
     }
+
     if ($REX['ADDON']['settings']['developer']['actions']) {
-      $synchronizer = new rex_developer_synchronizer_default('actions', $REX['TABLE_PREFIX'] . 'action', array('preview' => 'preview.php', 'presave' => 'presave.php', 'postsave' => 'postsave.php'));
+      $synchronizer = new rex_developer_synchronizer_default(
+        'actions',
+        $REX['TABLE_PREFIX'] . 'action',
+        array('preview' => 'preview.php', 'presave' => 'presave.php', 'postsave' => 'postsave.php'),
+        array('previewmode' => 'int', 'presavemode' => 'int', 'postsavemode' => 'int')
+      );
       self::register(
         $synchronizer,
         $page == 'module' && $subpage == 'actions' && ((($function == 'add' || $function == 'edit') && $save == '1') || $function == 'delete')
@@ -89,5 +105,28 @@ abstract class rex_developer_manager
       return $I18N->msg('developer_install_perm_dir', $dir);
     }
     return '';
+  }
+
+  /**
+   * Returns a string containing the YAML representation of $value.
+   *
+   * @param array  $value  The value being encoded
+   * @param number $inline The level where you switch to inline YAML
+   * @return string
+   */
+  static public function yamlEncode(array $value, $inline = 3)
+  {
+    return Symfony\Component\Yaml\Yaml::dump($value, $inline, 2);
+  }
+
+  /**
+   * Parses YAML into a PHP array.
+   *
+   * @param string $value YAML string
+   * @return array
+   */
+  static public function yamlDecode($value)
+  {
+    return Symfony\Component\Yaml\Yaml::parse($value);
   }
 }

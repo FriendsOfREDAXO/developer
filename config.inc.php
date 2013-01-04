@@ -13,6 +13,8 @@ $REX['ADDON']['version'][$mypage] = '3.0 dev';
 
 require_once __DIR__ . '/settings.inc.php';
 
+require_once __DIR__ . '/vendor/autoload.php';
+
 require_once __DIR__ . '/lib/manager.php';
 require_once __DIR__ . '/lib/synchronizer.php';
 require_once __DIR__ . '/lib/synchronizer_default.php';

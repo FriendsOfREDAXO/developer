@@ -4,9 +4,10 @@ $dir = dirname(__FILE__);
 $I18N->appendFile($dir . '/lang/');
 $msg = '';
 
-if (version_compare(PHP_VERSION, '5.3.0') < 0) {
+$minPhpVersion = '5.3.3';
+if (version_compare(PHP_VERSION, $minPhpVersion) < 0) {
 
-  $msg = $I18N->msg('developer_install_php_version');
+  $msg = $I18N->msg('developer_install_php_version', $minPhpVersion);
 
 } else {
 

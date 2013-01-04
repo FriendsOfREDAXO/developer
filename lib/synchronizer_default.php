@@ -2,9 +2,12 @@
 
 class rex_developer_synchronizer_default extends rex_developer_synchronizer
 {
+  const METADADATA_FILE = 'metadata.yml';
+
   protected
     $table,
     $columns,
+    $metadata,
     $addedCallback,
     $editedCallback,
     $idColumn = 'id',
@@ -12,12 +15,13 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
     $updatedColumn = 'updatedate',
     $commonCreateUpdateColumns = true;
 
-  public function __construct($dirname, $table, array $files)
+  public function __construct($dirname, $table, array $files, array $metadata = array())
   {
-    parent::__construct($dirname, $files);
-
     $this->table = $table;
     $this->columns = array_flip($files);
+    $this->metadata = array_merge(array('name' => 'string'), $metadata);
+    $files[] = self::METADADATA_FILE;
+    parent::__construct($dirname, $files);
   }
 
   public function setAddedCallback($callback)
@@ -61,10 +65,16 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
     $sql = rex_sql::factory();
     $sql->setQuery('SELECT * FROM `' . $this->table . '`');
     for ($i = 0, $rows = $sql->getRows(); $i < $rows; ++$i, $sql->next()) {
-      $item = new rex_developer_synchronizer_item($sql->getValue($this->idColumn), $sql->getValue($this->nameColumn), $sql->getValue($this->updatedColumn));
+      $name = $sql->getValue($this->nameColumn);
+      $item = new rex_developer_synchronizer_item($sql->getValue($this->idColumn), $name, $sql->getValue($this->updatedColumn));
       foreach ($this->columns as $file => $column) {
         $item->setFile($file, $sql->getValue($column));
       }
+      $metadata = array();
+      foreach ($this->metadata as $column => $type) {
+        $metadata[$column] = self::cast($sql->getValue($column), $type);
+      }
+      $item->setFile(self::METADADATA_FILE, rex_developer_manager::yamlEncode($metadata));
       $items[] = $item;
     }
     return $items;
@@ -85,7 +95,17 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
     } else {
       $sql->setValue($this->updatedColumn, $item->getUpdated());
     }
-    foreach ($item->getFiles() as $file => $content) {
+    $files = $item->getFiles();
+    if (isset($files[self::METADADATA_FILE])) {
+      $metadata = rex_developer_manager::yamlDecode($files[self::METADADATA_FILE]);
+      foreach ($this->metadata as $column => $type) {
+        if (isset($metadata[$column])) {
+          $sql->setValue($column, $sql->escape(self::toString($metadata[$column], $type)));
+        }
+      }
+      unset($files[self::METADADATA_FILE]);
+    }
+    foreach ($files as $file => $content) {
       $sql->setValue($this->columns[$file], $sql->escape($content));
     }
     if ($sql->insert()) {
@@ -111,12 +131,49 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
     } else {
       $sql->setValue($this->updatedColumn, $item->getUpdated());
     }
-    foreach ($item->getFiles() as $file => $content) {
+    $files = $item->getFiles();
+    if (isset($files[self::METADADATA_FILE])) {
+      $metadata = rex_developer_manager::yamlDecode($files[self::METADADATA_FILE]);
+      foreach ($this->metadata as $column => $type) {
+        if (isset($metadata[$column])) {
+          $sql->setValue($column, $sql->escape(self::toString($metadata[$column], $type)));
+        }
+      }
+      unset($files[self::METADADATA_FILE]);
+    }
+    foreach ($files as $file => $content) {
       $sql->setValue($this->columns[$file], $sql->escape($content));
     }
     $sql->update();
     if ($this->editedCallback) {
       call_user_func($this->editedCallback, $item);
+    }
+  }
+
+  static private function cast($value, $type)
+  {
+    switch ($type) {
+      case 'bool':
+      case 'boolean':
+        return (boolean) $value;
+      case 'int':
+      case 'integer':
+        return (integer) $value;
+      case 'serialize':
+        return unserialize($value);
+      case 'string':
+      default:
+        return (string) $value;
+    }
+  }
+
+  static private function toString($value, $type)
+  {
+    switch ($type) {
+      case 'serialize':
+        return serialize($value);
+      default:
+        return (string) $value;
     }
   }
 }
