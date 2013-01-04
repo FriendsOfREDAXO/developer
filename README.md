@@ -1,6 +1,8 @@
 REDAXO-AddOn: developer
 =======================
 
+Version 3.0-dev
+
 Mindestvoraussetzungen
 ----------------------
 
