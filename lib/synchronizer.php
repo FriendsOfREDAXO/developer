@@ -17,7 +17,7 @@ abstract class rex_developer_synchronizer
     $this->files = $files;
   }
 
-  public function run()
+  public function run($force = false)
   {
     global $REX;
     $baseDir = $REX['INCLUDE_PATH'] . '/' . $REX['ADDON']['settings']['developer']['dir'] . '/' . $this->dirname . '/';
@@ -62,7 +62,7 @@ abstract class rex_developer_synchronizer
       foreach ($this->files as $file) {
         $filePath = self::getFile($dir, $file);
         $files[] = $filePath;
-        $fileUpdated = file_exists($filePath) ? filemtime($filePath) : 0;
+        $fileUpdated = !$force && file_exists($filePath) ? filemtime($filePath) : 0;
         if ($dbUpdated > $fileUpdated) {
           self::putFile($filePath, $item->getFile($file));
           touch($filePath, $updated);

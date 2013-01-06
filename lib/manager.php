@@ -79,16 +79,29 @@ abstract class rex_developer_manager
   static public function start()
   {
     self::registerDefault();
-    self::synchronize(false);
-    rex_register_extension('OUTPUT_FILTER_CACHE', function () {
-      rex_developer_manager::synchronize(true);
-    });
+    if (rex_get('page', 'string') === 'import_export' && rex_get('subpage', 'string') === 'import' && rex_get('function', 'string') === 'dbimport') {
+      rex_register_extension('A1_AFTER_DB_IMPORT', function () {
+        rex_developer_manager::synchronize(null, true);
+      });
+    } else {
+      self::synchronize(false);
+      rex_register_extension('OUTPUT_FILTER_CACHE', function () {
+        rex_developer_manager::synchronize(true);
+      });
+    }
   }
 
-  static public function synchronize($late)
+  static public function synchronize($late = null, $force = false)
   {
-    foreach (self::$synchronizers[$late] as $synchronizer) {
-      $synchronizer->run();
+    $run = function (rex_developer_synchronizer $synchronizer) use ($force) {
+      $synchronizer->run($force);
+    };
+    if ($late === null) {
+      foreach (self::$synchronizers as $synchronizers) {
+        array_walk($synchronizers, $run);
+      }
+    } else {
+      array_walk(self::$synchronizers[$late], $run);
     }
   }
 
