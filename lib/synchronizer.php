@@ -46,8 +46,8 @@ abstract class rex_developer_synchronizer
     list($existing, $new) = $this->getNewAndExistingDirs();
     $this->synchronizeReceivedItems($idList, $existing, $force);
     $this->markRemovedItemsAsIgnored($idList, $existing);
-    $this->addNewItems($idList, $existing);
-    $this->addNewItems($idList, $new);
+    $this->addNewItems($idList, $existing, true);
+    $this->addNewItems($idList, $new, false);
 
     if (array_diff_key($origIdList, $idList) !== array_diff_key($idList, $origIdList)) {
       self::putFile($idListFile, implode(',', array_keys($idList)));
@@ -125,9 +125,9 @@ abstract class rex_developer_synchronizer
     }
   }
 
-  private function addNewItems(&$idList, $dirs)
+  private function addNewItems(&$idList, $dirs, $withId)
   {
-    foreach ($dirs as $dir) {
+    foreach ($dirs as $i => $dir) {
       $addFiles = array();
       $add = false;
       $updated = time();
@@ -142,7 +142,9 @@ abstract class rex_developer_synchronizer
         }
         touch($filePath, $updated);
       }
-      if ($add && $id = $this->addItem(new rex_developer_synchronizer_item(null, strtr(basename($dir), '_', ' '), $updated, $addFiles))) {
+      $id = $withId ? $i : null;
+      $name = strtr(basename($dir), '_', ' ');
+      if ($add && $id = $this->addItem(new rex_developer_synchronizer_item($id, $name, $updated, $addFiles))) {
         self::putFile($dir . self::ID_FILE, $id);
         $idList[$id] = true;
       }

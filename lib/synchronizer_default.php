@@ -84,6 +84,13 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
   {
     global $REX;
     $sql = rex_sql::factory();
+    $id = $item->getId();
+    if ($id) {
+      $sql->setQuery('SELECT `' . $this->idColumn . '` FROM ' . $this->table . ' WHERE `' . $this->idColumn . '` = ' . $id);
+      if ($sql->getRows() == 0) {
+        $sql->setValue($this->idColumn, $id);
+      }
+    }
     $sql->setTable($this->table);
     $sql->setValue($this->nameColumn, $item->getName());
     if ($this->commonCreateUpdateColumns) {
