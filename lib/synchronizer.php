@@ -8,40 +8,73 @@ abstract class rex_developer_synchronizer
     IGNORE_FILE = '.rex_ignore';
 
   protected
-    $dirname,
+    $baseDir,
     $files;
 
   public function __construct($dirname, array $files)
   {
-    $this->dirname = $dirname;
+    global $REX;
+    $this->baseDir = $REX['INCLUDE_PATH'] . '/' . $REX['ADDON']['settings']['developer']['dir'] . '/' . $dirname . '/';
     $this->files = $files;
   }
 
+  /**
+   * @return array[rex_developer_synchronizer_item]
+   */
+  abstract protected function getItems();
+
+  /**
+   * @param rex_developer_synchronizer_item $item
+   * @return int ID of new item
+   */
+  abstract protected function addItem(rex_developer_synchronizer_item $item);
+
+  /**
+   * @param rex_developer_synchronizer_item $item
+   */
+  abstract protected function editItem(rex_developer_synchronizer_item $item);
+
   public function run($force = false)
   {
-    global $REX;
-    $baseDir = $REX['INCLUDE_PATH'] . '/' . $REX['ADDON']['settings']['developer']['dir'] . '/' . $this->dirname . '/';
     $idList = array();
-    $idListFile = $baseDir . self::ID_LIST_FILE;
+    $idListFile = $this->baseDir . self::ID_LIST_FILE;
     if (file_exists($idListFile)) {
       $idList = array_flip(explode(',', rex_get_file_contents($idListFile)));
     }
     $origIdList = $idList;
-    $dirs = glob($baseDir . '*', GLOB_ONLYDIR | GLOB_NOSORT | GLOB_MARK);
-    if (!is_array($dirs)) {
-      $dirs = array();
+
+    list($existing, $new) = $this->getNewAndExistingDirs();
+    $this->synchronizeReceivedItems($idList, $existing, $force);
+    $this->markRemovedItemsAsIgnored($idList, $existing);
+    $this->addNewItems($idList, $existing);
+    $this->addNewItems($idList, $new);
+
+    if (array_diff_key($origIdList, $idList) !== array_diff_key($idList, $origIdList)) {
+      self::putFile($idListFile, implode(',', array_keys($idList)));
     }
+  }
+
+  private function getNewAndExistingDirs()
+  {
     $existing = array();
     $new = array();
-    foreach ($dirs as $dir) {
-      if (!file_exists($dir . self::IGNORE_FILE)) {
-        if (file_exists($dir . self::ID_FILE) && ($id = ((int) rex_get_file_contents($dir . self::ID_FILE))) > 0) {
-          $existing[$id] = $dir;
-        } else {
-          $new[] = $dir;
+    $dirs = glob($this->baseDir . '*', GLOB_ONLYDIR | GLOB_NOSORT | GLOB_MARK);
+    if (is_array($dirs)) {
+      foreach ($dirs as $dir) {
+        if (!file_exists($dir . self::IGNORE_FILE)) {
+          if (file_exists($dir . self::ID_FILE) && ($id = ((int) rex_get_file_contents($dir . self::ID_FILE))) > 0) {
+            $existing[$id] = $dir;
+          } else {
+            $new[] = $dir;
+          }
         }
       }
     }
+    return array($existing, $new);
+  }
+
+  private function synchronizeReceivedItems(&$idList, &$existing, $force = false)
+  {
     foreach ($this->getItems() as $item) {
       $id = $item->getId();
       $name = $item->getName();
@@ -49,7 +82,7 @@ abstract class rex_developer_synchronizer
         $dir = $existing[$id];
         unset($existing[$id]);
       } else {
-        $dir = self::getPath($baseDir, $name) . '/';
+        $dir = self::getPath($this->baseDir, $name) . '/';
         if (!self::putFile($dir . self::ID_FILE, $id)) {
           continue;
         }
@@ -78,6 +111,10 @@ abstract class rex_developer_synchronizer
         $this->editItem(new rex_developer_synchronizer_item($id, $name, $updated, $updateFiles));
       }
     }
+  }
+
+  private function markRemovedItemsAsIgnored(&$idList, &$existing)
+  {
     foreach ($existing as $id => $dir) {
       if (isset($idList[$id])) {
         unset($existing[$id]);
@@ -86,7 +123,11 @@ abstract class rex_developer_synchronizer
         unlink($dir . self::ID_FILE);
       }
     }
-    foreach ($new + $existing as $dir) {
+  }
+
+  private function addNewItems(&$idList, $dirs)
+  {
+    foreach ($dirs as $dir) {
       $addFiles = array();
       $add = false;
       $updated = time();
@@ -106,26 +147,7 @@ abstract class rex_developer_synchronizer
         $idList[$id] = true;
       }
     }
-    if (array_diff_key($origIdList, $idList) !== array_diff_key($idList, $origIdList)) {
-      self::putFile($idListFile, implode(',', array_keys($idList)));
-    }
   }
-
-  /**
-   * @return array[rex_developer_synchronizer_item]
-   */
-  abstract protected function getItems();
-
-  /**
-   * @param rex_developer_synchronizer_item $item
-   * @return int ID of new item
-   */
-  abstract protected function addItem(rex_developer_synchronizer_item $item);
-
-  /**
-   * @param rex_developer_synchronizer_item $item
-   */
-  abstract protected function editItem(rex_developer_synchronizer_item $item);
 
   static protected function getFile($dir, $file)
   {
