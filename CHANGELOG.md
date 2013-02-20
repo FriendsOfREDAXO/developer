@@ -1,7 +1,7 @@
 Changelog
 =========
 
-Version 3.0.0 – *in Entwicklung*
+Version 3.0.0 – 20.02.2013
 --------------------------------
 
 * Grunderneuerung (Mindestvoraussetzungen: PHP 5.3.3, REDAXO 4.3)
