@@ -230,6 +230,8 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
                 return (integer) $value;
             case 'serialize':
                 return unserialize($value);
+            case 'json':
+                return json_decode($value, true);
             case 'string':
             default:
                 return (string) $value;
@@ -248,6 +250,8 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         switch ($type) {
             case 'serialize':
                 return serialize($value);
+            case 'json':
+                return json_encode($value);
             default:
                 return (string) $value;
         }
