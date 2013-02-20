@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Abstract base class for synchronizers
+ *
+ * @author gharlan
+ */
 abstract class rex_developer_synchronizer
 {
     const
@@ -11,6 +16,12 @@ abstract class rex_developer_synchronizer
         $baseDir,
         $files;
 
+    /**
+     * Constructor
+     *
+     * @param string   $dirname Name of directory, which will be used for this synchronizer
+     * @param string[] $files   Array of file names, which will be synchronized within each item directory
+     */
     public function __construct($dirname, array $files)
     {
         global $REX;
@@ -19,21 +30,36 @@ abstract class rex_developer_synchronizer
     }
 
     /**
-     * @return array[rex_developer_synchronizer_item]
+     * The method should return all items from the base system which should be synchronized to the file system
+     *
+     * @return rex_developer_synchronizer_item[]
      */
     abstract protected function getItems();
 
     /**
-     * @param rex_developer_synchronizer_item $item
+     * The method is called, when a new item is created by the file system
+     *
+     * Use the method to add the new item to the base system. The method should return the new ID of the item.
+     *
+     * @param rex_developer_synchronizer_item $item New item
      * @return int ID of new item
      */
     abstract protected function addItem(rex_developer_synchronizer_item $item);
 
     /**
+     * The method is called, when an existing item is edited by the file system
+     *
+     * Use the method to edit the item in the base system
+     *
      * @param rex_developer_synchronizer_item $item
      */
     abstract protected function editItem(rex_developer_synchronizer_item $item);
 
+    /**
+     * Runs the synchronizer
+     *
+     * @param bool $force Flag, whether all items of the base system should be handled as changed
+     */
     public function run($force = false)
     {
         $idList = array();
@@ -151,6 +177,15 @@ abstract class rex_developer_synchronizer
         }
     }
 
+    /**
+     * Gets the real path for an item file
+     *
+     * Item files can be prefixed by the user, so e.g. "example.template.php" will match the item file "template.php"
+     *
+     * @param string $dir  Directory
+     * @param string $file File name
+     * @return string Real File path
+     */
     protected static function getFile($dir, $file)
     {
         $filePath = $dir . $file;
@@ -160,6 +195,15 @@ abstract class rex_developer_synchronizer
         return $filePath;
     }
 
+    /**
+     * Gets an unique path for a new file
+     *
+     * Special characters will be replaced by "_". If the file already exists, a suffix will be added.
+     *
+     * @param string $dir  Directory
+     * @param string $name File name
+     * @return string File path
+     */
     protected static function getPath($dir, $name)
     {
         $filename = str_replace(array('ä', 'ö', 'ü', 'ß'), array('ae', 'oe', 'ue', 'ss'), $name);
@@ -173,6 +217,13 @@ abstract class rex_developer_synchronizer
         return $path;
     }
 
+    /**
+     * Puts content into the given file
+     *
+     * @param string $file    File path
+     * @param string $content Content
+     * @return bool
+     */
     protected static function putFile($file, $content)
     {
         global $REX;

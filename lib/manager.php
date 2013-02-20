@@ -1,14 +1,28 @@
 <?php
 
+/**
+ * Developer Manager class
+ *
+ * @author gharlan
+ */
 abstract class rex_developer_manager
 {
     private static $synchronizers = array(false => array(), true => array());
 
+    /**
+     * Registers a new synchronizer
+     *
+     * @param rex_developer_synchronizer $synchronizer The synchronizer object
+     * @param bool                       $late         Flag, whether the synchronizer should start at the end of the request
+     */
     public static function register(rex_developer_synchronizer $synchronizer, $late = false)
     {
         self::$synchronizers[(boolean) $late][] = $synchronizer;
     }
 
+    /**
+     * Registers the default synchronizers for templates, modules and actions
+     */
     private static function registerDefault()
     {
         global $REX;
@@ -76,6 +90,11 @@ abstract class rex_developer_manager
         }
     }
 
+    /**
+     * Starts the main developer process
+     *
+     * The method registers the default synchronizers and the extensions which will start the synchronizer objects
+     */
     public static function start()
     {
         self::registerDefault();
@@ -91,6 +110,13 @@ abstract class rex_developer_manager
         }
     }
 
+    /**
+     * Runs the synchronizer objects
+     *
+     * @param bool $late  Flag, which synchronizers should start. If the value is null, all synchronizers will start
+     * @param bool $force Flag, whether the synchronizers should run in force mode or not
+     * @see rex_developer_synchronizer::run
+     */
     public static function synchronize($late = null, $force = false)
     {
         $run = function (rex_developer_synchronizer $synchronizer) use ($force) {
@@ -105,6 +131,12 @@ abstract class rex_developer_manager
         }
     }
 
+    /**
+     * Creates the given directory recursively, if it does not exist already
+     *
+     * @param string $dir Directory path
+     * @return string Error message or empty string
+     */
     public static function checkDir($dir)
     {
         global $REX, $I18N;
@@ -123,13 +155,13 @@ abstract class rex_developer_manager
     /**
      * Returns a string containing the YAML representation of $value.
      *
-     * @param array  $value  The value being encoded
-     * @param number $inline The level where you switch to inline YAML
+     * @param array $value  The value being encoded
+     * @param int   $inline The level where you switch to inline YAML
      * @return string
      */
     public static function yamlEncode(array $value, $inline = 3)
     {
-        return Symfony\Component\Yaml\Yaml::dump($value, $inline, 2);
+        return Symfony\Component\Yaml\Yaml::dump($value, $inline, 4);
     }
 
     /**

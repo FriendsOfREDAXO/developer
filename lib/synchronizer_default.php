@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Synchronizer class for default synchronizers
+ *
+ * Default synchronize will synchronize a database table to the file system.
+ * The columns can be synchronized to single files or together to a metadata YAML file.
+ *
+ * @author gharlan
+ */
 class rex_developer_synchronizer_default extends rex_developer_synchronizer
 {
     const METADADATA_FILE = 'metadata.yml';
@@ -15,6 +23,14 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         $updatedColumn = 'updatedate',
         $commonCreateUpdateColumns = true;
 
+    /**
+     * Constructor
+     *
+     * @param string   $dirname  Name of directory, which will be used for this synchronizer
+     * @param string   $table    Table name
+     * @param string[] $files    An associative array column=>file which contains the columns that should be synchronized to single files
+     * @param string[] $metadata An associative array column=>type which contains the columns (and their content type) that should be synchronized together to the metadata file
+     */
     public function __construct($dirname, $table, array $files, array $metadata = array())
     {
         $this->table = $table;
@@ -24,31 +40,61 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         parent::__construct($dirname, $files);
     }
 
+    /**
+     * Sets a callback function which will be called if a new item is added by the file system
+     *
+     * @param callable $callback
+     */
     public function setAddedCallback($callback)
     {
         $this->addedCallback = $callback;
     }
 
+    /**
+     * Sets a callback function which will be called if an existing item is edited by the file system
+     *
+     * @param callable $callback
+     */
     public function setEditedCallback($callback)
     {
         $this->editedCallback = $callback;
     }
 
+    /**
+     * Sets the name of the ID column
+     *
+     * @param string $idColumn Column name
+     */
     public function setIdColumn($idColumn)
     {
         $this->idColumn = $idColumn;
     }
 
+    /**
+     * Sets the name of the column which contains the name of the item
+     *
+     * @param string $nameColumn Column name
+     */
     public function setNameColumn($nameColumn)
     {
         $this->nameColumn = $nameColumn;
     }
 
+    /**
+     * Sets the name of the column which contains the updated timestamp
+     *
+     * @param string $updatedColumn Column name
+     */
     public function setUpdatedColumn($updatedColumn)
     {
         $this->updatedColumn = $updatedColumn;
     }
 
+    /**
+     * Sets whether the table has the common create and update columns (createdate, createuser, updatedate, updateuser)
+     *
+     * @param bool $commonCreateUpdateColumns
+     */
     public function setCommonCreateUpdateColumns($commonCreateUpdateColumns)
     {
         if ($commonCreateUpdateColumns) {
@@ -59,6 +105,9 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         }
     }
 
+    /**
+     * {@inheritedDoc}
+     */
     protected function getItems()
     {
         $items = array();
@@ -80,6 +129,9 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         return $items;
     }
 
+    /**
+     * {@inheritedDoc}
+     */
     protected function addItem(rex_developer_synchronizer_item $item)
     {
         global $REX;
@@ -126,6 +178,9 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         return null;
     }
 
+    /**
+     * {@inheritedDoc}
+     */
     protected function editItem(rex_developer_synchronizer_item $item)
     {
         global $REX;
@@ -157,6 +212,13 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         }
     }
 
+    /**
+     * Casts a value by the given type
+     *
+     * @param string $value Value
+     * @param string $type  Type
+     * @return mixed
+     */
     private static function cast($value, $type)
     {
         switch ($type) {
@@ -174,6 +236,13 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         }
     }
 
+    /**
+     * Converts a value from the given type to a string
+     *
+     * @param mixed  $value Value
+     * @param string $type  Type
+     * @return string
+     */
     private static function toString($value, $type)
     {
         switch ($type) {
