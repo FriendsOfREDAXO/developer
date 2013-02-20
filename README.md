@@ -26,12 +26,13 @@ Benutzung
 
 * Innerhalb des Ordners `developer_files` wird bei Bedarf jeweils ein Unterordner für Templates, Module und Actions
   angelegt.
-* Innerhalb der Unterordner wird für jedes Item (Template/Modul/Action) ein weiterer Unterordner angelegt.
+* Innerhalb der Unterordner wird für jedes einzelne Item (Template/Modul/Action) ein weiterer Unterordner angelegt.
 * Diese Ordner enthalten dann die Dateien, die synchronisiert werden. Neben der `metadata.yml`, welche unter anderem den
   Namen des Items enthält, sind dies die folgenden:
     - Templates: `template.php`
     - Module: `input.php`, `output.php`
     - Actions: `preview.php`, `presave.php`, `postsave.php`
+* Es wird nur synchronisiert, wenn man im Backend als Admin eingeloggt ist, dann aber auch, wenn man das Frontend aufruft.
 * Es können neue Items über das Dateisystem angelegt werden. Dazu genügt es einen neuen Ordner anzulegen mit mindestens
   einer der aufgelisteten Dateien.
 * Die Dateien können individuell umbenannt werden, sie müssen aber mit dem Standardnamen enden. Die `template.php` kann
