@@ -9,7 +9,7 @@ if ($REX['REDAXO']) {
 
 $REX['ADDON']['perm'][$mypage] = 'admin[]';
 $REX['ADDON']['author'][$mypage] = 'Gregor Harlan';
-$REX['ADDON']['version'][$mypage] = '3.0.0';
+$REX['ADDON']['version'][$mypage] = '3.0.1-dev';
 
 require_once __DIR__ . '/settings.inc.php';
 

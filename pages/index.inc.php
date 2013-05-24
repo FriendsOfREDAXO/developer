@@ -37,6 +37,9 @@ if ($REX['ADDON']['settings']['developer']['modules'] == '1')
 $actions = '';
 if ($REX['ADDON']['settings']['developer']['actions'] == '1')
     $actions = ' checked="checked"';
+$prefix = '';
+if ($REX['ADDON']['settings']['developer']['prefix'] == '1')
+    $prefix = ' checked="checked"';
 
 echo '
 
@@ -74,6 +77,14 @@ echo '
                         <input type="hidden" name="settings[actions]" value="0" />
                         <input class="rex-form-checkbox" type="checkbox" id="actions" name="settings[actions]" value="1"' . $actions . ' />
                         <label for="actions">' . $I18N->msg('developer_actions') . '</label>
+                    </p>
+                </div>
+
+                <div class="rex-form-row">
+                    <p class="rex-form-checkbox rex-form-label-right">
+                        <input type="hidden" name="settings[prefix]" value="0" />
+                        <input class="rex-form-checkbox" type="checkbox" id="prefix" name="settings[prefix]" value="1"' . $prefix . ' />
+                        <label for="prefix">' . $I18N->msg('developer_prefix') . '</label>
                     </p>
                 </div>
 

@@ -1,8 +1,13 @@
 Changelog
 =========
 
-Version 3.0.0 – 20.02.2013
+Version 3.0.1 - *in Entwicklung*
 --------------------------------
+
+* Optional kann allen Dateien ein Präfix bestehend aus ID und Name vorandgestellt werden
+
+Version 3.0.0 – 20.02.2013
+--------------------------
 
 * Grunderneuerung (Mindestvoraussetzungen: PHP 5.3.3, REDAXO 4.3)
 * Pro Template/Module/Action ein Ordner (dadurch Verwaltung mit git möglich)

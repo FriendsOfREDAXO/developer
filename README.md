@@ -1,7 +1,7 @@
 REDAXO-AddOn: developer
 =======================
 
-Version 3.0.0
+Version 3.0.1-dev
 
 Das AddOn ermöglicht es, die Templates, Module und Actions über das Dateisystem (und somit mit beliebigen Editor) zu
 bearbeiten, bzw. neu anzulegen.
@@ -37,7 +37,7 @@ Benutzung
   einer der aufgelisteten Dateien.
 * Die Dateien können individuell umbenannt werden, sie müssen aber mit dem Standardnamen enden. Die `template.php` kann
   also zum Beispiel in `navigation.template.php` umbenannt werden. Developer wird die dann trotzdem finden und den Namen
-  beibehalten.
+  beibehalten. Optional kann ein Präfix bestehend aus ID und Name automatisch hinzugefügt werden.
 * Der Item-Ordner kann beliebig umbenannt werden. Als Zuordnung dient eine versteckte Datei `.rex-id` innerhalb des
   Ordners, die nicht gelöscht werden darf.
 * Bei Umbennung über das Backend ändert Developer nichts an den Ordner- und Dateinamen, nur der Name innerhalb der

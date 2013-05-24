@@ -1,10 +1,9 @@
-# addon:developer de_de_utf8
-
 developer_name = Developer
 developer_settings = Einstellungen
 developer_templates = Templates synchronisieren
 developer_modules = Module synchronisieren
 developer_actions = Actions synchronisieren
+developer_prefix = Präfix für Dateinamen (enthält ID und Name)
 developer_dir = Ordner
 developer_save = Einstellungen speichern
 developer_saved = Die Einstellungen wurden gespeichert.

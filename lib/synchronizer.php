@@ -101,6 +101,8 @@ abstract class rex_developer_synchronizer
 
     private function synchronizeReceivedItems(&$idList, &$existing, $force = false)
     {
+        global $REX;
+
         foreach ($this->getItems() as $item) {
             $id = $item->getId();
             $name = $item->getName();
@@ -118,8 +120,12 @@ abstract class rex_developer_synchronizer
             $dbUpdated = $updated;
             $updateFiles = array();
             $files = array();
+            $prefix = '';
+            if ($REX['ADDON']['settings']['developer']['prefix']) {
+                $prefix = $id . '.' . $name . '.';
+            }
             foreach ($this->files as $file) {
-                $filePath = self::getFile($dir, $file);
+                $filePath = self::getFile($dir, $file, $prefix);
                 $files[] = $filePath;
                 $fileUpdated = !$force && file_exists($filePath) ? filemtime($filePath) : 0;
                 if ($dbUpdated > $fileUpdated) {
@@ -162,11 +168,10 @@ abstract class rex_developer_synchronizer
                 if (file_exists($filePath)) {
                     $add = true;
                     $addFiles[$file] = rex_get_file_contents($filePath);
+                    touch($filePath, $updated);
                 } else {
-                    self::putFile($filePath, '');
                     $addFiles[$file] = '';
                 }
-                touch($filePath, $updated);
             }
             $id = $withId ? $i : null;
             $name = strtr(basename($dir), '_', ' ');
@@ -182,17 +187,24 @@ abstract class rex_developer_synchronizer
      *
      * Item files can be prefixed by the user, so e.g. "example.template.php" will match the item file "template.php"
      *
-     * @param string $dir  Directory
-     * @param string $file File name
+     * @param string $dir           Directory
+     * @param string $file          File name
+     * @param string $defaultPrefix Default prefix
      * @return string Real File path
      */
-    protected static function getFile($dir, $file)
+    protected static function getFile($dir, $file, $defaultPrefix = '')
     {
-        $filePath = $dir . $file;
-        if (!file_exists($filePath) && is_array($glob = glob($dir . '*' . $file)) && !empty($glob)) {
-            $filePath = $glob[0];
+        $defaultPath = $dir . self::getFilename($defaultPrefix) . $file;
+        if (file_exists($defaultPath)) {
+            return $defaultPath;
         }
-        return $filePath;
+        if (file_exists($dir . $file)) {
+            return $dir . $file;
+        }
+        if (is_array($glob = glob($dir . '*' . $file)) && !empty($glob)) {
+            return $glob[0];
+        }
+        return $defaultPath;
     }
 
     /**
@@ -206,8 +218,7 @@ abstract class rex_developer_synchronizer
      */
     protected static function getPath($dir, $name)
     {
-        $filename = str_replace(array('ä', 'ö', 'ü', 'ß'), array('ae', 'oe', 'ue', 'ss'), $name);
-        $filename = preg_replace('/[^a-zA-Z0-9.\-+]/', '_', $filename);
+        $filename = self::getFilename($name);
         $path = $dir . $filename;
         if (file_exists($path)) {
             for ($i = 1; file_exists($path); ++$i) {
@@ -215,6 +226,18 @@ abstract class rex_developer_synchronizer
             }
         }
         return $path;
+    }
+
+    /**
+     * Replaces special chars by "_"
+     *
+     * @param string $name
+     * @return string
+     */
+    protected static function getFilename($name)
+    {
+        $filename = str_replace(array('ä', 'ö', 'ü', 'ß'), array('ae', 'oe', 'ue', 'ss'), $name);
+        return preg_replace('/[^a-zA-Z0-9.\-+]/', '_', $filename);
     }
 
     /**
