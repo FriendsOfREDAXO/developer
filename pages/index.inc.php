@@ -2,7 +2,7 @@
 
 require $REX['INCLUDE_PATH'] . '/layout/top.php';
 
-rex_title($I18N->msg('developer_name'));
+rex_title($I18N->msg('developer_name'), $REX['ADDON']['pages']['developer']);
 
 if (rex_post('func', 'string') == 'update') {
     $settings = (array) rex_post('settings', 'array', array());
