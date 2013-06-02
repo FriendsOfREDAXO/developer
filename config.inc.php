@@ -7,7 +7,7 @@ if ($REX['REDAXO']) {
     $REX['ADDON']['name'][$mypage] = $I18N->msg('developer_name');
 
     $REX['ADDON']['pages'][$mypage] = array(
-      array ('', $I18N->msg('developer_settings')),
+        array('', $I18N->msg('developer_settings')),
     );
 }
 

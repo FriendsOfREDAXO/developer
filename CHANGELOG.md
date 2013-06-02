@@ -4,7 +4,8 @@ Changelog
 Version 3.0.1 - *in Entwicklung*
 --------------------------------
 
-* Optional kann allen Dateien ein Präfix bestehend aus ID und Name vorandgestellt werden
+* Optional kann allen Dateien ein Präfix bestehend aus ID und Name vorangestellt werden
+* PlugIn-Unterstützung
 
 Version 3.0.0 – 20.02.2013
 --------------------------
