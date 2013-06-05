@@ -1,9 +1,10 @@
 Changelog
 =========
 
-Version 3.0.1 - *in Entwicklung*
+Version 3.1.0 - *in Entwicklung*
 --------------------------------
 
+* Parallele Entwicklung für REDAXO 5
 * Optional kann allen Dateien ein Präfix bestehend aus ID und Name vorangestellt werden
 * PlugIn-Unterstützung
 
