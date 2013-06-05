@@ -114,7 +114,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         $sql->setQuery('SELECT * FROM `' . $this->table . '`');
         for ($i = 0, $rows = $sql->getRows(); $i < $rows; ++$i, $sql->next()) {
             $name = $sql->getValue($this->nameColumn);
-            $item = new rex_developer_synchronizer_item($sql->getValue($this->idColumn), $name, $sql->getValue($this->updatedColumn));
+            $item = new rex_developer_synchronizer_item($sql->getValue($this->idColumn), $name, $sql->getDateTimeValue($this->updatedColumn));
             foreach ($this->columns as $file => $column) {
                 $item->setFile($file, $sql->getValue($column));
             }
@@ -122,7 +122,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
             foreach ($this->metadata as $column => $type) {
                 $metadata[$column] = self::cast($sql->getValue($column), $type);
             }
-            $item->setFile(self::METADADATA_FILE, rex_developer_manager::yamlEncode($metadata));
+            $item->setFile(self::METADADATA_FILE, rex_string::yamlEncode($metadata));
             $items[] = $item;
         }
         return $items;
@@ -133,7 +133,6 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
      */
     protected function addItem(rex_developer_synchronizer_item $item)
     {
-        global $REX;
         $sql = rex_sql::factory();
         $id = $item->getId();
         if ($id) {
@@ -145,26 +144,26 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         $sql->setTable($this->table);
         $sql->setValue($this->nameColumn, $item->getName());
         if ($this->commonCreateUpdateColumns) {
-            $user = $REX['LOGIN']->USER->getValue('login');
-            $sql->setValue('updatedate', $item->getUpdated());
+            $user = rex::getUser()->getLogin();
+            $sql->setDateTimeValue('updatedate', $item->getUpdated());
             $sql->setValue('updateuser', $user);
-            $sql->setValue('createdate', $item->getUpdated());
+            $sql->setDateTimeValue('createdate', $item->getUpdated());
             $sql->setValue('createuser', $user);
         } else {
-            $sql->setValue($this->updatedColumn, $item->getUpdated());
+            $sql->setDateTimeValue($this->updatedColumn, $item->getUpdated());
         }
         $files = $item->getFiles();
         if (isset($files[self::METADADATA_FILE])) {
-            $metadata = rex_developer_manager::yamlDecode($files[self::METADADATA_FILE]);
+            $metadata = rex_string::yamlDecode($files[self::METADADATA_FILE]);
             foreach ($this->metadata as $column => $type) {
                 if (isset($metadata[$column])) {
-                    $sql->setValue($column, $sql->escape(self::toString($metadata[$column], $type)));
+                    $sql->setValue($column, self::toString($metadata[$column], $type));
                 }
             }
             unset($files[self::METADADATA_FILE]);
         }
         foreach ($files as $file => $content) {
-            $sql->setValue($this->columns[$file], $sql->escape($content));
+            $sql->setValue($this->columns[$file], $content);
         }
         if ($sql->insert()) {
             $id = $sql->getLastId();
@@ -182,28 +181,27 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
      */
     protected function editItem(rex_developer_synchronizer_item $item)
     {
-        global $REX;
         $sql = rex_sql::factory();
         $sql->setTable($this->table);
-        $sql->setWhere('`' . $this->idColumn . '` = ' . $item->getId());
+        $sql->setWhere([$this->idColumn => $item->getId()]);
         if ($this->commonCreateUpdateColumns) {
-            $sql->setValue('updatedate', $item->getUpdated());
-            $sql->setValue('updateuser', $REX['LOGIN']->USER->getValue('login'));
+            $sql->setDateTimeValue('updatedate', $item->getUpdated());
+            $sql->setValue('updateuser', rex::getUser()->getLogin());
         } else {
-            $sql->setValue($this->updatedColumn, $item->getUpdated());
+            $sql->setDateTimeValue($this->updatedColumn, $item->getUpdated());
         }
         $files = $item->getFiles();
         if (isset($files[self::METADADATA_FILE])) {
-            $metadata = rex_developer_manager::yamlDecode($files[self::METADADATA_FILE]);
+            $metadata = rex_string::yamlDecode($files[self::METADADATA_FILE]);
             foreach ($this->metadata as $column => $type) {
                 if (isset($metadata[$column])) {
-                    $sql->setValue($column, $sql->escape(self::toString($metadata[$column], $type)));
+                    $sql->setValue($column, self::toString($metadata[$column], $type));
                 }
             }
             unset($files[self::METADADATA_FILE]);
         }
         foreach ($files as $file => $content) {
-            $sql->setValue($this->columns[$file], $sql->escape($content));
+            $sql->setValue($this->columns[$file], $content);
         }
         $sql->update();
         if ($this->editedCallback) {

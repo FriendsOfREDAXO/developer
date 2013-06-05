@@ -22,8 +22,7 @@ abstract class rex_developer_synchronizer
      */
     public function __construct($dirname, array $files)
     {
-        global $REX;
-        $this->baseDir = $REX['INCLUDE_PATH'] . '/' . $REX['ADDON']['settings']['developer']['dir'] . '/' . $dirname . '/';
+        $this->baseDir = rex_path::addonData('developer', $dirname . '/');
         $this->files = $files;
     }
 
@@ -63,7 +62,7 @@ abstract class rex_developer_synchronizer
         $idList = array();
         $idListFile = $this->baseDir . self::ID_LIST_FILE;
         if (file_exists($idListFile)) {
-            $idList = array_flip(explode(',', rex_get_file_contents($idListFile)));
+            $idList = array_flip(explode(',', rex_file::get($idListFile)));
         }
         $origIdList = $idList;
 
@@ -74,7 +73,7 @@ abstract class rex_developer_synchronizer
         $this->addNewItems($idList, $new, false);
 
         if (array_diff_key($origIdList, $idList) !== array_diff_key($idList, $origIdList)) {
-            self::putFile($idListFile, implode(',', array_keys($idList)));
+            rex_file::put($idListFile, implode(',', array_keys($idList)));
         }
     }
 
@@ -86,7 +85,7 @@ abstract class rex_developer_synchronizer
         if (is_array($dirs)) {
             foreach ($dirs as $dir) {
                 if (!file_exists($dir . self::IGNORE_FILE)) {
-                    if (file_exists($dir . self::ID_FILE) && ($id = ((int) rex_get_file_contents($dir . self::ID_FILE))) > 0) {
+                    if (file_exists($dir . self::ID_FILE) && ($id = ((int) rex_file::get($dir . self::ID_FILE))) > 0) {
                         $existing[$id] = $dir;
                     } else {
                         $new[] = $dir;
@@ -109,7 +108,7 @@ abstract class rex_developer_synchronizer
                 unset($existing[$id]);
             } else {
                 $dir = self::getPath($this->baseDir, $name) . '/';
-                if (!self::putFile($dir . self::ID_FILE, $id)) {
+                if (!rex_file::put($dir . self::ID_FILE, $id)) {
                     continue;
                 }
             }
@@ -119,7 +118,7 @@ abstract class rex_developer_synchronizer
             $updateFiles = array();
             $files = array();
             $prefix = '';
-            if ($REX['ADDON']['settings']['developer']['prefix']) {
+            if (rex_config::get('developer', 'prefix')) {
                 $prefix = $id . '.' . $name . '.';
             }
             foreach ($this->files as $file) {
@@ -127,11 +126,11 @@ abstract class rex_developer_synchronizer
                 $files[] = $filePath;
                 $fileUpdated = !$force && file_exists($filePath) ? filemtime($filePath) : 0;
                 if ($dbUpdated > $fileUpdated) {
-                    self::putFile($filePath, $item->getFile($file));
+                    rex_file::put($filePath, $item->getFile($file));
                     touch($filePath, $updated);
                 } elseif ($fileUpdated > $dbUpdated) {
                     $updated = max($updated, $fileUpdated);
-                    $updateFiles[$file] = rex_get_file_contents($filePath);
+                    $updateFiles[$file] = rex_file::get($filePath);
                 }
             }
             if ($dbUpdated != $updated) {
@@ -149,7 +148,7 @@ abstract class rex_developer_synchronizer
             if (isset($idList[$id])) {
                 unset($existing[$id]);
                 unset($idList[$id]);
-                self::putFile($dir . self::IGNORE_FILE, '');
+                rex_file::put($dir . self::IGNORE_FILE, '');
                 unlink($dir . self::ID_FILE);
             }
         }
@@ -165,7 +164,7 @@ abstract class rex_developer_synchronizer
                 $filePath = self::getFile($dir, $file);
                 if (file_exists($filePath)) {
                     $add = true;
-                    $addFiles[$file] = rex_get_file_contents($filePath);
+                    $addFiles[$file] = rex_file::get($filePath);
                     touch($filePath, $updated);
                 } else {
                     $addFiles[$file] = '';
@@ -174,7 +173,7 @@ abstract class rex_developer_synchronizer
             $id = $withId ? $i : null;
             $name = strtr(basename($dir), '_', ' ');
             if ($add && $id = $this->addItem(new rex_developer_synchronizer_item($id, $name, $updated, $addFiles))) {
-                self::putFile($dir . self::ID_FILE, $id);
+                rex_file::put($dir . self::ID_FILE, $id);
                 $idList[$id] = true;
             }
         }
@@ -236,27 +235,5 @@ abstract class rex_developer_synchronizer
     {
         $filename = str_replace(array('ä', 'ö', 'ü', 'ß'), array('ae', 'oe', 'ue', 'ss'), $name);
         return preg_replace('/[^a-zA-Z0-9.\-+]/', '_', $filename);
-    }
-
-    /**
-     * Puts content into the given file
-     *
-     * @param string $file    File path
-     * @param string $content Content
-     * @return bool
-     */
-    protected static function putFile($file, $content)
-    {
-        global $REX;
-        $dir = dirname($file);
-        if (!is_dir($dir)) {
-            mkdir($dir, $REX['DIRPERM'], true);
-            @chmod($dir, $REX['DIRPERM']);
-        }
-        if (is_dir($dir) && file_put_contents($file, $content)) {
-            @chmod($file, $REX['FILEPERM']);
-            return true;
-        }
-        return false;
     }
 }
