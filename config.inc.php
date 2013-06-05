@@ -27,12 +27,14 @@ require_once __DIR__ . '/lib/synchronizer_item.php';
 if (!$REX['REDAXO'] || is_object($REX['LOGIN'])) {
     rex_register_extension('ADDONS_INCLUDED', function ($params) {
         global $REX, $I18N;
-        if (session_id() == '')
+        if (session_id() == '') {
             session_start();
+        }
         $loggedIn = isset($_SESSION[$REX['INSTNAME']]['UID']) && $_SESSION[$REX['INSTNAME']]['UID'] > 0;
         if ($loggedIn && (!isset($REX['LOGIN']) || !is_object($REX['LOGIN']))) {
-            if (!is_object($I18N))
+            if (!is_object($I18N)) {
                 $I18N = rex_create_lang($REX['LANG']);
+            }
             $REX['LOGIN'] = new rex_backend_login($REX['TABLE_PREFIX'] . 'user');
             $loggedIn = $REX['LOGIN']->checkLogin();
         }

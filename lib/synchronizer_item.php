@@ -7,11 +7,10 @@
  */
 class rex_developer_synchronizer_item
 {
-    protected
-        $id,
-        $name,
-        $updated,
-        $files;
+    protected $id;
+    protected $name;
+    protected $updated;
+    protected $files;
 
     /**
      * Constructor

@@ -7,14 +7,12 @@
  */
 abstract class rex_developer_synchronizer
 {
-    const
-        ID_LIST_FILE = '.rex_id_list',
-        ID_FILE = '.rex_id',
-        IGNORE_FILE = '.rex_ignore';
+    const ID_LIST_FILE = '.rex_id_list';
+    const ID_FILE      = '.rex_id';
+    const IGNORE_FILE  = '.rex_ignore';
 
-    protected
-        $baseDir,
-        $files;
+    protected $baseDir;
+    protected $files;
 
     /**
      * Constructor

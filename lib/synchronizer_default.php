@@ -12,16 +12,15 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
 {
     const METADADATA_FILE = 'metadata.yml';
 
-    protected
-        $table,
-        $columns,
-        $metadata,
-        $addedCallback,
-        $editedCallback,
-        $idColumn = 'id',
-        $nameColumn = 'name',
-        $updatedColumn = 'updatedate',
-        $commonCreateUpdateColumns = true;
+    protected $table;
+    protected $columns;
+    protected $metadata;
+    protected $addedCallback;
+    protected $editedCallback;
+    protected $idColumn = 'id';
+    protected $nameColumn = 'name';
+    protected $updatedColumn = 'updatedate';
+    protected $commonCreateUpdateColumns = true;
 
     /**
      * Constructor

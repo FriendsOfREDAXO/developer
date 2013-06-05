@@ -17,8 +17,9 @@ if (rex_post('func', 'string') == 'update') {
     if ($msg == '') {
         $REX['ADDON']['settings']['developer'] = array_merge((array) $REX['ADDON']['settings']['developer'], (array) $settings);
         $content = '';
-        foreach ((array) $REX['ADDON']['settings']['developer'] as $key => $value)
+        foreach ((array) $REX['ADDON']['settings']['developer'] as $key => $value) {
             $content .= "\$REX['ADDON']['settings']['developer']['$key'] = '" . $value . "';\n";
+        }
         $file = $REX['INCLUDE_PATH'] . '/addons/developer/settings.inc.php';
         if (rex_replace_dynamic_contents($file, $content)) {
             echo rex_info($I18N->msg('developer_saved'));
@@ -29,17 +30,21 @@ if (rex_post('func', 'string') == 'update') {
 }
 
 $templates = '';
-if ($REX['ADDON']['settings']['developer']['templates'] == '1')
+if ($REX['ADDON']['settings']['developer']['templates'] == '1') {
     $templates = ' checked="checked"';
+}
 $modules = '';
-if ($REX['ADDON']['settings']['developer']['modules'] == '1')
+if ($REX['ADDON']['settings']['developer']['modules'] == '1') {
     $modules = ' checked="checked"';
+}
 $actions = '';
-if ($REX['ADDON']['settings']['developer']['actions'] == '1')
+if ($REX['ADDON']['settings']['developer']['actions'] == '1') {
     $actions = ' checked="checked"';
+}
 $prefix = '';
-if ($REX['ADDON']['settings']['developer']['prefix'] == '1')
+if ($REX['ADDON']['settings']['developer']['prefix'] == '1') {
     $prefix = ' checked="checked"';
+}
 
 echo '
 
