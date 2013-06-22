@@ -6,6 +6,7 @@ Version 3.1.0 - *in Entwicklung*
 
 * Parallele Entwicklung für REDAXO 5
 * Optional kann allen Dateien ein Präfix bestehend aus ID und Name vorangestellt werden
+* Die ID wird im Namen der ID-Datei gespeichert statt im Inhalt ("1.rex_id" etc.)
 * PlugIn-Unterstützung
 
 Version 3.0.0 – 20.02.2013

@@ -85,7 +85,11 @@ abstract class rex_developer_synchronizer
         if (is_array($dirs)) {
             foreach ($dirs as $dir) {
                 if (!file_exists($dir . self::IGNORE_FILE)) {
-                    if (file_exists($dir . self::ID_FILE) && ($id = ((int) rex_file::get($dir . self::ID_FILE))) > 0) {
+                    $file = basename(self::getFile($dir, self::ID_FILE));
+                    if (
+                        file_exists($dir . $file) &&
+                        (sscanf($file, '%d' . self::ID_FILE, $id) || ($id = ((int) rex_file::get($dir . $file))))
+                    ) {
                         $existing[$id] = $dir;
                     } else {
                         $new[] = $dir;
@@ -108,7 +112,7 @@ abstract class rex_developer_synchronizer
                 unset($existing[$id]);
             } else {
                 $dir = self::getPath($this->baseDir, $name) . '/';
-                if (!rex_file::put($dir . self::ID_FILE, $id)) {
+                if (!rex_file::put($dir . $id . self::ID_FILE, '')) {
                     continue;
                 }
             }
@@ -149,7 +153,7 @@ abstract class rex_developer_synchronizer
                 unset($existing[$id]);
                 unset($idList[$id]);
                 rex_file::put($dir . self::IGNORE_FILE, '');
-                unlink($dir . self::ID_FILE);
+                unlink(self::getFile($dir, self::ID_FILE));
             }
         }
     }
@@ -173,7 +177,7 @@ abstract class rex_developer_synchronizer
             $id = $withId ? $i : null;
             $name = strtr(basename($dir), '_', ' ');
             if ($add && $id = $this->addItem(new rex_developer_synchronizer_item($id, $name, $updated, $addFiles))) {
-                rex_file::put($dir . self::ID_FILE, $id);
+                rex_file::put($dir . $id . self::ID_FILE, '');
                 $idList[$id] = true;
             }
         }
