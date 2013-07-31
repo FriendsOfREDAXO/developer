@@ -231,15 +231,16 @@ abstract class rex_developer_synchronizer
     }
 
     /**
-     * Replaces special chars by "_"
+     * Replaces special chars
      *
      * @param string $name
      * @return string
      */
     protected static function getFilename($name)
     {
-        $filename = str_replace(array('ä', 'ö', 'ü', 'ß'), array('ae', 'oe', 'ue', 'ss'), $name);
-        return preg_replace('/[^a-zA-Z0-9.\-+]/', '_', $filename);
+        $filename = preg_replace('@[\\\\|:<>?*"\'+]@', '', $name);
+        $filename = strtr($filename, '[]/', '()-');
+        return ltrim(rtrim($filename, ' .'));
     }
 
     /**
