@@ -16,12 +16,11 @@ if (rex_post('func', 'string') == 'update') {
 
     if ($msg == '') {
         $REX['ADDON']['settings']['developer'] = array_merge((array) $REX['ADDON']['settings']['developer'], (array) $settings);
-        $content = '';
+        $content = "<?php\n\n";
         foreach ((array) $REX['ADDON']['settings']['developer'] as $key => $value) {
             $content .= "\$REX['ADDON']['settings']['developer']['$key'] = '" . $value . "';\n";
         }
-        $file = $REX['INCLUDE_PATH'] . '/addons/developer/settings.inc.php';
-        if (rex_replace_dynamic_contents($file, $content)) {
+        if (rex_put_file_contents(REX_DEVELOPER_SETTINGS_FILE, $content)) {
             echo rex_info($I18N->msg('developer_saved'));
         } else {
             echo rex_warning($I18N->msg('developer_error'));

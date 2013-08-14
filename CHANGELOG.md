@@ -1,6 +1,12 @@
 Changelog
 =========
 
+Version 3.1.1 – 14.08.2013
+--------------------------
+
+* Die Einstellungen werden außerhalb des Addonordners in /redaxo/include/data/addons/developer gespeichert
+* Neuer Standardpfad für die synchronisierten Dateien: /redaxo/include/data/addons/developer
+
 Version 3.1.0 - 03.08.2013
 --------------------------
 

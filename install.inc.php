@@ -11,13 +11,8 @@ if (version_compare(PHP_VERSION, $minPhpVersion) < 0) {
 
 } else {
 
-    if (!@is_writeable($dir . '/settings.inc.php')) {
-        $msg = $I18N->msg('developer_install_perm_settings');
-    } else {
-        require_once $dir . '/settings.inc.php';
-        require_once $dir . '/lib/manager.php';
-        $msg = rex_developer_manager::checkDir($REX['ADDON']['settings']['developer']['dir']);
-    }
+    require_once $dir . '/lib/manager.php';
+    $msg = rex_developer_manager::checkDir('data/addons/developer');
 
 }
 
