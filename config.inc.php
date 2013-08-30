@@ -36,9 +36,15 @@ if (file_exists(REX_DEVELOPER_SETTINGS_FILE)) {
 if (!$REX['REDAXO'] || is_object($REX['LOGIN'])) {
     rex_register_extension('ADDONS_INCLUDED', function ($params) {
         global $REX, $I18N;
-        if (session_id() == '') {
-            session_start();
+        
+        if (version_compare($REX['VERSION'] . '.' . $REX['SUBVERSION'] . '.' . $REX['MINORVERSION'], '4.5.1') < 0) {
+            if (session_id() == '') {
+                session_start();
+            }    
+        } else {
+            rex_login::startSession();
         }
+        
         $loggedIn = isset($_SESSION[$REX['INSTNAME']]['UID']) && $_SESSION[$REX['INSTNAME']]['UID'] > 0;
         if ($loggedIn && (!isset($REX['LOGIN']) || !is_object($REX['LOGIN']))) {
             if (!is_object($I18N)) {
