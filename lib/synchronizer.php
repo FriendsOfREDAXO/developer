@@ -196,7 +196,7 @@ abstract class rex_developer_synchronizer
      */
     protected static function getFile($dir, $file, $defaultPrefix = '')
     {
-        $defaultPath = $dir . self::getFilename($defaultPrefix) . $file;
+        $defaultPath = $dir . self::getFilename($defaultPrefix . $file);
         if (file_exists($defaultPath)) {
             return $defaultPath;
         }

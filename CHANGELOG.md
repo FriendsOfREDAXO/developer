@@ -4,7 +4,7 @@ Changelog
 Version 3.1.2 – *in Entwicklung*
 --------------------------------
 
-* ...
+* Korrekte Dateinamen (mit Präfix-Option fehlte ein Punkt vor input.php etc.)
 
 Version 3.1.1 – 14.08.2013
 --------------------------
