@@ -18,13 +18,13 @@ Installation
 1. Zip-Datei im AddOn-Ordner entpacken, der Ordner muss „developer“ heißen
 2. AddOn installieren und aktivieren
 3. Gegebenfalls die Einstellungen auf der Developer-Page anpassen. Standardmäßig sind alle drei Sychronisationen
-   (Templates/Module/Actions) aktiviert und der Synchronisationsordner ist `redaxo/include/developer_files`. Der Ordner
+   (Templates/Module/Actions) aktiviert und der Synchronisationsordner ist `redaxo/include/data/addons/developer`. Der Ordner
    sollte innerhalb des geschützen Include-Ordners liegen.
 
 Benutzung
 ---------
 
-* Innerhalb des Ordners `developer_files` wird bei Bedarf jeweils ein Unterordner für Templates, Module und Actions
+* Innerhalb des Ordners `redaxo/include/data/addons/developer` wird bei Bedarf jeweils ein Unterordner für Templates, Module und Actions
   angelegt.
 * Innerhalb der Unterordner wird für jedes einzelne Item (Template/Modul/Action) ein weiterer Unterordner angelegt.
 * Diese Ordner enthalten dann die Dateien, die synchronisiert werden. Neben der `metadata.yml`, welche unter anderem den
