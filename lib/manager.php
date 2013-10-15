@@ -120,7 +120,7 @@ abstract class rex_developer_manager
         } else {
             self::synchronize(self::START_EARLY);
             rex_register_extension('OUTPUT_FILTER_CACHE', function () {
-                rex_developer_manager::synchronize(self::START_LATE);
+                rex_developer_manager::synchronize(rex_developer_manager::START_LATE);
             });
         }
     }
