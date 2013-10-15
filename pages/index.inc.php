@@ -4,7 +4,7 @@ require $REX['INCLUDE_PATH'] . '/layout/top.php';
 
 rex_title($I18N->msg('developer_name'), $REX['ADDON']['pages']['developer']);
 
-if (rex_post('func', 'string') == 'update') {
+if (rex_post('function', 'string') == 'update') {
     $settings = (array) rex_post('settings', 'array', array());
     $settings['dir'] = trim($settings['dir'], '/');
     $msg = '';
@@ -62,7 +62,7 @@ echo '
 
         <fieldset class="rex-form-col-1">
             <div class="rex-form-wrapper">
-                <input type="hidden" name="func" value="update" />
+                <input type="hidden" name="function" value="update" />
 
                 <div class="rex-form-row">
                     <p class="rex-form-checkbox rex-form-label-right">
@@ -113,7 +113,7 @@ echo '
 
                 <div class="rex-form-row">
                     <p>
-                        <input type="submit" class="rex-form-submit" name="FUNC_UPDATE" value="' . $I18N->msg('developer_save') . '" />
+                        <input type="submit" class="rex-form-submit" value="' . $I18N->msg('developer_save') . '" />
                     </p>
                 </div>
 

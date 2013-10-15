@@ -7,17 +7,23 @@
  */
 abstract class rex_developer_manager
 {
-    private static $synchronizers = array(false => array(), true => array());
+    const START_EARLY = 0;
+    const START_LATE  = 1;
+
+    private static $synchronizers = array(
+        self::START_EARLY => array(),
+        self::START_LATE  => array()
+    );
 
     /**
      * Registers a new synchronizer
      *
      * @param rex_developer_synchronizer $synchronizer The synchronizer object
-     * @param bool                       $late         Flag, whether the synchronizer should start at the end of the request
+     * @param int                        $start        Flag, whether the synchronizer should start at the end of the request
      */
-    public static function register(rex_developer_synchronizer $synchronizer, $late = false)
+    public static function register(rex_developer_synchronizer $synchronizer, $start = self::START_EARLY)
     {
-        self::$synchronizers[(boolean) $late][] = $synchronizer;
+        self::$synchronizers[$start][] = $synchronizer;
     }
 
     /**
@@ -98,14 +104,23 @@ abstract class rex_developer_manager
     public static function start()
     {
         self::registerDefault();
-        if (rex_get('page', 'string') === 'import_export' && rex_get('subpage', 'string') === 'import' && rex_get('function', 'string') === 'dbimport') {
+
+        $page     = rex_request('page', 'string');
+        $subpage  = rex_request('subpage', 'string');
+        $function = rex_request('function', 'string');
+
+        if ($page === 'import_export' && $subpage === 'import' && $function === 'dbimport') {
             rex_register_extension('A1_AFTER_DB_IMPORT', function () {
                 rex_developer_manager::synchronize(null, true);
             });
-        } else {
-            self::synchronize(false);
+        } elseif ($page === 'developer' && $function === 'update') {
             rex_register_extension('OUTPUT_FILTER_CACHE', function () {
-                rex_developer_manager::synchronize(true);
+                rex_developer_manager::synchronize(null, true);
+            });
+        } else {
+            self::synchronize(self::START_EARLY);
+            rex_register_extension('OUTPUT_FILTER_CACHE', function () {
+                rex_developer_manager::synchronize(self::START_LATE);
             });
         }
     }
@@ -113,21 +128,21 @@ abstract class rex_developer_manager
     /**
      * Runs the synchronizer objects
      *
-     * @param bool $late  Flag, which synchronizers should start. If the value is null, all synchronizers will start
-     * @param bool $force Flag, whether the synchronizers should run in force mode or not
+     * @param int|null $type  Flag, which synchronizers should start. If the value is null, all synchronizers will start
+     * @param bool     $force Flag, whether the synchronizers should run in force mode or not
      * @see rex_developer_synchronizer::run
      */
-    public static function synchronize($late = null, $force = false)
+    public static function synchronize($type = null, $force = false)
     {
         $run = function (rex_developer_synchronizer $synchronizer) use ($force) {
             $synchronizer->run($force);
         };
-        if ($late === null) {
+        if ($type === null) {
             foreach (self::$synchronizers as $synchronizers) {
                 array_walk($synchronizers, $run);
             }
         } else {
-            array_walk(self::$synchronizers[$late], $run);
+            array_walk(self::$synchronizers[$type], $run);
         }
     }
 
