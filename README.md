@@ -10,7 +10,7 @@ Mindestvoraussetzungen
 ----------------------
 
 * PHP 5.3.3
-* REDAXO 4.3
+* REDAXO 4.3.2
 
 Installation
 ------------
