@@ -6,6 +6,7 @@ Version 3.1.2 – *in Entwicklung*
 
 * Min. REDAXO-Version: 4.3.2
 * Korrekte Dateinamen (mit Präfix-Option fehlte ein Punkt vor input.php etc.)
+* Optional können Umlaute wieder ersetzt werden
 
 Version 3.1.1 – 14.08.2013
 --------------------------

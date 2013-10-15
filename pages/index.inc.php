@@ -44,6 +44,10 @@ $prefix = '';
 if ($REX['ADDON']['settings']['developer']['prefix'] == '1') {
     $prefix = ' checked="checked"';
 }
+$umlauts = '';
+if ($REX['ADDON']['settings']['developer']['umlauts'] == '1') {
+    $umlauts = ' checked="checked"';
+}
 
 echo '
 
@@ -89,6 +93,14 @@ echo '
                         <input type="hidden" name="settings[prefix]" value="0" />
                         <input class="rex-form-checkbox" type="checkbox" id="prefix" name="settings[prefix]" value="1"' . $prefix . ' />
                         <label for="prefix">' . $I18N->msg('developer_prefix') . '</label>
+                    </p>
+                </div>
+
+                <div class="rex-form-row">
+                    <p class="rex-form-checkbox rex-form-label-right">
+                        <input type="hidden" name="settings[umlauts]" value="0" />
+                        <input class="rex-form-checkbox" type="checkbox" id="umlauts" name="settings[umlauts]" value="1"' . $umlauts . ' />
+                        <label for="umlauts">' . $I18N->msg('developer_umlauts') . '</label>
                     </p>
                 </div>
 

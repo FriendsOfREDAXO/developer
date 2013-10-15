@@ -4,6 +4,7 @@ developer_templates = synchronize templates
 developer_modules = synchronize modules
 developer_actions = synchronize actions
 developer_prefix = Filename prefix (contains ID and name)
+developer_umlauts = Keep umlauts in names
 developer_dir = directory
 developer_save = save settings
 developer_saved = settings have been saved

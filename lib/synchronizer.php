@@ -238,8 +238,16 @@ abstract class rex_developer_synchronizer
      */
     protected static function getFilename($name)
     {
+        global $REX;
         $filename = preg_replace('@[\\\\|:<>?*"\'+]@', '', $name);
         $filename = strtr($filename, '[]/', '()-');
+        if (!$REX['ADDON']['settings']['developer']['umlauts']) {
+            $filename = str_replace(
+                array('Ä',  'Ö',  'Ü',  'ä',  'ö',  'ü',  'ß'),
+                array('Ae', 'Oe', 'Ue', 'ae', 'oe', 'ue', 'ss'),
+                $filename
+            );
+        }
         return ltrim(rtrim($filename, ' .'));
     }
 
