@@ -34,6 +34,7 @@ $actions   = $REX['ADDON']['settings']['developer']['actions'] ? ' checked="chec
 $rename    = $REX['ADDON']['settings']['developer']['rename'] ? ' checked="checked"' : '';
 $prefix    = $REX['ADDON']['settings']['developer']['prefix'] ? ' checked="checked"' : '';
 $umlauts   = $REX['ADDON']['settings']['developer']['umlauts'] ? ' checked="checked"' : '';
+$delete    = $REX['ADDON']['settings']['developer']['delete'] ? ' checked="checked"' : '';
 
 echo '
 
@@ -95,6 +96,14 @@ echo '
                         <input type="hidden" name="settings[umlauts]" value="0" />
                         <input class="rex-form-checkbox" type="checkbox" id="umlauts" name="settings[umlauts]" value="1"' . $umlauts . ' />
                         <label for="umlauts">' . $I18N->msg('developer_umlauts') . '</label>
+                    </p>
+                </div>
+
+                <div class="rex-form-row">
+                    <p class="rex-form-checkbox rex-form-label-right">
+                        <input type="hidden" name="settings[delete]" value="0" />
+                        <input class="rex-form-checkbox" type="checkbox" id="delete" name="settings[delete]" value="1"' . $delete . ' />
+                        <label for="delete">' . $I18N->msg('developer_delete') . '</label>
                     </p>
                 </div>
 

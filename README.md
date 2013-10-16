@@ -45,8 +45,8 @@ Benutzung
   `metadata.yml` wird aktualisiert. Über dieses Feld kann auch der Name im Backend über das Dateisystem geändert werden.
 * Nach dem Löschen eines Item-Ordners (oder einzelner Dateien) werden diese neu angelegt. Die Items müssen also regulär
   über das Backend gelöscht werden.
-* Nach dem Löschen eines Items über das Backend wird der Sychronisationsordner nicht gelöscht, sondern nur die `.rex-id`
-  durch eine `.rex-ignore` ersetzt. Der Ordner kann aber anschließend problemlos durch den Nutzer gelöscht werden.
+* Nach dem Löschen eines Items über das Backend wird der Sychronisationsordner gelöscht, wenn die entsprechende Option
+  nicht deaktivert ist. Ansonsten wird nur die `.rex-id` durch eine `.rex-ignore` ersetzt.
 
 Eigene Synchronisationen
 ------------------------

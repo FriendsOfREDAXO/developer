@@ -9,6 +9,7 @@ Version 3.2.0 – *in Entwicklung*
 * Optional können Umlaute wieder ersetzt werden
 * Die Einstellungen wirken sich beim Speichern direkt aus
 * Optional können die Ordner- und Dateinamen automatisch aktuell gehalten werden
+* Optional können die Item-Ordner automatisch gelöscht werden nach dem Löschen über das Backend
 
 Version 3.1.1 – 14.08.2013
 --------------------------

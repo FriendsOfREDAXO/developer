@@ -69,7 +69,7 @@ abstract class rex_developer_synchronizer
 
         list($existing, $new) = $this->getNewAndExistingDirs();
         $this->synchronizeReceivedItems($idList, $existing, $force);
-        $this->markRemovedItemsAsIgnored($idList, $existing);
+        $this->removeItems($idList, $existing);
         $this->addNewItems($idList, $existing, true);
         $this->addNewItems($idList, $new, false);
 
@@ -163,15 +163,22 @@ abstract class rex_developer_synchronizer
         }
     }
 
-    private function markRemovedItemsAsIgnored(&$idList, &$existing)
+    private function removeItems(&$idList, &$existing)
     {
+        global $REX;
+
         foreach ($existing as $id => $dir) {
             $dir = $this->baseDir . $dir . '/';
             if (isset($idList[$id])) {
                 unset($existing[$id]);
                 unset($idList[$id]);
-                self::putFile($dir . self::IGNORE_FILE, '');
-                unlink(self::getFile($dir, self::ID_FILE));
+                if ($REX['ADDON']['settings']['developer']['delete']) {
+                    require_once $REX['INCLUDE_PATH'] . '/functions/function_rex_generate.inc.php';
+                    rex_deleteDir($dir, true);
+                } else {
+                    self::putFile($dir . self::IGNORE_FILE, '');
+                    unlink(self::getFile($dir, self::ID_FILE));
+                }
             }
         }
     }

@@ -6,6 +6,7 @@ developer_actions = Actions synchronisieren
 developer_rename = Datei- und Ordnernamen aktuell halten
 developer_prefix = Präfix für Dateinamen (enthält ID und Name)
 developer_umlauts = Umlaute in Namen beibehalten
+developer_delete = Item-Ordner löschen nach dem Löschen eines Items über das Backend
 developer_dir = Ordner
 developer_save = Einstellungen speichern
 developer_saved = Die Einstellungen wurden gespeichert.

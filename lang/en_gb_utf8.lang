@@ -6,6 +6,7 @@ developer_actions = synchronize actions
 developer_rename = Refresh file and directory names
 developer_prefix = Filename prefix (contains ID and name)
 developer_umlauts = Keep umlauts in names
+developer_delete = Delete item directory after deleting item in backend
 developer_dir = directory
 developer_save = save settings
 developer_saved = settings have been saved

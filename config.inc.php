@@ -28,6 +28,7 @@ $REX['ADDON']['settings']['developer']['actions'] = '1';
 $REX['ADDON']['settings']['developer']['rename'] = '1';
 $REX['ADDON']['settings']['developer']['prefix'] = '0';
 $REX['ADDON']['settings']['developer']['umlauts'] = '1';
+$REX['ADDON']['settings']['developer']['delete'] = '1';
 $REX['ADDON']['settings']['developer']['dir'] = 'data/addons/developer';
 
 define('REX_DEVELOPER_SETTINGS_FILE', $REX['INCLUDE_PATH'] . '/data/addons/developer/settings.inc.php');
