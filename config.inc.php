@@ -13,7 +13,7 @@ if ($REX['REDAXO']) {
 
 $REX['ADDON']['perm'][$mypage] = 'admin[]';
 $REX['ADDON']['author'][$mypage] = 'Gregor Harlan';
-$REX['ADDON']['version'][$mypage] = '3.1.2';
+$REX['ADDON']['version'][$mypage] = '3.2.0';
 
 require_once __DIR__ . '/vendor/autoload.php';
 

@@ -1,7 +1,7 @@
 Changelog
 =========
 
-Version 3.1.2 – *in Entwicklung*
+Version 3.2.0 – *in Entwicklung*
 --------------------------------
 
 * Min. REDAXO-Version: 4.3.2
