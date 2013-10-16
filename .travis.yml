@@ -6,10 +6,10 @@ php:
     - 5.5
 
 before_script:
-    - pear channel-discover bartlett.laurent-laville.org
-    - pear install bartlett/PHP_CompatInfo
+    - wget http://bartlett.laurent-laville.org/get/phpcompatinfo.phar
+    - chmod +x phpcompatinfo.phar
     
 script:
     - find -L . -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
-    - phpcompatinfo -v print -R . > compat.txt
+    - ./phpcompatinfo.phar -v print -R . > compat.txt
     - cat compat.txt | grep "REQUIRED PHP" | grep --only-matching "5.3.0"
