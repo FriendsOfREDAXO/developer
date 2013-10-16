@@ -91,6 +91,12 @@ abstract class rex_developer_synchronizer
                         file_exists($dir . $file) &&
                         (sscanf($file, '%d' . self::ID_FILE, $id) || ($id = ((int) rex_get_file_contents($dir . $file))))
                     ) {
+                        if (isset($existing[$id])) {
+                            trigger_error(
+                                'There are two item directories with the same ID: "' . $existing[$id] . '" and "' . basename($dir) . '"',
+                                E_USER_ERROR
+                            );
+                        }
                         $existing[$id] = basename($dir);
                     } else {
                         $new[] = basename($dir);
