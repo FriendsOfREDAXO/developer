@@ -8,6 +8,7 @@ Version 3.2.0 – *in Entwicklung*
 * Korrekte Dateinamen (mit Präfix-Option fehlte ein Punkt vor input.php etc.)
 * Optional können Umlaute wieder ersetzt werden
 * Die Einstellungen wirken sich beim Speichern direkt aus
+* Optional können die Ordner- und Dateinamen automatisch aktuell gehalten werden
 
 Version 3.1.1 – 14.08.2013
 --------------------------

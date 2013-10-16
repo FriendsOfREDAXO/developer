@@ -28,26 +28,12 @@ if (rex_post('function', 'string') == 'update') {
     }
 }
 
-$templates = '';
-if ($REX['ADDON']['settings']['developer']['templates'] == '1') {
-    $templates = ' checked="checked"';
-}
-$modules = '';
-if ($REX['ADDON']['settings']['developer']['modules'] == '1') {
-    $modules = ' checked="checked"';
-}
-$actions = '';
-if ($REX['ADDON']['settings']['developer']['actions'] == '1') {
-    $actions = ' checked="checked"';
-}
-$prefix = '';
-if ($REX['ADDON']['settings']['developer']['prefix'] == '1') {
-    $prefix = ' checked="checked"';
-}
-$umlauts = '';
-if ($REX['ADDON']['settings']['developer']['umlauts'] == '1') {
-    $umlauts = ' checked="checked"';
-}
+$templates = $REX['ADDON']['settings']['developer']['templates'] ? ' checked="checked"' : '';
+$modules   = $REX['ADDON']['settings']['developer']['modules'] ? ' checked="checked"' : '';
+$actions   = $REX['ADDON']['settings']['developer']['actions'] ? ' checked="checked"' : '';
+$rename    = $REX['ADDON']['settings']['developer']['rename'] ? ' checked="checked"' : '';
+$prefix    = $REX['ADDON']['settings']['developer']['prefix'] ? ' checked="checked"' : '';
+$umlauts   = $REX['ADDON']['settings']['developer']['umlauts'] ? ' checked="checked"' : '';
 
 echo '
 
@@ -85,6 +71,14 @@ echo '
                         <input type="hidden" name="settings[actions]" value="0" />
                         <input class="rex-form-checkbox" type="checkbox" id="actions" name="settings[actions]" value="1"' . $actions . ' />
                         <label for="actions">' . $I18N->msg('developer_actions') . '</label>
+                    </p>
+                </div>
+
+                <div class="rex-form-row">
+                    <p class="rex-form-checkbox rex-form-label-right">
+                        <input type="hidden" name="settings[rename]" value="0" />
+                        <input class="rex-form-checkbox" type="checkbox" id="rename" name="settings[rename]" value="1"' . $rename . ' />
+                        <label for="rename">' . $I18N->msg('developer_rename') . '</label>
                     </p>
                 </div>
 

@@ -91,9 +91,9 @@ abstract class rex_developer_synchronizer
                         file_exists($dir . $file) &&
                         (sscanf($file, '%d' . self::ID_FILE, $id) || ($id = ((int) rex_get_file_contents($dir . $file))))
                     ) {
-                        $existing[$id] = $dir;
+                        $existing[$id] = basename($dir);
                     } else {
-                        $new[] = $dir;
+                        $new[] = basename($dir);
                     }
                 }
             }
@@ -108,15 +108,31 @@ abstract class rex_developer_synchronizer
         foreach ($this->getItems() as $item) {
             $id = $item->getId();
             $name = $item->getName();
+
+            $existingDir = null;
             if (isset($existing[$id])) {
-                $dir = $existing[$id];
+                $existingDir = $existing[$id];
                 unset($existing[$id]);
-            } else {
-                $dir = self::getPath($this->baseDir, $name) . '/';
-                if (!self::putFile($dir . $id . self::ID_FILE, '')) {
-                    continue;
-                }
             }
+            if ($REX['ADDON']['settings']['developer']['rename'] || !$existingDir) {
+                $dirBase = self::getFilename($name);
+                $dir = $dirBase;
+                $i = 1;
+                while (!self::equalFilenames($existingDir, $dir) && file_exists($this->baseDir . $dir)) {
+                    $dir = $dirBase . ' [' . ++$i . ']';
+                }
+                if (!$existingDir) {
+                    if (!self::putFile($this->baseDir . $dir . '/' . $id . self::ID_FILE, '')) {
+                        continue;
+                    }
+                } elseif (!self::equalFilenames($existingDir, $dir)) {
+                    rename($this->baseDir . $existingDir, $this->baseDir . $dir);
+                }
+                $dir = $this->baseDir . $dir . '/';
+            } else {
+                $dir = $this->baseDir . $existingDir . '/';
+            }
+
             $idList[$id] = true;
             $updated = max(1, $item->getUpdated());
             $dbUpdated = $updated;
@@ -127,7 +143,7 @@ abstract class rex_developer_synchronizer
                 $prefix = $id . '.' . $name . '.';
             }
             foreach ($this->files as $file) {
-                $filePath = self::getFile($dir, $file, $prefix);
+                $filePath = self::getFile($dir, $file, $prefix, $REX['ADDON']['settings']['developer']['rename']);
                 $files[] = $filePath;
                 $fileUpdated = !$force && file_exists($filePath) ? filemtime($filePath) : 0;
                 if ($dbUpdated > $fileUpdated) {
@@ -150,6 +166,7 @@ abstract class rex_developer_synchronizer
     private function markRemovedItemsAsIgnored(&$idList, &$existing)
     {
         foreach ($existing as $id => $dir) {
+            $dir = $this->baseDir . $dir . '/';
             if (isset($idList[$id])) {
                 unset($existing[$id]);
                 unset($idList[$id]);
@@ -162,6 +179,7 @@ abstract class rex_developer_synchronizer
     private function addNewItems(&$idList, $dirs, $withId)
     {
         foreach ($dirs as $i => $dir) {
+            $dir = $this->baseDir . $dir . '/';
             $addFiles = array();
             $add = false;
             $updated = time();
@@ -192,42 +210,27 @@ abstract class rex_developer_synchronizer
      * @param string $dir           Directory
      * @param string $file          File name
      * @param string $defaultPrefix Default prefix
+     * @param bool   $rename
      * @return string Real File path
      */
-    protected static function getFile($dir, $file, $defaultPrefix = '')
+    protected static function getFile($dir, $file, $defaultPrefix = '', $rename = false)
     {
         $defaultPath = $dir . self::getFilename($defaultPrefix . $file);
         if (file_exists($defaultPath)) {
-            return $defaultPath;
+            $path = $defaultPath;
+        } elseif (file_exists($dir . $file)) {
+            $path = $dir . $file;
+        } elseif (is_array($glob = glob($dir . '*' . $file)) && !empty($glob)) {
+            $path = $dir . basename($glob[0]);
         }
-        if (file_exists($dir . $file)) {
-            return $dir . $file;
-        }
-        if (is_array($glob = glob($dir . '*' . $file)) && !empty($glob)) {
-            return $glob[0];
+        if (isset($path)) {
+            if ($rename && !self::equalFilenames($path, $defaultPath)) {
+                rename($path, $defaultPath);
+                return $defaultPath;
+            }
+            return $path;
         }
         return $defaultPath;
-    }
-
-    /**
-     * Gets an unique path for a new file
-     *
-     * Special characters will be replaced by "_". If the file already exists, a suffix will be added.
-     *
-     * @param string $dir  Directory
-     * @param string $name File name
-     * @return string File path
-     */
-    protected static function getPath($dir, $name)
-    {
-        $filename = self::getFilename($name);
-        $path = $dir . $filename;
-        if (file_exists($path)) {
-            for ($i = 1; file_exists($path); ++$i) {
-                $path = $dir . $filename . '_' . $i;
-            }
-        }
-        return $path;
     }
 
     /**
@@ -249,6 +252,23 @@ abstract class rex_developer_synchronizer
             );
         }
         return ltrim(rtrim($filename, ' .'));
+    }
+
+    /**
+     * Checks whether the filenames are equal (independent of UTF8 NFC and NFD)
+     *
+     * @param string $filename1
+     * @param string $filename2
+     * @return bool
+     */
+    protected static function equalFilenames($filename1, $filename2)
+    {
+        $search = array("A\xcc\x88", "O\xcc\x88", "U\xcc\x88", "a\xcc\x88", "o\xcc\x88", "u\xcc\x88");
+        $replace = array('Ä', 'Ö', 'Ü', 'ä', 'ö', 'ü');
+        $filename1 = str_replace($search, $replace, $filename1);
+        $filename2 = str_replace($search, $replace, $filename2);
+
+        return $filename1 === $filename2;
     }
 
     /**

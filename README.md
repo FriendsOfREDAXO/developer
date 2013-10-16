@@ -35,10 +35,11 @@ Benutzung
 * Es wird nur synchronisiert, wenn man im Backend als Admin eingeloggt ist, dann aber auch, wenn man das Frontend aufruft.
 * Es können neue Items über das Dateisystem angelegt werden. Dazu genügt es einen neuen Ordner anzulegen mit mindestens
   einer der aufgelisteten Dateien.
-* Die Dateien können individuell umbenannt werden, sie müssen aber mit dem Standardnamen enden. Die `template.php` kann
-  also zum Beispiel in `navigation.template.php` umbenannt werden. Developer wird die dann trotzdem finden und den Namen
-  beibehalten. Optional kann ein Präfix bestehend aus ID und Name automatisch hinzugefügt werden.
-* Der Item-Ordner kann beliebig umbenannt werden. Als Zuordnung dient eine versteckte Datei `.rex-id` innerhalb des
+* Wenn die automatische Umbenennung deaktiviert ist, können die Dateien individuell umbenannt werden, sie müssen aber mit
+  dem Standardnamen enden. Die `template.php` kann also zum Beispiel in `navigation.template.php` umbenannt werden.
+  Developer wird die dann trotzdem finden und den Namen beibehalten. Optional kann ein Präfix bestehend aus ID und Name
+  automatisch hinzugefügt werden.
+* Der Item-Ordner kann beliebig umbenannt werden. Als Zuordnung dient eine Datei `X.rex-id` innerhalb des
   Ordners, die nicht gelöscht werden darf.
 * Bei Umbennung über das Backend ändert Developer nichts an den Ordner- und Dateinamen, nur der Name innerhalb der
   `metadata.yml` wird aktualisiert. Über dieses Feld kann auch der Name im Backend über das Dateisystem geändert werden.

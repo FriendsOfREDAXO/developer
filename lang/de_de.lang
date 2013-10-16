@@ -3,6 +3,7 @@ developer_settings = Einstellungen
 developer_templates = Templates synchronisieren
 developer_modules = Module synchronisieren
 developer_actions = Actions synchronisieren
+developer_rename = Datei- und Ordnernamen aktuell halten
 developer_prefix = Präfix für Dateinamen (enthält ID und Name)
 developer_umlauts = Umlaute in Namen beibehalten
 developer_dir = Ordner
