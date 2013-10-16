@@ -1,6 +1,7 @@
 <?php
 
-$mypage = 'developer';
+$mypage = 'developer'
+$asbc = ASD;
 
 if ($REX['REDAXO']) {
     $I18N->appendFile(__DIR__ . '/lang/');
