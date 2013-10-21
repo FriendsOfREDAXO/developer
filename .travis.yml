@@ -1,0 +1,15 @@
+language: php
+
+php:
+    - 5.3
+    - 5.4
+    - 5.5
+
+before_script:
+    - wget http://bartlett.laurent-laville.org/get/phpcompatinfo.phar
+    - chmod +x phpcompatinfo.phar
+    
+script:
+    - find -L . -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
+    - ./phpcompatinfo.phar -v print -R . > compat.txt
+    - cat compat.txt | grep "REQUIRED PHP" | grep --only-matching "5.3.0"
