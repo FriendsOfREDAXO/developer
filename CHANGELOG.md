@@ -1,8 +1,8 @@
 Changelog
 =========
 
-Version 3.2.0 – *in Entwicklung*
---------------------------------
+Version 3.2.0 – 08.11.2013
+--------------------------
 
 * Min. REDAXO-Version: 4.3.2
 * Korrekte Dateinamen (mit Präfix-Option fehlte ein Punkt vor input.php etc.)
