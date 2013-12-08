@@ -55,6 +55,7 @@ if (!$REX['REDAXO'] || is_object($REX['LOGIN'])) {
             $loggedIn = $REX['LOGIN']->checkLogin();
         }
         if ($loggedIn && $REX['LOGIN']->USER->isAdmin()) {
+            rex_register_extension_point('DEVELOPER_MANAGER_START','',array(),true);
             rex_developer_manager::start();
         }
     });
