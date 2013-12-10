@@ -122,7 +122,9 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
             foreach ($this->metadata as $column => $type) {
                 $metadata[$column] = self::cast($sql->getValue($column), $type);
             }
-            $item->setFile(self::METADATA_FILE, rex_developer_manager::yamlEncode($metadata));
+            $item->setFile(self::METADATA_FILE, function() use ($metadata) {
+                return rex_developer_manager::yamlEncode($metadata);
+            });
             $items[] = $item;
         }
         return $items;
