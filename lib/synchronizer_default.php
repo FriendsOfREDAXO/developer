@@ -105,7 +105,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
     }
 
     /**
-     * {@inheritedDoc}
+     * {@inheritDoc}
      */
     protected function getItems()
     {
@@ -129,7 +129,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
     }
 
     /**
-     * {@inheritedDoc}
+     * {@inheritDoc}
      */
     protected function addItem(rex_developer_synchronizer_item $item)
     {
@@ -178,7 +178,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
     }
 
     /**
-     * {@inheritedDoc}
+     * {@inheritDoc}
      */
     protected function editItem(rex_developer_synchronizer_item $item)
     {
