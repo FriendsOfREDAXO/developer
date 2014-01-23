@@ -6,6 +6,7 @@ Version 3.3.0 – *in Entwicklung*
 
 * Neuer EP: DEVELOPER_MANAGER_START
 * Performanceverbesserung
+* Bugfix: Unter bestimmten Umständen wurden die Ordner (teilweise auch DB-Einträge) bei jedem Aufruf vervielfältigt
 
 Version 3.2.0 – 08.11.2013
 --------------------------

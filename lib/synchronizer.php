@@ -82,7 +82,7 @@ abstract class rex_developer_synchronizer
     {
         $existing = array();
         $new = array();
-        $dirs = glob($this->baseDir . '*', GLOB_ONLYDIR | GLOB_NOSORT | GLOB_MARK);
+        $dirs = self::glob($this->baseDir . '*', GLOB_ONLYDIR | GLOB_NOSORT | GLOB_MARK);
         if (is_array($dirs)) {
             foreach ($dirs as $dir) {
                 if (!file_exists($dir . self::IGNORE_FILE)) {
@@ -233,7 +233,7 @@ abstract class rex_developer_synchronizer
             $path = $defaultPath;
         } elseif (file_exists($dir . $file)) {
             $path = $dir . $file;
-        } elseif (is_array($glob = glob($dir . '*' . $file)) && !empty($glob)) {
+        } elseif (is_array($glob = self::glob($dir . '*' . $file)) && !empty($glob)) {
             $path = $dir . basename($glob[0]);
         }
         if (isset($path)) {
@@ -304,5 +304,11 @@ abstract class rex_developer_synchronizer
             return true;
         }
         return false;
+    }
+
+    protected static function glob($pattern, $flags = 0)
+    {
+        $pattern = addcslashes($pattern, '[]');
+        return glob($pattern, $flags);
     }
 }
