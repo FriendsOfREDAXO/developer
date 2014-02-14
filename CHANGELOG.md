@@ -1,8 +1,8 @@
 Changelog
 =========
 
-Version 3.3.0 – *in Entwicklung*
---------------------------------
+Version 3.3.0 – 14.02.2013
+--------------------------
 
 * Neuer EP: DEVELOPER_MANAGER_START
 * Performanceverbesserung

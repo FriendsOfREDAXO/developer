@@ -1,7 +1,7 @@
 REDAXO-AddOn: developer
 =======================
 
-Version 3.3.0-dev
+Version 3.3.0
 
 Das AddOn ermöglicht es, die Templates, Module und Actions über das Dateisystem (und somit mit beliebigen Editor) zu
 bearbeiten, bzw. neu anzulegen.
