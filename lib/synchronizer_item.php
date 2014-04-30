@@ -119,6 +119,17 @@ class rex_developer_synchronizer_item
         return $this->files;
     }
 
+
+
+    /**
+     * Checks if given string is a function or callable without producing errors
+     *
+     * @return bool
+     */
+    public static function is_function($f) {
+        return (is_string($f) && function_exists($f)) || (is_object($f) && ($f instanceof Closure));
+    }
+
     /**
      * Returns the content of the given item file
      *
@@ -130,7 +141,8 @@ class rex_developer_synchronizer_item
         if (!isset($this->files[$file])) {
             return '';
         }
-        if (is_callable($this->files[$file])) {
+        
+        if (self::is_function($this->files[$file])) {
             $this->files[$file] = call_user_func($this->files[$file]);
         }
         return $this->files[$file];
