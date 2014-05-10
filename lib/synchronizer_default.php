@@ -98,7 +98,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
     {
         if ($commonCreateUpdateColumns) {
             $this->commonCreateUpdateColumns = true;
-            $this->updateColumn = 'updatedate';
+            $this->updatedColumn = 'updatedate';
         } else {
             $this->commonCreateUpdateColumns = false;
         }
