@@ -130,7 +130,7 @@ class rex_developer_synchronizer_item
         if (!isset($this->files[$file])) {
             return '';
         }
-        if (is_callable($this->files[$file])) {
+        if ((!is_string($file) || strlen($file) < 200) && is_callable($this->files[$file])) {
             $this->files[$file] = call_user_func($this->files[$file]);
         }
         return $this->files[$file];

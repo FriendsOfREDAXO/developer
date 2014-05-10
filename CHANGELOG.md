@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 3.3.1 – 10.05.2014
+--------------------------
+
+* Bugfix: In Kombination mit Autoloadern konnte es zu Fehlermeldungen kommen
+
 Version 3.3.0 – 14.02.2013
 --------------------------
 
