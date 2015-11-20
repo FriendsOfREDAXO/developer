@@ -101,8 +101,8 @@ abstract class rex_developer_manager
     public static function start()
     {
         self::registerDefault();
-        if (rex_be_controller::getCurrentPage() === 'import_export/import' && rex_get('function', 'string') === 'dbimport') {
-            rex_extension::register('A1_AFTER_DB_IMPORT', function () {
+        if (rex_be_controller::getCurrentPage() === 'backup/import' && rex_get('function', 'string') === 'dbimport') {
+            rex_extension::register('BACKUP_AFTER_DB_IMPORT', function () {
                 rex_developer_manager::synchronize(null, true);
             });
         } elseif (rex_be_controller::getCurrentPagePart(1) === 'developer' && rex_get('function', 'string') === 'update') {
