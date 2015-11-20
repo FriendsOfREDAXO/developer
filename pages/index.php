@@ -6,11 +6,14 @@ echo rex_view::title($this->i18n('name'));
 
 if (rex_post('config-submit', 'boolean')) {
     $this->setConfig(rex_post('config', [
-                ['templates', 'bool'],
-                ['module', 'bool'],
-                ['actions', 'bool'],
-                ['prefix', 'bool']
-            ]));
+        ['templates', 'bool'],
+        ['module', 'bool'],
+        ['actions', 'bool'],
+        ['rename', 'bool'],
+        ['prefix', 'bool'],
+        ['umlauts', 'bool'],
+        ['delete', 'bool'],
+    ]));
 
     echo rex_view::success($this->i18n('saved'));
 }
@@ -41,8 +44,23 @@ $n['field'] = '<input type="checkbox" id="rex-developer-actions" name="config[ac
 $formElements[] = $n;
 
 $n = [];
+$n['label'] = '<label for="rex-developer-rename">' . $this->i18n('rename') . '</label>';
+$n['field'] = '<input type="checkbox" id="rex-developer-rename" name="config[rename]" value="1" ' . ($this->getConfig('rename') ? ' checked="checked"' : '') . ' />';
+$formElements[] = $n;
+
+$n = [];
 $n['label'] = '<label for="rex-developer-prefix">' . $this->i18n('prefix') . '</label>';
 $n['field'] = '<input type="checkbox" id="rex-developer-prefix" name="config[prefix]" value="1" ' . ($this->getConfig('prefix') ? ' checked="checked"' : '') . ' />';
+$formElements[] = $n;
+
+$n = [];
+$n['label'] = '<label for="rex-developer-umlauts">' . $this->i18n('umlauts') . '</label>';
+$n['field'] = '<input type="checkbox" id="rex-developer-umlauts" name="config[umlauts]" value="1" ' . ($this->getConfig('umlauts') ? ' checked="checked"' : '') . ' />';
+$formElements[] = $n;
+
+$n = [];
+$n['label'] = '<label for="rex-developer-delete">' . $this->i18n('delete') . '</label>';
+$n['field'] = '<input type="checkbox" id="rex-developer-delete" name="config[delete]" value="1" ' . ($this->getConfig('delete') ? ' checked="checked"' : '') . ' />';
 $formElements[] = $n;
 
 $fragment = new rex_fragment();

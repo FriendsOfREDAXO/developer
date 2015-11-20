@@ -68,7 +68,7 @@ abstract class rex_developer_synchronizer
 
         list($existing, $new) = $this->getNewAndExistingDirs();
         $this->synchronizeReceivedItems($idList, $existing, $force);
-        $this->markRemovedItemsAsIgnored($idList, $existing);
+        $this->removeItems($idList, $existing);
         $this->addNewItems($idList, $existing, true);
         $this->addNewItems($idList, $new, false);
 
@@ -81,7 +81,7 @@ abstract class rex_developer_synchronizer
     {
         $existing = array();
         $new = array();
-        $dirs = glob($this->baseDir . '*', GLOB_ONLYDIR | GLOB_NOSORT | GLOB_MARK);
+        $dirs = self::glob($this->baseDir . '*', GLOB_ONLYDIR | GLOB_NOSORT | GLOB_MARK);
         if (is_array($dirs)) {
             foreach ($dirs as $dir) {
                 if (!file_exists($dir . self::IGNORE_FILE)) {
@@ -90,9 +90,15 @@ abstract class rex_developer_synchronizer
                         file_exists($dir . $file) &&
                         (sscanf($file, '%d' . self::ID_FILE, $id) || ($id = ((int) rex_file::get($dir . $file))))
                     ) {
-                        $existing[$id] = $dir;
+                        if (isset($existing[$id])) {
+                            trigger_error(
+                                'There are two item directories with the same ID: "' . $existing[$id] . '" and "' . basename($dir) . '"',
+                                E_USER_ERROR
+                            );
+                        }
+                        $existing[$id] = basename($dir);
                     } else {
-                        $new[] = $dir;
+                        $new[] = basename($dir);
                     }
                 }
             }
@@ -102,20 +108,34 @@ abstract class rex_developer_synchronizer
 
     private function synchronizeReceivedItems(&$idList, &$existing, $force = false)
     {
-        global $REX;
-
         foreach ($this->getItems() as $item) {
             $id = $item->getId();
             $name = $item->getName();
+
+            $existingDir = null;
             if (isset($existing[$id])) {
-                $dir = $existing[$id];
+                $existingDir = $existing[$id];
                 unset($existing[$id]);
-            } else {
-                $dir = self::getPath($this->baseDir, $name) . '/';
-                if (!rex_file::put($dir . $id . self::ID_FILE, '')) {
-                    continue;
-                }
             }
+            if (rex_config::get('developer', 'rename') || !$existingDir) {
+                $dirBase = self::getFilename($name);
+                $dir = $dirBase;
+                $i = 1;
+                while (!self::equalFilenames($existingDir, $dir) && file_exists($this->baseDir . $dir)) {
+                    $dir = $dirBase . ' [' . ++$i . ']';
+                }
+                if (!$existingDir) {
+                    if (!rex_file::put($this->baseDir . $dir . '/' . $id . self::ID_FILE, '')) {
+                        continue;
+                    }
+                } elseif (!self::equalFilenames($existingDir, $dir)) {
+                    rename($this->baseDir . $existingDir, $this->baseDir . $dir);
+                }
+                $dir = $this->baseDir . $dir . '/';
+            } else {
+                $dir = $this->baseDir . $existingDir . '/';
+            }
+
             $idList[$id] = true;
             $updated = max(1, $item->getUpdated());
             $dbUpdated = $updated;
@@ -126,7 +146,7 @@ abstract class rex_developer_synchronizer
                 $prefix = $id . '.' . $name . '.';
             }
             foreach ($this->files as $file) {
-                $filePath = self::getFile($dir, $file, $prefix);
+                $filePath = self::getFile($dir, $file, $prefix, rex_config::get('developer', 'rename'));
                 $files[] = $filePath;
                 $fileUpdated = !$force && file_exists($filePath) ? filemtime($filePath) : 0;
                 if ($dbUpdated > $fileUpdated) {
@@ -146,14 +166,19 @@ abstract class rex_developer_synchronizer
         }
     }
 
-    private function markRemovedItemsAsIgnored(&$idList, &$existing)
+    private function removeItems(&$idList, &$existing)
     {
         foreach ($existing as $id => $dir) {
+            $dir = $this->baseDir . $dir . '/';
             if (isset($idList[$id])) {
                 unset($existing[$id]);
                 unset($idList[$id]);
-                rex_file::put($dir . self::IGNORE_FILE, '');
-                unlink(self::getFile($dir, self::ID_FILE));
+                if (rex_config::get('developer', 'delete')) {
+                    rex_dir::delete($dir);
+                } else {
+                    rex_file::put($dir . self::IGNORE_FILE, '');
+                    unlink(self::getFile($dir, self::ID_FILE));
+                }
             }
         }
     }
@@ -161,6 +186,7 @@ abstract class rex_developer_synchronizer
     private function addNewItems(&$idList, $dirs, $withId)
     {
         foreach ($dirs as $i => $dir) {
+            $dir = $this->baseDir . $dir . '/';
             $addFiles = array();
             $add = false;
             $updated = time();
@@ -191,42 +217,27 @@ abstract class rex_developer_synchronizer
      * @param string $dir           Directory
      * @param string $file          File name
      * @param string $defaultPrefix Default prefix
+     * @param bool   $rename
      * @return string Real File path
      */
-    protected static function getFile($dir, $file, $defaultPrefix = '')
+    protected static function getFile($dir, $file, $defaultPrefix = '', $rename = false)
     {
-        $defaultPath = $dir . self::getFilename($defaultPrefix) . $file;
+        $defaultPath = $dir . self::getFilename($defaultPrefix . $file);
         if (file_exists($defaultPath)) {
-            return $defaultPath;
+            $path = $defaultPath;
+        } elseif (file_exists($dir . $file)) {
+            $path = $dir . $file;
+        } elseif (is_array($glob = self::glob($dir . '*' . $file)) && !empty($glob)) {
+            $path = $dir . basename($glob[0]);
         }
-        if (file_exists($dir . $file)) {
-            return $dir . $file;
-        }
-        if (is_array($glob = glob($dir . '*' . $file)) && !empty($glob)) {
-            return $glob[0];
+        if (isset($path)) {
+            if ($rename && !self::equalFilenames($path, $defaultPath)) {
+                rename($path, $defaultPath);
+                return $defaultPath;
+            }
+            return $path;
         }
         return $defaultPath;
-    }
-
-    /**
-     * Gets an unique path for a new file
-     *
-     * Special characters will be replaced by "_". If the file already exists, a suffix will be added.
-     *
-     * @param string $dir  Directory
-     * @param string $name File name
-     * @return string File path
-     */
-    protected static function getPath($dir, $name)
-    {
-        $filename = self::getFilename($name);
-        $path = $dir . $filename;
-        if (file_exists($path)) {
-            for ($i = 1; file_exists($path); ++$i) {
-                $path = $dir . $filename . '_' . $i;
-            }
-        }
-        return $path;
     }
 
     /**
@@ -239,6 +250,36 @@ abstract class rex_developer_synchronizer
     {
         $filename = preg_replace('@[\\\\|:<>?*"\'+]@', '', $name);
         $filename = strtr($filename, '[]/', '()-');
+        if (!rex_config::get('developer', 'umlauts')) {
+            $filename = str_replace(
+                array('Ä',  'Ö',  'Ü',  'ä',  'ö',  'ü',  'ß'),
+                array('Ae', 'Oe', 'Ue', 'ae', 'oe', 'ue', 'ss'),
+                $filename
+            );
+        }
         return ltrim(rtrim($filename, ' .'));
+    }
+
+    /**
+     * Checks whether the filenames are equal (independent of UTF8 NFC and NFD)
+     *
+     * @param string $filename1
+     * @param string $filename2
+     * @return bool
+     */
+    protected static function equalFilenames($filename1, $filename2)
+    {
+        $search = array("A\xcc\x88", "O\xcc\x88", "U\xcc\x88", "a\xcc\x88", "o\xcc\x88", "u\xcc\x88");
+        $replace = array('Ä', 'Ö', 'Ü', 'ä', 'ö', 'ü');
+        $filename1 = str_replace($search, $replace, $filename1);
+        $filename2 = str_replace($search, $replace, $filename2);
+
+        return $filename1 === $filename2;
+    }
+
+    protected static function glob($pattern, $flags = 0)
+    {
+        $pattern = addcslashes($pattern, '[]');
+        return glob($pattern, $flags);
     }
 }

@@ -7,6 +7,9 @@ if (!$this->hasConfig()) {
         'templates' => true,
         'modules' => true,
         'actions' => true,
-        'prefix' => false
+        'rename' => true,
+        'prefix' => false,
+        'umlauts' => true,
+        'delete' => true,
     ]);
 }
