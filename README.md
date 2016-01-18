@@ -1,7 +1,7 @@
 REDAXO-AddOn: developer
 =======================
 
-Version 3.3.1
+Version 3.4.0
 
 Das AddOn ermöglicht es, die Templates, Module und Actions über das Dateisystem (und somit mit beliebigen Editor) zu
 bearbeiten, bzw. neu anzulegen.
@@ -9,17 +9,16 @@ bearbeiten, bzw. neu anzulegen.
 Mindestvoraussetzungen
 ----------------------
 
-* PHP 5.3.3
-* REDAXO 4.3.2
+* PHP 5.5
+* REDAXO 5.0
 
 Installation
 ------------
 
-1. Zip-Datei im AddOn-Ordner entpacken, der Ordner muss „developer“ heißen
+1. Über Installer laden oder Zip-Datei im AddOn-Ordner entpacken, der Ordner muss „developer“ heißen
 2. AddOn installieren und aktivieren
 3. Gegebenfalls die Einstellungen auf der Developer-Page anpassen. Standardmäßig sind alle drei Sychronisationen
-   (Templates/Module/Actions) aktiviert und der Synchronisationsordner ist `redaxo/data/addons/developer`. Der Ordner
-   sollte innerhalb des geschützen Include-Ordners liegen.
+   (Templates/Module/Actions) aktiviert.
 
 Benutzung
 ---------

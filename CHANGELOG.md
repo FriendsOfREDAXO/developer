@@ -1,6 +1,12 @@
 Changelog
 =========
 
+Version 3.4.0 – 18.01.2016
+--------------------------
+
+* Anpassungen für REDAXO 5 final
+* Bugfix: Nach einem DB-Import wurden die Daten teilweise direkt wieder mit Altdaten überschrieben
+
 Version 3.3.1 – 10.05.2014
 --------------------------
 
