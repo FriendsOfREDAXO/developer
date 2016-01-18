@@ -101,7 +101,7 @@ abstract class rex_developer_manager
     public static function start()
     {
         self::registerDefault();
-        if (rex_be_controller::getCurrentPage() === 'backup/import' && rex_get('function', 'string') === 'dbimport') {
+        if (rex_be_controller::getCurrentPagePart(1) === 'backup' && rex_get('function', 'string') === 'dbimport') {
             rex_extension::register('BACKUP_AFTER_DB_IMPORT', function () {
                 rex_developer_manager::synchronize(null, true);
             });
