@@ -7,10 +7,10 @@
  */
 abstract class rex_developer_synchronizer
 {
-    const ID_LIST_FILE = '.rex_id_list';
-    const ID_FILE      = '.rex_id';
-    const IGNORE_FILE  = '.rex_ignore';
+    const ID_FILE     = '.rex_id';
+    const IGNORE_FILE = '.rex_ignore';
 
+    protected $dirname;
     protected $baseDir;
     protected $files;
 
@@ -22,6 +22,7 @@ abstract class rex_developer_synchronizer
      */
     public function __construct($dirname, array $files)
     {
+        $this->dirname = $dirname;
         $this->baseDir = rex_path::addonData('developer', $dirname . '/');
         $this->files = $files;
     }
@@ -59,11 +60,8 @@ abstract class rex_developer_synchronizer
      */
     public function run($force = false)
     {
-        $idList = array();
-        $idListFile = $this->baseDir . self::ID_LIST_FILE;
-        if (file_exists($idListFile)) {
-            $idList = array_flip(explode(',', rex_file::get($idListFile)));
-        }
+        $idLists = rex_config::get('developer', 'items', array());
+        $idList = isset($idLists[$this->dirname]) ? array_flip($idLists[$this->dirname]) : array();
         $origIdList = $idList;
 
         list($existing, $new) = $this->getNewAndExistingDirs();
@@ -73,7 +71,8 @@ abstract class rex_developer_synchronizer
         $this->addNewItems($idList, $new, false);
 
         if (array_diff_key($origIdList, $idList) !== array_diff_key($idList, $origIdList)) {
-            rex_file::put($idListFile, implode(',', array_keys($idList)));
+            $idLists[$this->dirname] = array_keys($idList);
+            rex_config::set('developer', 'items', $idLists);
         }
     }
 
