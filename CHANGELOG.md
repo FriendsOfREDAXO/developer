@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 3.4.1 – 05.05.2016
+--------------------------
+
+* Bugfix: Bei paralleler Entwicklung lokal/Server kam es teilweise zum ungewollten Löschen von Sync-Ordnern
+
 Version 3.4.0 – 18.01.2016
 --------------------------
 
