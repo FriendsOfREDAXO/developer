@@ -9,6 +9,7 @@ if (rex_post('config-submit', 'boolean')) {
         ['templates', 'bool'],
         ['modules', 'bool'],
         ['actions', 'bool'],
+        ['sync_frontend', 'bool'],
         ['rename', 'bool'],
         ['prefix', 'bool'],
         ['umlauts', 'bool'],
@@ -35,6 +36,11 @@ $formElements[] = $n;
 $n = [];
 $n['label'] = '<label for="rex-developer-actions">' . $this->i18n('actions') . '</label>';
 $n['field'] = '<input type="checkbox" id="rex-developer-actions" name="config[actions]" value="1" ' . ($this->getConfig('actions') ? ' checked="checked"' : '') . ' />';
+$formElements[] = $n;
+
+$n = [];
+$n['label'] = '<label for="rex-developer-sync-frontend">' . $this->i18n('sync_frontend') . '</label>';
+$n['field'] = '<input type="checkbox" id="rex-developer-sync-frontend" name="config[sync_frontend]" value="1" ' . ($this->getConfig('sync_frontend') ? ' checked="checked"' : '') . ' />';
 $formElements[] = $n;
 
 $n = [];

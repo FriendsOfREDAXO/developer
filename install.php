@@ -7,6 +7,7 @@ if (!$this->hasConfig()) {
         'templates' => true,
         'modules' => true,
         'actions' => true,
+        'sync_frontend' => true,
         'rename' => true,
         'prefix' => false,
         'umlauts' => true,
