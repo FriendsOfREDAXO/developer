@@ -49,4 +49,4 @@ Eigene Synchronisationen
 ------------------------
 
 Über PlugIns oder andere AddOns ist es möglich, eigene Sychronisationen mit dem Dateisystem hinzuzufügen. Details dazu
-gibt es im [Wiki](https://github.com/gharlan/redaxo_developer/wiki/Eigene-Synchronisationen).
+gibt es im [Wiki](https://github.com/friendsofredaxo/developer/wiki/Eigene-Synchronisationen).

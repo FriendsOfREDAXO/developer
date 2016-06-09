@@ -1,7 +1,7 @@
 package: developer
 version: '3.4.1'
-author: Gregor Harlan
-supportpage: http://www.redaxo.org/de/forum
+author: Friends Of REDAXO
+supportpage: https://github.com/FriendsOfREDAXO/developer
 
 page:
     title: translate:name
