@@ -1,6 +1,13 @@
 Changelog
 =========
 
+Version 3.5.0 – 09.06.2016
+--------------------------
+
+* Übertrag zu Friends Of REDAXO
+* Synchronisation in Frontend kann deaktiviert werden
+* Bugfix: "Module synchronisieren" konnte nicht deaktiviert werden
+
 Version 3.4.1 – 05.05.2016
 --------------------------
 
