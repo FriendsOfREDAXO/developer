@@ -7,7 +7,7 @@ echo rex_view::title($this->i18n('name'));
 if (rex_post('config-submit', 'boolean')) {
     $this->setConfig(rex_post('config', [
         ['templates', 'bool'],
-        ['module', 'bool'],
+        ['modules', 'bool'],
         ['actions', 'bool'],
         ['rename', 'bool'],
         ['prefix', 'bool'],
