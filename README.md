@@ -1,7 +1,7 @@
 REDAXO-AddOn: developer
 =======================
 
-Das AddOn ermöglicht es, die Templates, Module und Actions über das Dateisystem (und somit mit beliebigen Editor) zu bearbeiten, bzw. neu anzulegen.
+Das AddOn ermöglicht es, die Templates, Module und Actions über das Dateisystem (und somit mit beliebigem Editor) zu bearbeiten, bzw. neu anzulegen.
 
 ![Screenshot](https://raw.githubusercontent.com/FriendsOfREDAXO/developer/assets/developer.png)
 
