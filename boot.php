@@ -1,6 +1,6 @@
 <?php
 
-if (!empty($_SERVER['HTTP_ACCEPT']) && stripos($_SERVER['HTTP_ACCEPT'], 'image/') !== false) {
+if (stripos(rex_server('HTTP_ACCEPT', 'string'), 'image/') !== false) {
     // dont trigger sync mechnisms in image requests, so we dont acquire a session-lock
     // in media-manager requests
     return;
