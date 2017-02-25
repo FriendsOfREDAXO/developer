@@ -1,5 +1,11 @@
 <?php
 
+if (stripos(rex_server('HTTP_ACCEPT', 'string'), 'image/') !== false) {
+    // dont trigger sync mechnisms in image requests, so we dont acquire a session-lock
+    // in media-manager requests
+    return;
+}
+
 if (!rex::isBackend() && $this->getConfig('sync_frontend') || rex::getUser()) {
     rex_extension::register('PACKAGES_INCLUDED', function () {
         if (($user = rex_backend_login::createUser()) && $user->isAdmin()) {
