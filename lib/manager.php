@@ -100,8 +100,13 @@ abstract class rex_developer_manager
      */
     public static function start()
     {
+        rex_extension::registerPoint(new rex_extension_point('DEVELOPER_MANAGER_START', '', [], true));
+
         self::registerDefault();
-        if (rex_be_controller::getCurrentPagePart(1) === 'backup' && rex_get('function', 'string') === 'dbimport') {
+
+        if (method_exists('rex', 'getConsole') && rex::getConsole()) {
+            self::synchronize();
+        } elseif (rex_be_controller::getCurrentPagePart(1) === 'backup' && rex_get('function', 'string') === 'dbimport') {
             rex_extension::register('BACKUP_AFTER_DB_IMPORT', function () {
                 rex_developer_manager::synchronize(null, true);
             });

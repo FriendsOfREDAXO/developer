@@ -146,7 +146,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         $sql->setTable($this->table);
         $sql->setValue($this->nameColumn, $item->getName());
         if ($this->commonCreateUpdateColumns) {
-            $user = rex::getUser()->getLogin();
+            $user = rex::getUser() ? rex::getUser()->getLogin() : 'console';
             $sql->setDateTimeValue('updatedate', $item->getUpdated());
             $sql->setValue('updateuser', $user);
             $sql->setDateTimeValue('createdate', $item->getUpdated());
@@ -188,7 +188,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         $sql->setWhere([$this->idColumn => $item->getId()]);
         if ($this->commonCreateUpdateColumns) {
             $sql->setDateTimeValue('updatedate', $item->getUpdated());
-            $sql->setValue('updateuser', rex::getUser()->getLogin());
+            $sql->setValue('updateuser', rex::getUser() ? rex::getUser()->getLogin() : 'console');
         } else {
             $sql->setDateTimeValue($this->updatedColumn, $item->getUpdated());
         }
