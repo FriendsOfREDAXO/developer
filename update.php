@@ -13,3 +13,7 @@ if (rex_string::versionCompare($this->getVersion(), '3.4.1', '<')) {
 if (rex_string::versionCompare($this->getVersion(), '3.5.0', '<')) {
     $this->setConfig('sync_frontend', true);
 }
+
+if (rex_string::versionCompare($this->getVersion(), '3.6.0', '<')) {
+    $this->setConfig('sync_backend', true);
+}
