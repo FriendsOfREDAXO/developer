@@ -1,0 +1,15 @@
+developer_name = Programador
+developer_settings = Configurações
+developer_templates = Sincronizar templates
+developer_modules = Sincronizar módulos
+developer_actions = Sincronizar ações
+developer_sync_frontend = Sincronizar no frontend (somente se registrado como administrador no backend)
+developer_sync_backend = Sincronizar no backend (somente se registrado como administrador)
+developer_rename = Atualizar nomes de arquivo e diretórios automaticamente
+developer_prefix = Prefixo do nome do arquivo (contem ID e nome)
+developer_umlauts = Manter acentos nos nomes
+developer_delete = Deletar item do diretório depois de deletar item no backend
+developer_dir = Diretório
+developer_save = Salvar configurações
+developer_saved = Configurações foram salvas
+developer_error = Um erro ocorreu
