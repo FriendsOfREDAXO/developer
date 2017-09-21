@@ -1,8 +1,6 @@
 <?php
 
 if (method_exists('rex', 'getConsole') && rex::getConsole()) {
-    rex::getConsole()->add(new rex_developer_command());
-
     return;
 }
 

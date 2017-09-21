@@ -8,3 +8,6 @@ page:
     perm: admin
     subpages:
         settings: { title: translate:settings }
+
+console_commands:
+    developer:sync: rex_developer_command
