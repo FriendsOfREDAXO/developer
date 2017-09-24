@@ -15,6 +15,18 @@ abstract class rex_developer_manager
         self::START_LATE  => array()
     );
 
+    private static $basePath;
+
+    public static function setBasePath($basePath)
+    {
+        self::$basePath = $basePath;
+    }
+
+    public static function getBasePath()
+    {
+        return self::$basePath ?: rex_path::addonData('developer');
+    }
+
     /**
      * Registers a new synchronizer
      *

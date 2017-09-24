@@ -23,7 +23,8 @@ abstract class rex_developer_synchronizer
     public function __construct($dirname, array $files)
     {
         $this->dirname = $dirname;
-        $this->baseDir = rex_path::addonData('developer', $dirname . '/');
+        $this->baseDir = rex_developer_manager::getBasePath() . '/' . $dirname . '/';
+
         $this->files = $files;
     }
 
