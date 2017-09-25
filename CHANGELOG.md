@@ -1,7 +1,7 @@
 Changelog
 =========
 
-Version 3.6.0 – XX.XX.2016
+Version 3.6.0 – XX.XX.2017
 --------------------------
 
 * Consolen-Command für das Synchronisieren über die cli
