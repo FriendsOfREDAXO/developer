@@ -1,6 +1,15 @@
 Changelog
 =========
 
+Version 3.6.0 – XX.XX.2016
+--------------------------
+
+* Consolen-Command für das Synchronisieren über die cli
+* Hauptpfad kann über `rex_developer_manager::setBasePath()` geändert werden
+* Option zum Deaktivieren der Synchronisation im Backend
+* Option für Erhaltung der Umlaute default inaktiv, Option ist nun deprecated
+* Beim Aufruf von Medien über den Media Manager wird die Synchronisation nicht gestartet
+
 Version 3.5.0 – 09.06.2016
 --------------------------
 
