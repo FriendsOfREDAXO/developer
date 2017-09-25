@@ -11,7 +11,7 @@ if (!$this->hasConfig()) {
         'sync_backend' => true,
         'rename' => true,
         'prefix' => false,
-        'umlauts' => true,
+        'umlauts' => false,
         'delete' => true,
     ]);
 }
