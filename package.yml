@@ -11,3 +11,7 @@ page:
 
 console_commands:
     developer:sync: rex_developer_command
+
+requires:
+    php:
+        extensions: [iconv]
