@@ -1,0 +1,15 @@
+developer_name = Developer
+developer_settings = Inställningar
+developer_templates = Synkronisera mallar
+developer_modules = Synkronisera moduler
+developer_actions = Synkronisera aktioner
+developer_sync_frontend = Synkronisera i frontend (endast om du är inloggad som administratör i backend)
+developer_sync_backend = Synkronisera i backend (endast om du är inloggad som administratör)
+developer_rename = Uppdatera fil- och katalognamn automatiskt
+developer_prefix = Filnamn prefix (innehåller ID och namn)
+developer_umlauts = Håll umlauts i namn
+developer_delete = Ta bort artikelkatalog efter att du har raderat objektet i backend
+developer_dir = Mapp
+developer_save = Spara inställningarna
+developer_saved = Inställningarna har sparats
+developer_error = Det uppstod ett fel
