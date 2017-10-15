@@ -10,6 +10,7 @@ if (!$this->hasConfig()) {
         'sync_frontend' => true,
         'sync_backend' => true,
         'rename' => true,
+        'dir_suffix' => true,
         'prefix' => false,
         'umlauts' => false,
         'delete' => true,

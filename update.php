@@ -17,3 +17,7 @@ if (rex_string::versionCompare($this->getVersion(), '3.5.0', '<')) {
 if (rex_string::versionCompare($this->getVersion(), '3.6.0', '<')) {
     $this->setConfig('sync_backend', true);
 }
+
+if (rex_string::versionCompare($this->getVersion(), '3.6.0-beta2', '<')) {
+    $this->setConfig('dir_suffix', false);
+}
