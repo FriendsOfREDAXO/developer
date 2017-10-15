@@ -109,24 +109,37 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
      */
     protected function getItems()
     {
-        $items = array();
-        $sql = rex_sql::factory();
-        $sql->setQuery('SELECT * FROM `' . $this->table . '`');
-        for ($i = 0, $rows = $sql->getRows(); $i < $rows; ++$i, $sql->next()) {
-            $name = $sql->getValue($this->nameColumn);
-            $item = new rex_developer_synchronizer_item($sql->getValue($this->idColumn), $name, $sql->getDateTimeValue($this->updatedColumn));
-            foreach ($this->columns as $file => $column) {
-                $item->setFile($file, $sql->getValue($column));
-            }
-            $metadata = array();
-            foreach ($this->metadata as $column => $type) {
-                $metadata[$column] = self::cast($sql->getValue($column), $type);
-            }
-            $item->setFile(self::METADATA_FILE, function() use ($metadata) {
-                return rex_string::yamlEncode($metadata);
-            });
-            $items[] = $item;
+        $defaultLang = rex::getProperty('lang');
+        $lang = rex_i18n::getLocale();
+        if ($defaultLang !== $lang) {
+            rex_i18n::setLocale($defaultLang, false);
         }
+
+        try {
+            $items = array();
+            $sql = rex_sql::factory();
+            $sql->setQuery('SELECT * FROM `' . $this->table . '`');
+            for ($i = 0, $rows = $sql->getRows(); $i < $rows; ++$i, $sql->next()) {
+                $name = rex_i18n::translate($sql->getValue($this->nameColumn));
+                $item = new rex_developer_synchronizer_item($sql->getValue($this->idColumn), $name, $sql->getDateTimeValue($this->updatedColumn));
+                foreach ($this->columns as $file => $column) {
+                    $item->setFile($file, $sql->getValue($column));
+                }
+                $metadata = array();
+                foreach ($this->metadata as $column => $type) {
+                    $metadata[$column] = self::cast($sql->getValue($column), $type);
+                }
+                $item->setFile(self::METADATA_FILE, function() use ($metadata) {
+                    return rex_string::yamlEncode($metadata);
+                });
+                $items[] = $item;
+            }
+        } finally {
+            if ($defaultLang !== $lang) {
+                rex_i18n::setLocale($lang, false);
+            }
+        }
+
         return $items;
     }
 
