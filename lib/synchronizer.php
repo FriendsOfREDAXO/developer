@@ -261,6 +261,7 @@ abstract class rex_developer_synchronizer
                 array('Ae', 'Oe', 'Ue', 'ae', 'oe', 'ue', 'ss'),
                 $filename
             );
+            $filename = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $filename);
         }
         return ltrim(rtrim($filename, ' .'));
     }
