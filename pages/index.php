@@ -12,6 +12,7 @@ if (rex_post('config-submit', 'boolean')) {
         ['sync_frontend', 'bool'],
         ['sync_backend', 'bool'],
         ['rename', 'bool'],
+        ['dir_suffix', 'bool'],
         ['prefix', 'bool'],
         ['umlauts', 'bool'],
         ['delete', 'bool'],
@@ -52,6 +53,11 @@ $formElements[] = $n;
 $n = [];
 $n['label'] = '<label for="rex-developer-rename">' . $this->i18n('rename') . '</label>';
 $n['field'] = '<input type="checkbox" id="rex-developer-rename" name="config[rename]" value="1" ' . ($this->getConfig('rename') ? ' checked="checked"' : '') . ' />';
+$formElements[] = $n;
+
+$n = [];
+$n['label'] = '<label for="rex-developer-dir-suffix">' . $this->i18n('dir_suffix') . '</label>';
+$n['field'] = '<input type="checkbox" id="rex-developer-dir-suffix" name="config[dir_suffix]" value="1" ' . ($this->getConfig('dir_suffix') ? ' checked="checked"' : '') . ' />';
 $formElements[] = $n;
 
 $n = [];

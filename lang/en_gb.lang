@@ -6,6 +6,7 @@ developer_actions = Synchronize actions
 developer_sync_frontend = Synchronize in frontend (only if signed in as admin in backend)
 developer_sync_backend = Synchronize in backend (only if signed in as admin)
 developer_rename = Update file and directory names automatically
+developer_dir_suffix = Dir names with id suffix
 developer_prefix = Filename prefix (contains ID and name)
 developer_umlauts = Keep umlauts in names (deprecated; will be removed in next major version)
 developer_delete = Delete item directory after deleting item in backend

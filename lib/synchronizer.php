@@ -119,6 +119,11 @@ abstract class rex_developer_synchronizer
             }
             if (rex_config::get('developer', 'rename') || !$existingDir) {
                 $dirBase = self::getFilename($name);
+
+                if (rex_config::get('developer', 'dir_suffix')) {
+                    $dirBase .= ' ['.$id.']';
+                }
+
                 $dir = $dirBase;
                 $i = 1;
                 while (!self::equalFilenames($existingDir, $dir) && file_exists($this->baseDir . $dir)) {
