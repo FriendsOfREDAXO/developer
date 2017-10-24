@@ -62,7 +62,12 @@ abstract class rex_developer_synchronizer
     public function run($force = false)
     {
         $idLists = rex_config::get('developer', 'items', array());
-        $idList = isset($idLists[$this->dirname]) ? array_flip($idLists[$this->dirname]) : array();
+        $idList = isset($idLists[$this->dirname]) ? $idLists[$this->dirname] : array();
+
+        if (isset($idList[0])) {
+            $idList = array_flip($idList);
+        }
+
         $origIdList = $idList;
 
         list($existing, $new) = $this->getNewAndExistingDirs();
@@ -71,8 +76,8 @@ abstract class rex_developer_synchronizer
         $this->addNewItems($idList, $existing, true);
         $this->addNewItems($idList, $new, false);
 
-        if (array_diff_key($origIdList, $idList) !== array_diff_key($idList, $origIdList)) {
-            $idLists[$this->dirname] = array_keys($idList);
+        if ($idList !== $origIdList) {
+            $idLists[$this->dirname] = $idList;
             rex_config::set('developer', 'items', $idLists);
         }
     }
@@ -141,7 +146,7 @@ abstract class rex_developer_synchronizer
                 $dir = $this->baseDir . $existingDir . '/';
             }
 
-            $idList[$id] = true;
+            $lastUpdated = isset($idList[$id]) ? $idList[$id] : 0;
             $updated = max(1, $item->getUpdated());
             $dbUpdated = $updated;
             $updateFiles = array();
@@ -154,7 +159,8 @@ abstract class rex_developer_synchronizer
                 $filePath = self::getFile($dir, $file, $prefix, rex_config::get('developer', 'rename'));
                 $files[] = $filePath;
                 $fileUpdated = !$force && file_exists($filePath) ? filemtime($filePath) : 0;
-                if ($dbUpdated > $fileUpdated) {
+
+                if ($dbUpdated > $fileUpdated && $dbUpdated > $lastUpdated) {
                     rex_file::put($filePath, $item->getFile($file));
                     touch($filePath, $updated);
                 } elseif ($fileUpdated > $dbUpdated) {
@@ -163,11 +169,10 @@ abstract class rex_developer_synchronizer
                 }
             }
             if ($dbUpdated != $updated) {
-                foreach ($files as $file) {
-                    touch($file, $updated);
-                }
                 $this->editItem(new rex_developer_synchronizer_item($id, $name, $updated, $updateFiles));
             }
+
+            $idList[$id] = $updated;
         }
     }
 
@@ -209,7 +214,7 @@ abstract class rex_developer_synchronizer
             $name = strtr(basename($dir), '_', ' ');
             if ($add && $id = $this->addItem(new rex_developer_synchronizer_item($id, $name, $updated, $addFiles))) {
                 rex_file::put($dir . $id . self::ID_FILE, '');
-                $idList[$id] = true;
+                $idList[$id] = $updated;
             }
         }
     }
