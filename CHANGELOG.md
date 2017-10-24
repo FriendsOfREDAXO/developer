@@ -1,14 +1,19 @@
 Changelog
 =========
 
-Version 3.6.0 – XX.XX.2017
+Version 3.6.0 – 24.10.2017
 --------------------------
 
+* Übersetzungen: Verbesserung Englisch, neu Portugiesisch und Schwedisch
 * Consolen-Command für das Synchronisieren über die cli
 * Hauptpfad kann über `rex_developer_manager::setBasePath()` geändert werden
 * Option zum Deaktivieren der Synchronisation im Backend
+* Option für ID-Suffix in Ordnernamen
 * Option für Erhaltung der Umlaute default inaktiv, Option ist nun deprecated
+* Bessere Ersetzung von Umlauten (insbesondere der Nicht-Deutschen)
+* Namen beginnend mit "translate:" werden auch im Ordnernamen übersetzt
 * Beim Aufruf von Medien über den Media Manager wird die Synchronisation nicht gestartet
+* Die mtime der Dateien wird nicht unnötig neu gesetzt (versursachte teilweise Reloadhinweise in manchen Editoren)
 
 Version 3.5.0 – 09.06.2016
 --------------------------
