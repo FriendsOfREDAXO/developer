@@ -120,7 +120,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
             $sql = rex_sql::factory();
             $sql->setQuery('SELECT * FROM `' . $this->table . '`');
             for ($i = 0, $rows = $sql->getRows(); $i < $rows; ++$i, $sql->next()) {
-                $name = rex_i18n::translate($sql->getValue($this->nameColumn));
+                $name = rex_i18n::translate($sql->getValue($this->nameColumn), false);
                 $item = new rex_developer_synchronizer_item($sql->getValue($this->idColumn), $name, $sql->getDateTimeValue($this->updatedColumn));
                 foreach ($this->columns as $file => $column) {
                     $item->setFile($file, $sql->getValue($column));
