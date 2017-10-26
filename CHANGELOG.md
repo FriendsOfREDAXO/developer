@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 3.6.1 – 26.10.2017
+--------------------------
+
+* Die Ordnernamen enthielten HTML-Entities ("&amp;" statt "&" etc.)
+
 Version 3.6.0 – 24.10.2017
 --------------------------
 
