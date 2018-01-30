@@ -290,7 +290,7 @@ abstract class rex_developer_synchronizer
 
     protected static function glob($pattern, $flags = 0)
     {
-        $pattern = addcslashes($pattern, '[]');
+        $pattern = str_replace(['[',']',"\f[","\f]"], ["\f[","\f]",'[[]','[]]'], $pattern);
         return glob($pattern, $flags);
     }
 }
