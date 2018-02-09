@@ -1,0 +1,16 @@
+developer_name = Desarrollador
+developer_settings = Ajustes
+developer_templates = Sincronizar plantillas
+developer_modules = Sincronizar módulos
+developer_actions = Sincronizar acciones
+developer_sync_frontend = Sincronizar en frontend (solo iniciado sesión como administrador en back-end)
+developer_sync_backend = Sincronizar en el backend (solo si está conectado como administrador)
+developer_rename = Mantenga actualizados los nombres de archivos y carpetas
+developer_dir_suffix = Nombre de la carpeta con ID como sufijo
+developer_prefix = Prefijo de nombre de archivo (contiene ID y nombre)
+developer_umlauts = Mantenga umlauts en los nombres (obsoleto, la opción desaparecerá en la siguiente versión principal y por lo tanto siempre estará deshabilitada)
+developer_delete = Eliminar carpeta de elementos después de eliminar un elemento a través del servidor
+developer_dir = Directorio
+developer_save = Guardar configuraciones
+developer_saved = La configuración ha sido guardada.
+developer_error = Un error ha ocurrido
