@@ -17,6 +17,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
     protected $metadata;
     protected $addedCallback;
     protected $editedCallback;
+    protected $deletedCallback;
     protected $idColumn = 'id';
     protected $nameColumn = 'name';
     protected $updatedColumn = 'updatedate';
@@ -57,6 +58,16 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
     public function setEditedCallback($callback)
     {
         $this->editedCallback = $callback;
+    }
+
+    /**
+     * Sets a callback function which will be called if an existing item is deleted by the file system
+     *
+     * @param callable $callback
+     */
+    public function setDeletedCallback($callback)
+    {
+        $this->deletedCallback = $callback;
     }
 
     /**
@@ -221,6 +232,21 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         $sql->update();
         if ($this->editedCallback) {
             call_user_func($this->editedCallback, $item);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function deleteItem(rex_developer_synchronizer_item $item)
+    {
+        $sql = rex_sql::factory();
+        $sql->setTable($this->table);
+        $sql->setWhere([$this->idColumn => $item->getId()]);
+        $sql->delete();
+
+        if ($this->deletedCallback) {
+            call_user_func($this->deletedCallback, $item);
         }
     }
 
