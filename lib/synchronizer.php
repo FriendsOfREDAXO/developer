@@ -72,7 +72,7 @@ abstract class rex_developer_synchronizer
 
         list($existing, $new) = $this->getNewAndExistingDirs();
         $this->synchronizeReceivedItems($idList, $existing, $force);
-        $this->removeItems($idList, $existing);
+        $this->removeItems($idList, $existing, $force);
         $this->addNewItems($idList, $existing, true);
         $this->addNewItems($idList, $new, false);
 
@@ -176,11 +176,11 @@ abstract class rex_developer_synchronizer
         }
     }
 
-    private function removeItems(&$idList, &$existing)
+    private function removeItems(&$idList, &$existing, $force = false)
     {
         foreach ($existing as $id => $dir) {
             $dir = $this->baseDir . $dir . '/';
-            if (isset($idList[$id])) {
+            if ($force || isset($idList[$id])) {
                 unset($existing[$id]);
                 unset($idList[$id]);
                 if (rex_config::get('developer', 'delete')) {
