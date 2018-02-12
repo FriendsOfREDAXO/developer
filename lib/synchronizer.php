@@ -10,6 +10,12 @@ abstract class rex_developer_synchronizer
     const ID_FILE     = '.rex_id';
     const IGNORE_FILE = '.rex_ignore';
 
+    /** Force the current status in db  */
+    const FORCE_DB = 1;
+
+    /** Force the current status in file system */
+    const FORCE_FILES = 2;
+
     protected $dirname;
     protected $baseDir;
     protected $files;
@@ -55,9 +61,20 @@ abstract class rex_developer_synchronizer
     abstract protected function editItem(rex_developer_synchronizer_item $item);
 
     /**
+     * The method is called, when an existing item is deleted by the file system (`FORCE_FILES` is activated)
+     *
+     * Use the method to delete the item in the base system
+     *
+     * @param rex_developer_synchronizer_item $item
+     */
+    protected function deleteItem(rex_developer_synchronizer_item $item)
+    {
+    }
+
+    /**
      * Runs the synchronizer
      *
-     * @param bool $force Flag, whether all items of the base system should be handled as changed
+     * @param bool $force Flag, whether the synchronizers should run in force mode (`rex_developer_synchronizer::FORCE_DB/FILES`)
      */
     public function run($force = false)
     {
@@ -113,6 +130,8 @@ abstract class rex_developer_synchronizer
 
     private function synchronizeReceivedItems(&$idList, &$existing, $force = false)
     {
+        $force = $force ? (int) $force : false;
+
         foreach ($this->getItems() as $item) {
             $id = $item->getId();
             $name = $item->getName();
@@ -121,7 +140,13 @@ abstract class rex_developer_synchronizer
             if (isset($existing[$id])) {
                 $existingDir = $existing[$id];
                 unset($existing[$id]);
+            } elseif (self::FORCE_FILES === $force) {
+                $this->deleteItem($item);
+                unset($idList[$id]);
+
+                continue;
             }
+
             if (rex_config::get('developer', 'rename') || !$existingDir) {
                 $dirBase = self::getFilename($name);
 
@@ -147,7 +172,7 @@ abstract class rex_developer_synchronizer
             }
 
             $lastUpdated = isset($idList[$id]) ? $idList[$id] : 0;
-            $updated = max(1, $item->getUpdated());
+            $updated = self::FORCE_FILES === $force ? 0 : max(1, $item->getUpdated());
             $dbUpdated = $updated;
             $updateFiles = array();
             $files = array();
@@ -158,9 +183,9 @@ abstract class rex_developer_synchronizer
             foreach ($this->files as $file) {
                 $filePath = self::getFile($dir, $file, $prefix, rex_config::get('developer', 'rename'));
                 $files[] = $filePath;
-                $fileUpdated = !$force && file_exists($filePath) ? filemtime($filePath) : 0;
+                $fileUpdated = self::FORCE_DB !== $force && file_exists($filePath) ? filemtime($filePath) : 0;
 
-                if ($dbUpdated > $fileUpdated && $dbUpdated > $lastUpdated) {
+                if ($dbUpdated > $fileUpdated && $dbUpdated > $lastUpdated || !file_exists($filePath)) {
                     rex_file::put($filePath, $item->getFile($file));
                     touch($filePath, $updated);
                 } elseif ($fileUpdated > $dbUpdated) {
@@ -178,9 +203,13 @@ abstract class rex_developer_synchronizer
 
     private function removeItems(&$idList, &$existing, $force = false)
     {
+        if (self::FORCE_FILES === $force) {
+            return;
+        }
+
         foreach ($existing as $id => $dir) {
             $dir = $this->baseDir . $dir . '/';
-            if ($force || isset($idList[$id])) {
+            if (self::FORCE_DB === $force || isset($idList[$id])) {
                 unset($existing[$id]);
                 unset($idList[$id]);
                 if (rex_config::get('developer', 'delete')) {
