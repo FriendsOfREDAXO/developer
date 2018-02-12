@@ -1,6 +1,14 @@
 Changelog
 =========
 
+Version 3.7.0 – 13.02.2018
+--------------------------
+
+* Spanisch-Übersetzung
+* Neue Kommando-Optionen `--force-db` und `--force-files`
+* In Windows kam es teils zu exzessiven Vervielfältigungen der Module/Templates
+* Nach Backup-Import wurden teils Module/Templates vom Stand vor dem Import wiederhergestellt
+
 Version 3.6.1 – 26.10.2017
 --------------------------
 
