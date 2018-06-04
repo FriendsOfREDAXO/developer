@@ -6,6 +6,7 @@ developer_actions = Synkronisera aktioner
 developer_sync_frontend = Synkronisera i frontend (endast om du är inloggad som administratör i backend)
 developer_sync_backend = Synkronisera i backend (endast om du är inloggad som administratör)
 developer_rename = Uppdatera fil- och katalognamn automatiskt
+developer_dir_suffix = Mappnamn med ID som suffix
 developer_prefix = Filnamn prefix (innehåller ID och namn)
 developer_umlauts = Håll umlauts i namn
 developer_delete = Ta bort artikelkatalog efter att du har raderat objektet i backend
