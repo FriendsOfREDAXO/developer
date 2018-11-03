@@ -317,7 +317,7 @@ abstract class rex_developer_synchronizer
         return $filename1 === $filename2;
     }
 
-    protected static function glob($pattern, $flags = 0)
+    public static function glob($pattern, $flags = 0)
     {
         $pattern = str_replace(['[',']',"\f[","\f]"], ["\f[","\f]",'[[]','[]]'], $pattern);
         return glob($pattern, $flags);
