@@ -124,7 +124,7 @@ abstract class rex_developer_manager
 
         if (method_exists('rex', 'getConsole') && rex::getConsole()) {
             self::synchronize(null, $force);
-        } elseif (rex_be_controller::getCurrentPagePart(1) === 'backup' && rex_get('function', 'string') === 'dbimport') {
+        } elseif (rex_be_controller::getCurrentPagePart(1) === 'backup') {
             rex_extension::register('BACKUP_AFTER_DB_IMPORT', function () {
                 rex_developer_manager::synchronize(null, rex_developer_synchronizer::FORCE_DB);
             });

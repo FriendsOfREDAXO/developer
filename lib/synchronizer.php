@@ -171,7 +171,7 @@ abstract class rex_developer_synchronizer
                 $dir = $this->baseDir . $existingDir . '/';
             }
 
-            $lastUpdated = isset($idList[$id]) ? $idList[$id] : 0;
+            $lastUpdated = self::FORCE_DB !== $force && isset($idList[$id]) ? $idList[$id] : 0;
             $updated = self::FORCE_FILES === $force ? 0 : max(1, $item->getUpdated());
             $dbUpdated = $updated;
             $updateFiles = array();
