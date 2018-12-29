@@ -183,9 +183,12 @@ abstract class rex_developer_synchronizer
             foreach ($this->files as $file) {
                 $filePath = self::getFile($dir, $file, $prefix, rex_config::get('developer', 'rename'));
                 $files[] = $filePath;
-                $fileUpdated = self::FORCE_DB !== $force && file_exists($filePath) ? filemtime($filePath) : 0;
+                
+                $fileMtime = @filemtime($filePath);
+                $fileExists = $fileMtime !== false;
+                $fileUpdated = self::FORCE_DB !== $force && $fileExists ? $fileMtime : 0;
 
-                if ($dbUpdated > $fileUpdated && $dbUpdated > $lastUpdated || !file_exists($filePath)) {
+                if ($dbUpdated > $fileUpdated && $dbUpdated > $lastUpdated || !$fileExists) {
                     rex_file::put($filePath, $item->getFile($file));
                     touch($filePath, $updated);
                 } elseif ($fileUpdated > $dbUpdated) {
