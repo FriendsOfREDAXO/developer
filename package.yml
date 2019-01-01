@@ -15,3 +15,4 @@ console_commands:
 requires:
     php:
         extensions: [iconv]
+    redaxo: ^5.0
