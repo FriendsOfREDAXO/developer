@@ -1,6 +1,14 @@
 Changelog
 =========
 
+Version 3.8.0 – 01.01.2019
+--------------------------
+
+* Editor-URL zu Modulen/Templates liefern (R5.7)
+* Readme als Subpage im Addon
+* Performance-Verbesserung
+* Nach Backup-Import wurden teils Module/Templates vom Stand vor dem Import wiederhergestellt
+
 Version 3.7.0 – 13.02.2018
 --------------------------
 
