@@ -8,6 +8,7 @@ page:
     perm: admin
     subpages:
         settings: { title: translate:settings }
+        readme: { title: translate:readme, subPath: README.md }
 
 console_commands:
     developer:sync: rex_developer_command
@@ -15,4 +16,4 @@ console_commands:
 requires:
     php:
         extensions: [iconv]
-    redaxo: ^5.0
+    redaxo: ^5.1
