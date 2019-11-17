@@ -107,6 +107,19 @@ abstract class rex_developer_manager
                 $page == 'modules/actions' && ((($function == 'add' || $function == 'edit') && $save == '1') || $function == 'delete')
             );
         }
+
+        if (rex_addon::exists('yform') && rex_addon::get('yform')->isInstalled() && $addon->getConfig('yform_email')) {
+            $synchronizer = new rex_developer_synchronizer_default(
+                'yform_email',
+                rex::getTablePrefix() . 'yform_email_template',
+                array('body' => 'body.php', 'body_html' => 'body_html.php'),
+                array('mail_from' => 'string', 'mail_from_name' => 'string', 'mail_reply_to' => 'string', 'mail_reply_to_name' => 'string', 'subject' => 'string', 'attachments' => 'string')
+            );
+            self::register(
+                $synchronizer,
+                $page == 'yform/email/index' && ($function == 'add' || $function == 'edit' || $function == 'delete')
+            );
+        }
     }
 
     /**

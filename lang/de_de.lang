@@ -15,5 +15,6 @@ developer_dir = Ordner
 developer_save = Einstellungen speichern
 developer_saved = Die Einstellungen wurden gespeichert.
 developer_error = Es ist ein Fehler aufgetreten.
+developer_yform_email = YForm E-Mail Templates synchronisieren
 
 developer_readme = Hilfe

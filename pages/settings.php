@@ -14,6 +14,7 @@ if (rex_post('config-submit', 'boolean')) {
         ['prefix', 'bool'],
         ['umlauts', 'bool'],
         ['delete', 'bool'],
+        ['yform_email', 'bool'],
     ]));
 
     echo rex_view::success($this->i18n('saved'));
@@ -72,6 +73,13 @@ $n = [];
 $n['label'] = '<label for="rex-developer-delete">' . $this->i18n('delete') . '</label>';
 $n['field'] = '<input type="checkbox" id="rex-developer-delete" name="config[delete]" value="1" ' . ($this->getConfig('delete') ? ' checked="checked"' : '') . ' />';
 $formElements[] = $n;
+
+if (rex_addon::exists('yform') && rex_addon::get('yform')->isInstalled()) {
+    $n = [];
+    $n['label'] = '<label for="rex-developer-yform-email">' . $this->i18n('yform_email') . '</label>';
+    $n['field'] = '<input type="checkbox" id="rex-developer-yform-email" name="config[yform_email]" value="1" ' . ($this->getConfig('yform_email') ? ' checked="checked"' : '') . ' />';
+    $formElements[] = $n;
+}
 
 $fragment = new rex_fragment();
 $fragment->setVar('elements', $formElements, false);

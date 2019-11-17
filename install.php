@@ -14,5 +14,6 @@ if (!$this->hasConfig()) {
         'prefix' => false,
         'umlauts' => false,
         'delete' => true,
+        'yform_email' => true,
     ]);
 }
