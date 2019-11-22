@@ -13,3 +13,5 @@ developer_dir = Diretório
 developer_save = Salvar configurações
 developer_saved = Configurações foram salvas
 developer_error = Um erro ocorreu
+developer_multidomain = Sincronize no front-end de YRewrite-Multidomains (apenas com o modo de depuração ativado)
+developer_readme = Ajuda

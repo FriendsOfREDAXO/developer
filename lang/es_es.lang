@@ -1,5 +1,4 @@
 developer_name = Desarrollador
-
 developer_settings = Ajustes
 developer_templates = Sincronizar plantillas
 developer_modules = Sincronizar módulos
@@ -15,5 +14,6 @@ developer_dir = Directorio
 developer_save = Guardar configuraciones
 developer_saved = La configuración ha sido guardada.
 developer_error = Un error ha ocurrido
+developer_multidomain = Sincronice en la interfaz de YRewrite-Multidomains (solo con el modo de depuración activado)
 
 developer_readme = Léame

@@ -14,6 +14,7 @@ if (rex_post('config-submit', 'boolean')) {
         ['prefix', 'bool'],
         ['umlauts', 'bool'],
         ['delete', 'bool'],
+        ['multidomain', 'bool'],
     ]));
 
     echo rex_view::success($this->i18n('saved'));
@@ -71,6 +72,11 @@ $formElements[] = $n;
 $n = [];
 $n['label'] = '<label for="rex-developer-delete">' . $this->i18n('delete') . '</label>';
 $n['field'] = '<input type="checkbox" id="rex-developer-delete" name="config[delete]" value="1" ' . ($this->getConfig('delete') ? ' checked="checked"' : '') . ' />';
+$formElements[] = $n;
+
+$n = [];
+$n['label'] = '<label for="rex-developer-multidomain">' . $this->i18n('multidomain') . '</label>';
+$n['field'] = '<input type="checkbox" id="rex-developer-multidomain" name="config[multidomain]" value="1" ' . ($this->getConfig('multidomain') ? ' checked="checked"' : '') . ' />';
 $formElements[] = $n;
 
 $fragment = new rex_fragment();

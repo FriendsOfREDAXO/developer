@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 3.9.0 – 22.11.2019
+--------------------------
+
+* Bei aktiviertem Debug-Modus wird im Frontend von YRewrite-Multidomains nun auch synchronisiert 
+
 Version 3.8.0 – 01.01.2019
 --------------------------
 

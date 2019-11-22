@@ -1,5 +1,4 @@
 <?php
-
 if (method_exists('rex', 'getConsole') && rex::getConsole()) {
     return;
 }
@@ -14,6 +13,16 @@ if (
 ) {
     rex_extension::register('PACKAGES_INCLUDED', function () {
         if (($user = rex_backend_login::createUser()) && $user->isAdmin()) {
+            rex_developer_manager::start();
+        }
+    });
+}
+
+if (
+    rex_addon::get('yrewrite')->isAvailable() && $this->getConfig('multidomain')
+) {
+    rex_extension::register('PACKAGES_INCLUDED', function () {
+          if (rex::isDebugMode()) {			
             rex_developer_manager::start();
         }
     });

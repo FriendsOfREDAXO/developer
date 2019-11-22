@@ -15,5 +15,6 @@ developer_dir = Directory
 developer_save = Save settings
 developer_saved = Settings have been saved
 developer_error = An error occured
+developer_multidomain =  Synchronize in frontend of YRewrite-Multidomains (only with activated debug-mode)
 
 developer_readme = Readme

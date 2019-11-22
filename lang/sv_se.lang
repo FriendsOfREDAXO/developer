@@ -1,5 +1,4 @@
 developer_name = Developer
-
 developer_settings = Inställningar
 developer_templates = Synkronisera mallar
 developer_modules = Synkronisera moduler
@@ -15,5 +14,6 @@ developer_dir = Mapp
 developer_save = Spara inställningarna
 developer_saved = Inställningarna har sparats
 developer_error = Det uppstod ett fel
+developer_multidomain = Synkronisera framför YRewrite-Multidomains (endast med aktiverat felsökningsläge)
 
 developer_readme = Hjälp
