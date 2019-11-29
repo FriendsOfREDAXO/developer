@@ -40,7 +40,7 @@ Hinweise zur Synchronisation im Frontend
 ------------
 * Damit die Synchronisation im Frontend funktioniert, muss hierzu die entsprechende Checkbox in den Einstellungen von developer aktiviert werden.
 * Damit die Synchronisation nach dem Speichern direkt im Frontend funktioniert, muss die Seite im Frontend über die selbe Domain aufgerufen werden, mit welcher man sich im Backend eingeloggt hat, da ansonsten die Backend-Session nicht mit dem Frontend übereinstimmt (Beispiel: im Backend mit www. eingeloggt aber das Frontend ohne www. aufgerufen). Selbes gilt in Multidomain-Umgebungen und für http/https. 
-* Werden diese Hinweise missachtet, funktioniert das automatische Synchornisieren im Frontend nicht und man ist gezwungen, eine Seite im Backend aufzurufen, um die Funktion anzustoßen
+
 
 Eigene Synchronisationen
 ------------------------
