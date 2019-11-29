@@ -35,6 +35,13 @@ Benutzung
 * Nach dem Löschen eines Item-Ordners (oder einzelner Dateien) werden diese neu angelegt. Die Items müssen also regulär über das Backend gelöscht werden.
 * Nach dem Löschen eines Items über das Backend wird der Sychronisationsordner gelöscht, wenn die entsprechende Option nicht deaktivert ist. Ansonsten wird nur die `.rex-id` durch eine `.rex-ignore` ersetzt.
 
+
+Hinweise zur Synchronisation im Frontend
+------------
+* Damit die Synchronisation im Frontend funktioniert, muss hierzu die entsprechende Checkbox in den Einstellungen von developer aktiviert werden.
+* Damit die Synchronisation nach dem Speichern direkt im Frontend funktioniert, muss die Seite im Frontend über die selbe URL aufgerufen werden, mit welcher man sich im Backend eingeloggt hat, da ansonsten die Backend-Session nicht mit dem Frontend übereinstimmt (Beispiel: im Backend mit www. eingeloggt aber das Frontend ohne www. aufgerufen). Selbes gilt in Multidomain-Umgebungen und für http/https. 
+* Werden diese Hinweise missachtet, funktioniert das automatische Synchornisieren im Frontend nicht und man ist gezwungen, eine Seite im Backend aufzurufen, um die Funktion anzustoßen
+
 Eigene Synchronisationen
 ------------------------
 
