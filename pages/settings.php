@@ -74,7 +74,7 @@ $n['label'] = '<label for="rex-developer-delete">' . $this->i18n('delete') . '</
 $n['field'] = '<input type="checkbox" id="rex-developer-delete" name="config[delete]" value="1" ' . ($this->getConfig('delete') ? ' checked="checked"' : '') . ' />';
 $formElements[] = $n;
 
-if (rex_addon::exists('yform') && rex_addon::get('yform')->isInstalled()) {
+if (rex_addon::get('yform')->isAvailable()) {
     $n = [];
     $n['label'] = '<label for="rex-developer-yform-email">' . $this->i18n('yform_email') . '</label>';
     $n['field'] = '<input type="checkbox" id="rex-developer-yform-email" name="config[yform_email]" value="1" ' . ($this->getConfig('yform_email') ? ' checked="checked"' : '') . ' />';
