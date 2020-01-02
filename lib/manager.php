@@ -44,7 +44,9 @@ abstract class rex_developer_manager
     private static function registerDefault()
     {
         $page = rex_be_controller::getCurrentPage();
-        $function = rex_request('function', 'string', '');
+        // workaround for https://github.com/redaxo/redaxo/issues/2900
+        $function = rex_request('function', '', null);
+        $function = is_string($function) ? $function : null;
         $save = rex_request('save', 'string', '');
         $addon = rex_addon::get('developer');
 
