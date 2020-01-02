@@ -40,5 +40,7 @@ class rex_developer_command extends rex_console_command
         rex_developer_manager::start($force);
 
         $io->success('Synchronized developer files.');
+
+        return 0;
     }
 }
