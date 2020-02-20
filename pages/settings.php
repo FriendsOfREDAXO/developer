@@ -39,6 +39,13 @@ $n['label'] = '<label for="rex-developer-actions">' . $this->i18n('actions') . '
 $n['field'] = '<input type="checkbox" id="rex-developer-actions" name="config[actions]" value="1" ' . ($this->getConfig('actions') ? ' checked="checked"' : '') . ' />';
 $formElements[] = $n;
 
+if (rex_addon::get('yform')->isAvailable()) {
+    $n = [];
+    $n['label'] = '<label for="rex-developer-yform-email">' . $this->i18n('yform_email') . '</label>';
+    $n['field'] = '<input type="checkbox" id="rex-developer-yform-email" name="config[yform_email]" value="1" ' . ($this->getConfig('yform_email') ? ' checked="checked"' : '') . ' />';
+    $formElements[] = $n;
+}
+
 $n = [];
 $n['label'] = '<label for="rex-developer-sync-frontend">' . $this->i18n('sync_frontend') . '</label>';
 $n['field'] = '<input type="checkbox" id="rex-developer-sync-frontend" name="config[sync_frontend]" value="1" ' . ($this->getConfig('sync_frontend') ? ' checked="checked"' : '') . ' />';
@@ -73,13 +80,6 @@ $n = [];
 $n['label'] = '<label for="rex-developer-delete">' . $this->i18n('delete') . '</label>';
 $n['field'] = '<input type="checkbox" id="rex-developer-delete" name="config[delete]" value="1" ' . ($this->getConfig('delete') ? ' checked="checked"' : '') . ' />';
 $formElements[] = $n;
-
-if (rex_addon::get('yform')->isAvailable()) {
-    $n = [];
-    $n['label'] = '<label for="rex-developer-yform-email">' . $this->i18n('yform_email') . '</label>';
-    $n['field'] = '<input type="checkbox" id="rex-developer-yform-email" name="config[yform_email]" value="1" ' . ($this->getConfig('yform_email') ? ' checked="checked"' : '') . ' />';
-    $formElements[] = $n;
-}
 
 $fragment = new rex_fragment();
 $fragment->setVar('elements', $formElements, false);
