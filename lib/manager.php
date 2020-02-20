@@ -115,6 +115,7 @@ abstract class rex_developer_manager
                 array('body' => 'body.php', 'body_html' => 'body_html.php'),
                 array('mail_from' => 'string', 'mail_from_name' => 'string', 'mail_reply_to' => 'string', 'mail_reply_to_name' => 'string', 'subject' => 'string', 'attachments' => 'string')
             );
+            $synchronizer->setCommonCreateUpdateColumns(false);
             self::register(
                 $synchronizer,
                 $page == 'yform/email/index' && ($function == 'add' || $function == 'edit' || $function == 'delete')
