@@ -55,7 +55,7 @@ abstract class rex_developer_manager
                 'templates',
                 rex::getTable('template'),
                 array('content' => 'template.php'),
-                array('active' => 'boolean', 'attributes' => 'json')
+                array('active' => 'boolean','key' => 'string', 'attributes' => 'json')
             );
             $callback = function (rex_developer_synchronizer_item $item) {
                 $template = new rex_template($item->getId());
@@ -73,7 +73,8 @@ abstract class rex_developer_manager
             $synchronizer = new rex_developer_synchronizer_default(
                 'modules',
                 rex::getTable('module'),
-                array('input' => 'input.php', 'output' => 'output.php')
+                array('input' => 'input.php', 'output' => 'output.php'),
+                array('key' => 'string')
             );
             $callback = function (rex_developer_synchronizer_item $item) {
                 $sql = rex_sql::factory();
