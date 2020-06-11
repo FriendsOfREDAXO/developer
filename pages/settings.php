@@ -24,20 +24,22 @@ $content = '<fieldset>';
 
 $formElements = [];
 
-$n = [];
-$n['label'] = '<label for="rex-developer-templates">' . $this->i18n('templates') . '</label>';
-$n['field'] = '<input type="checkbox" id="rex-developer-templates" name="config[templates]" value="1" ' . ($this->getConfig('templates') ? ' checked="checked"' : '') . ' />';
-$formElements[] = $n;
+if (rex_plugin::get('structure', 'content')->isAvailable()) {
+    $n = [];
+    $n['label'] = '<label for="rex-developer-templates">' . $this->i18n('templates') . '</label>';
+    $n['field'] = '<input type="checkbox" id="rex-developer-templates" name="config[templates]" value="1" ' . ($this->getConfig('templates') ? ' checked="checked"' : '') . ' />';
+    $formElements[] = $n;
 
-$n = [];
-$n['label'] = '<label for="rex-developer-modules">' . $this->i18n('modules') . '</label>';
-$n['field'] = '<input type="checkbox" id="rex-developer-modules" name="config[modules]" value="1" ' . ($this->getConfig('modules') ? ' checked="checked"' : '') . ' />';
-$formElements[] = $n;
+    $n = [];
+    $n['label'] = '<label for="rex-developer-modules">' . $this->i18n('modules') . '</label>';
+    $n['field'] = '<input type="checkbox" id="rex-developer-modules" name="config[modules]" value="1" ' . ($this->getConfig('modules') ? ' checked="checked"' : '') . ' />';
+    $formElements[] = $n;
 
-$n = [];
-$n['label'] = '<label for="rex-developer-actions">' . $this->i18n('actions') . '</label>';
-$n['field'] = '<input type="checkbox" id="rex-developer-actions" name="config[actions]" value="1" ' . ($this->getConfig('actions') ? ' checked="checked"' : '') . ' />';
-$formElements[] = $n;
+    $n = [];
+    $n['label'] = '<label for="rex-developer-actions">' . $this->i18n('actions') . '</label>';
+    $n['field'] = '<input type="checkbox" id="rex-developer-actions" name="config[actions]" value="1" ' . ($this->getConfig('actions') ? ' checked="checked"' : '') . ' />';
+    $formElements[] = $n;
+}
 
 $yformEmail = rex_plugin::get('yform', 'email');
 if ($yformEmail->isAvailable() && rex_string::versionCompare($yformEmail->getVersion(), '3.4b1', '>=')) {
