@@ -15,5 +15,6 @@ console_commands:
 
 requires:
     php:
+        version: '>=5.5'
         extensions: [iconv]
     redaxo: ^5.2
