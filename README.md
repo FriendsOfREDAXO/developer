@@ -1,7 +1,7 @@
 REDAXO-AddOn: developer
 =======================
 
-Das AddOn ermöglicht es, die Templates, Module und Actions über das Dateisystem (und somit mit beliebigem Editor) zu bearbeiten, bzw. neu anzulegen.
+Das AddOn ermöglicht es, die Templates, Module, Actions, sowie die E-Mail-Templates von YForm über das Dateisystem (und somit mit beliebigem Editor) zu bearbeiten, bzw. neu anzulegen.
 
 ![Screenshot](https://raw.githubusercontent.com/FriendsOfREDAXO/developer/assets/developer.png)
 
@@ -9,7 +9,7 @@ Mindestvoraussetzungen
 ----------------------
 
 * PHP 5.5
-* REDAXO 5.0
+* REDAXO 5.2
 
 Installation
 ------------
@@ -39,7 +39,7 @@ Benutzung
 Hinweise zur Synchronisation im Frontend
 ------------
 * Damit die Synchronisation im Frontend funktioniert, muss hierzu die entsprechende Checkbox in den Einstellungen von developer aktiviert werden.
-* Damit die Synchronisation nach dem Speichern direkt im Frontend funktioniert, muss die Seite im Frontend über die selbe Domain aufgerufen werden, mit welcher man sich im Backend eingeloggt hat, da ansonsten die Backend-Session nicht mit dem Frontend übereinstimmt (Beispiel: im Backend mit www. eingeloggt aber das Frontend ohne www. aufgerufen). Selbes gilt in Multidomain-Umgebungen und für http/https. 
+* Damit die Synchronisation nach dem Speichern direkt im Frontend funktioniert, muss entweder der Debug-Modus aktiviert sein, oder die Seite im Frontend über die selbe Domain aufgerufen werden, mit welcher man sich im Backend eingeloggt hat, da ansonsten die Backend-Session nicht mit dem Frontend übereinstimmt (Beispiel: im Backend mit www. eingeloggt aber das Frontend ohne www. aufgerufen). Selbes gilt in Multidomain-Umgebungen und für http/https.
 
 
 Eigene Synchronisationen
