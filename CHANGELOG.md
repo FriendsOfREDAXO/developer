@@ -1,6 +1,17 @@
 Changelog
 =========
 
+Version 3.9.0 – 11.06.2020
+--------------------------
+
+* YForm-E-Mail-Templates können synchronisiert werden (@jelleschutter)
+* Im Debug-Modus wird nun auch synchronisiert, wenn kein Backend-Admin eingeloggt ist (@gharlan)
+* Template/Module-Keys werden über die `metadata.yml` synchronisiert (@thorol, @gharlan)
+* Übersetzungen aktualisiert (@nandes2062, @interweave-media)
+* Es wird geprüft, ob das structure/content-Plugin verfügbar ist (@gharlan)
+* Readme erweitert (@Hirbod)
+* In Kombination mit adminer und dem Debug-Modus konnte es teils zu einem Fehler kommen (@gharlan)
+
 Version 3.8.0 – 01.01.2019
 --------------------------
 
