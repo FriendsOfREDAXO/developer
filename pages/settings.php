@@ -7,6 +7,7 @@ if (rex_post('config-submit', 'boolean')) {
         ['templates', 'bool'],
         ['modules', 'bool'],
         ['actions', 'bool'],
+        ['yform_email', 'bool'],
         ['sync_frontend', 'bool'],
         ['sync_backend', 'bool'],
         ['rename', 'bool'],
@@ -37,6 +38,14 @@ $n = [];
 $n['label'] = '<label for="rex-developer-actions">' . $this->i18n('actions') . '</label>';
 $n['field'] = '<input type="checkbox" id="rex-developer-actions" name="config[actions]" value="1" ' . ($this->getConfig('actions') ? ' checked="checked"' : '') . ' />';
 $formElements[] = $n;
+
+$yformEmail = rex_plugin::get('yform', 'email');
+if ($yformEmail->isAvailable() && rex_string::versionCompare($yformEmail->getVersion(), '3.4b1', '>=')) {
+    $n = [];
+    $n['label'] = '<label for="rex-developer-yform-email">' . $this->i18n('yform_email') . '</label>';
+    $n['field'] = '<input type="checkbox" id="rex-developer-yform-email" name="config[yform_email]" value="1" ' . ($this->getConfig('yform_email') ? ' checked="checked"' : '') . ' />';
+    $formElements[] = $n;
+}
 
 $n = [];
 $n['label'] = '<label for="rex-developer-sync-frontend">' . $this->i18n('sync_frontend') . '</label>';

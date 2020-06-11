@@ -109,6 +109,21 @@ abstract class rex_developer_manager
                 $page == 'modules/actions' && ((($function == 'add' || $function == 'edit') && $save == '1') || $function == 'delete')
             );
         }
+
+        $yformEmail = rex_plugin::get('yform', 'email');
+        if ($yformEmail->isAvailable() && rex_string::versionCompare($yformEmail->getVersion(), '3.4b1', '>=') && $addon->getConfig('yform_email')) {
+            $synchronizer = new rex_developer_synchronizer_default(
+                'yform_email',
+                rex::getTable('yform_email_template'),
+                array('body' => 'body.php', 'body_html' => 'body_html.php'),
+                array('mail_from' => 'string', 'mail_from_name' => 'string', 'mail_reply_to' => 'string', 'mail_reply_to_name' => 'string', 'subject' => 'string', 'attachments' => 'string')
+            );
+            $synchronizer->setCommonCreateUpdateColumns(false);
+            self::register(
+                $synchronizer,
+                $page == 'yform/email/index' && ($function == 'add' || $function == 'edit' || $function == 'delete')
+            );
+        }
     }
 
     /**
