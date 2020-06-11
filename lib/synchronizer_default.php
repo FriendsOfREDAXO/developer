@@ -182,7 +182,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         if (isset($files[self::METADATA_FILE])) {
             $metadata = rex_string::yamlDecode($files[self::METADATA_FILE]);
             foreach ($this->metadata as $column => $type) {
-                if (isset($metadata[$column])) {
+                if (array_key_exists($column, $metadata)) {
                     $sql->setValue($column, self::toString($metadata[$column], $type));
                 }
             }
@@ -220,7 +220,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         if (isset($files[self::METADATA_FILE])) {
             $metadata = rex_string::yamlDecode($files[self::METADATA_FILE]);
             foreach ($this->metadata as $column => $type) {
-                if (isset($metadata[$column])) {
+                if (array_key_exists($column, $metadata)) {
                     $sql->setValue($column, self::toString($metadata[$column], $type));
                 }
             }
@@ -259,6 +259,10 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
      */
     private static function cast($value, $type)
     {
+        if (null === $value) {
+            return null;
+        }
+
         switch ($type) {
             case 'bool':
             case 'boolean':
@@ -281,10 +285,14 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
      *
      * @param mixed  $value Value
      * @param string $type  Type
-     * @return string
+     * @return null|string
      */
     private static function toString($value, $type)
     {
+        if (null === $value) {
+            return null;
+        }
+
         switch ($type) {
             case 'serialize':
                 return serialize($value);

@@ -53,11 +53,17 @@ abstract class rex_developer_manager
         $structureContent = rex_plugin::get('structure', 'content');
 
         if ($structureContent->isAvailable() && $addon->getConfig('templates')) {
+            $metadata = array();
+            if (rex_string::versionCompare($structureContent->getVersion(), '2.9', '>=')) {
+                $metadata = array('key' => 'string');
+            }
+            $metadata = array_merge($metadata, array('active' => 'boolean', 'attributes' => 'json'));
+
             $synchronizer = new rex_developer_synchronizer_default(
                 'templates',
                 rex::getTable('template'),
                 array('content' => 'template.php'),
-                array('active' => 'boolean', 'attributes' => 'json')
+                $metadata
             );
             $callback = function (rex_developer_synchronizer_item $item) {
                 $template = new rex_template($item->getId());
@@ -72,10 +78,16 @@ abstract class rex_developer_manager
         }
 
         if ($structureContent->isAvailable() && $addon->getConfig('modules')) {
+            $metadata = array();
+            if (rex_string::versionCompare($structureContent->getVersion(), '2.10', '>=')) {
+                $metadata = array('key' => 'string');
+            }
+
             $synchronizer = new rex_developer_synchronizer_default(
                 'modules',
                 rex::getTable('module'),
-                array('input' => 'input.php', 'output' => 'output.php')
+                array('input' => 'input.php', 'output' => 'output.php'),
+                $metadata
             );
             $callback = function (rex_developer_synchronizer_item $item) {
                 $sql = rex_sql::factory();
