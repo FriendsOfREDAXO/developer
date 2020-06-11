@@ -7,6 +7,7 @@ if (rex_post('config-submit', 'boolean')) {
         ['templates', 'bool'],
         ['modules', 'bool'],
         ['actions', 'bool'],
+        ['yform_email', 'bool'],
         ['sync_frontend', 'bool'],
         ['sync_backend', 'bool'],
         ['rename', 'bool'],
@@ -14,7 +15,6 @@ if (rex_post('config-submit', 'boolean')) {
         ['prefix', 'bool'],
         ['umlauts', 'bool'],
         ['delete', 'bool'],
-        ['yform_email', 'bool'],
     ]));
 
     echo rex_view::success($this->i18n('saved'));
