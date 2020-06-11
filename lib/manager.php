@@ -108,7 +108,8 @@ abstract class rex_developer_manager
             );
         }
 
-        if (rex_addon::get('yform')->isAvailable() && rex_string::versionCompare(rex_addon::get('yform')->getVersion(), '3.4', '>=') && $addon->getConfig('yform_email')) {
+        $yformEmail = rex_plugin::get('yform', 'email');
+        if ($yformEmail->isAvailable() && rex_string::versionCompare($yformEmail->getVersion(), '3.4b1', '>=') && $addon->getConfig('yform_email')) {
             $synchronizer = new rex_developer_synchronizer_default(
                 'yform_email',
                 rex::getTable('yform_email_template'),

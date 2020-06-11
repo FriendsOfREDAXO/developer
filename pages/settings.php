@@ -39,7 +39,8 @@ $n['label'] = '<label for="rex-developer-actions">' . $this->i18n('actions') . '
 $n['field'] = '<input type="checkbox" id="rex-developer-actions" name="config[actions]" value="1" ' . ($this->getConfig('actions') ? ' checked="checked"' : '') . ' />';
 $formElements[] = $n;
 
-if (rex_addon::get('yform')->isAvailable() && rex_string::versionCompare(rex_addon::get('yform')->getVersion(), '3.4', '>=')) {
+$yformEmail = rex_plugin::get('yform', 'email');
+if ($yformEmail->isAvailable() && rex_string::versionCompare($yformEmail->getVersion(), '3.4b1', '>=')) {
     $n = [];
     $n['label'] = '<label for="rex-developer-yform-email">' . $this->i18n('yform_email') . '</label>';
     $n['field'] = '<input type="checkbox" id="rex-developer-yform-email" name="config[yform_email]" value="1" ' . ($this->getConfig('yform_email') ? ' checked="checked"' : '') . ' />';
