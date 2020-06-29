@@ -4,6 +4,7 @@ developer_settings = Inställningar
 developer_templates = Synkronisera mallar
 developer_modules = Synkronisera moduler
 developer_actions = Synkronisera aktioner
+developer_yform_email = YForm: Synkronisera e-postmallar
 developer_sync_frontend = Synkronisera i frontend (endast om du är inloggad som administratör i backend)
 developer_sync_backend = Synkronisera i backend (endast om du är inloggad som administratör)
 developer_rename = Uppdatera fil- och katalognamn automatiskt
