@@ -4,6 +4,7 @@ developer_settings = Ajustes
 developer_templates = Sincronizar plantillas
 developer_modules = Sincronizar módulos
 developer_actions = Sincronizar acciones
+developer_yform_email = YForm: sincronizar plantillas de correo electrónico
 developer_sync_frontend = Sincronizar en frontend (solo iniciado sesión como administrador en back-end)
 developer_sync_backend = Sincronizar en el backend (solo si está conectado como administrador)
 developer_rename = Mantenga actualizados los nombres de archivos y carpetas
