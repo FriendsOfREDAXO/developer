@@ -191,15 +191,14 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         foreach ($files as $file => $content) {
             $sql->setValue($this->columns[$file], $content);
         }
-        if ($sql->insert()) {
-            $id = $sql->getLastId();
-            $item->setId($id);
-            if ($this->addedCallback) {
-                call_user_func($this->addedCallback, $item);
-            }
-            return $id;
+        $sql->insert();
+        
+        $id = $sql->getLastId();
+        $item->setId($id);
+        if ($this->addedCallback) {
+            call_user_func($this->addedCallback, $item);
         }
-        return null;
+        return $id;
     }
 
     /**
