@@ -42,6 +42,11 @@ Hinweise zur Synchronisation im Frontend
 * Damit die Synchronisation nach dem Speichern direkt im Frontend funktioniert, muss entweder der Debug-Modus aktiviert sein, oder die Seite im Frontend über die selbe Domain aufgerufen werden, mit welcher man sich im Backend eingeloggt hat, da ansonsten die Backend-Session nicht mit dem Frontend übereinstimmt (Beispiel: im Backend mit www. eingeloggt aber das Frontend ohne www. aufgerufen). Selbes gilt in Multidomain-Umgebungen und für http/https.
 
 
+Fehlerbehebung
+---------
+Falls die Synchronisation von aktualisierten Dateien fehlschlägt, kann der Grund ein falscher Timestamp sein. Das `updatedate` in der Datenbank muss älter sein als der Zeitstempel der hochgeladenen Datei.
+
+
 Eigene Synchronisationen
 ------------------------
 
