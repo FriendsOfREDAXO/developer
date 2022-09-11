@@ -1,5 +1,9 @@
 <?php
 
+/**
+ *  @var rex_addon $this
+ */
+
 if (method_exists('rex', 'getConsole') && rex::getConsole()) {
     return;
 }
