@@ -192,8 +192,8 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
             $sql->setValue($this->columns[$file], $content);
         }
         $sql->insert();
-        
-        $id = $sql->getLastId();
+
+        $id = (int) $sql->getLastId();
         $item->setId($id);
         if ($this->addedCallback) {
             call_user_func($this->addedCallback, $item);

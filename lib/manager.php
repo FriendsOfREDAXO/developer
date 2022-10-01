@@ -73,7 +73,7 @@ abstract class rex_developer_manager
             $synchronizer->setDeletedCallback($callback);
             self::register(
                 $synchronizer,
-                $page == 'templates' && ((($function == 'add' || $function == 'edit') && $save == 'ja') || $function == 'delete')
+                $page == 'templates' && ((($function == 'add' || $function == 'edit') && $save == 'ja') || $function == 'delete') ? self::START_LATE : self::START_EARLY
             );
         }
 
@@ -107,7 +107,7 @@ abstract class rex_developer_manager
             $synchronizer->setDeletedCallback($callback);
             self::register(
                 $synchronizer,
-                $page == 'modules/modules' && ((($function == 'add' || $function == 'edit') && $save == '1') || $function == 'delete')
+                $page == 'modules/modules' && ((($function == 'add' || $function == 'edit') && $save == '1') || $function == 'delete') ? self::START_LATE : self::START_EARLY
             );
         }
 
@@ -120,7 +120,7 @@ abstract class rex_developer_manager
             );
             self::register(
                 $synchronizer,
-                $page == 'modules/actions' && ((($function == 'add' || $function == 'edit') && $save == '1') || $function == 'delete')
+                $page == 'modules/actions' && ((($function == 'add' || $function == 'edit') && $save == '1') || $function == 'delete') ? self::START_LATE : self::START_EARLY
             );
         }
 
@@ -135,7 +135,7 @@ abstract class rex_developer_manager
             $synchronizer->setCommonCreateUpdateColumns(false);
             self::register(
                 $synchronizer,
-                $page == 'yform/email/index' && ($function == 'add' || $function == 'edit' || $function == 'delete')
+                $page == 'yform/email/index' && ($function == 'add' || $function == 'edit' || $function == 'delete') ? self::START_LATE : self::START_EARLY
             );
         }
     }

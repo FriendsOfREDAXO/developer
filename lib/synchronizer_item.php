@@ -101,8 +101,8 @@ class rex_developer_synchronizer_item
     /**
      * Sets the content of an item file
      *
-     * @param string $file    File name
-     * @param string $content Content
+     * @param string $file File name
+     * @param string|callable():string $content Content
      */
     public function setFile($file, $content)
     {
