@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 3.9.1 – 01.10.2022
+--------------------------
+
+* rexstan-Warnings gelöst (@staabm, @gharlan)
+
 Version 3.9.0 – 11.06.2020
 --------------------------
 
