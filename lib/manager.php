@@ -191,4 +191,19 @@ abstract class rex_developer_manager
             array_walk(self::$synchronizers[$type], $run);
         }
     }
+    
+    public static function missing_translation_ep($ep)
+    {
+        if ($lang = rex::getUser()->getLanguage() == "") {
+            $lang = rex::getProperty('lang');
+        }
+
+        $path = self::getBasePath() . 'lang'.DIRECTORY_SEPARATOR.'missing.'.$lang.'.lang';
+        $array = explode("\n", rex_file::get($path));
+
+        $array[] = $ep->getParam('key') ." = ";
+
+        rex_file::put($path, implode("\n", array_unique($array)));
+    }
+}
 }
