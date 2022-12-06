@@ -57,3 +57,9 @@ rex_extension::register('EDITOR_URL', function (rex_extension_point $ep) {
 
     return rex_editor::factory()->getUrl($files[0], $ep->getParam('line'));
 }, rex_extension::LATE);
+
+
+if (rex::isBackend() && rex::getUser()) {
+    // To Do: Checkbox anbieten
+    rex_extension::register('I18N_MISSING_TRANSLATION', ['rex_developer_manager','missing_translation_ep'], rex_extension::LATE);
+}
