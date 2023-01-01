@@ -156,7 +156,7 @@ abstract class rex_developer_synchronizer
 
                 $dir = $dirBase;
                 $i = 1;
-                while (!self::equalFilenames($existingDir, $dir) && file_exists($this->baseDir . $dir)) {
+                while ((!$existingDir || !self::equalFilenames($existingDir, $dir)) && file_exists($this->baseDir . $dir)) {
                     $dir = $dirBase . ' [' . ++$i . ']';
                 }
                 if (!$existingDir) {
