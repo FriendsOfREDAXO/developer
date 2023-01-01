@@ -290,17 +290,19 @@ abstract class rex_developer_synchronizer
      */
     protected static function getFilename($name)
     {
-        $filename = preg_replace('@[\\\\|:<>?*"\'+]@', '', $name);
-        $filename = strtr($filename, '[]/', '()-');
         if (!rex_config::get('developer', 'umlauts')) {
-            $filename = str_replace(
+            $name = str_replace(
                 array('Ä',  'Ö',  'Ü',  'ä',  'ö',  'ü',  'ß'),
                 array('Ae', 'Oe', 'Ue', 'ae', 'oe', 'ue', 'ss'),
-                $filename
+                $name
             );
-            $filename = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $filename);
+            $name = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $name);
         }
-        return ltrim(rtrim($filename, ' .'));
+
+        $name = preg_replace('@[\\\\|:<>?*"\'+]@', '', $name);
+        $name = strtr($name, '[]/', '()-');
+
+        return ltrim(rtrim($name, ' .'));
     }
 
     /**
