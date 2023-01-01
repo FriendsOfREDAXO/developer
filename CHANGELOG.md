@@ -1,6 +1,14 @@
 Changelog
 =========
 
+Version 3.9.2 – 02.01.2023
+--------------------------
+
+* Wenn der developer-Ordner gelöscht wurde, kam es zu einer Deprecated-Meldung (@gharlan)
+* Bei manchen Sonderzeichen im Namen konnte es unter Windows zu Fehlern kommen (@gharlan)
+* SQL-Escaping korrigiert (@staabm)
+* Rechtschreibfehler korrigiert (@eaCe)
+
 Version 3.9.1 – 01.10.2022
 --------------------------
 
