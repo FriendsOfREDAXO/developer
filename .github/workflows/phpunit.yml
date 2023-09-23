@@ -1,0 +1,83 @@
+name: PHPUnit
+
+on:
+    push:
+        branches: [ master, main ]
+    pull_request:
+        branches: [ master, main ]
+
+permissions:
+    contents: read
+
+jobs:
+    phpunit:
+
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write  # for Git to git apply
+
+        steps:
+            - uses: actions/checkout@v3
+
+            # setup PHP v8, install some extensions
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+                  extensions: gd, intl, pdo_mysql
+                  coverage: none # disable xdebug, pcov
+
+            # download the latest REDAXO release and unzip it
+            # credits https://blog.markvincze.com/download-artifacts-from-a-latest-github-release-in-sh-and-powershell/
+            - name: Download latest REDAXO release
+              run: |
+                  LATEST_RELEASE=$(curl -L -s -H 'Accept: application/json' https://github.com/redaxo/redaxo/releases/latest)
+                  REDAXO_VERSION=$(echo $LATEST_RELEASE | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
+                  echo "Downloaded REDAXO $REDAXO_VERSION"
+                  curl -Ls -o redaxo.zip https://github.com/redaxo/redaxo/releases/download/$REDAXO_VERSION/redaxo_$REDAXO_VERSION.zip
+                  unzip -oq redaxo.zip -d redaxo_cms
+                  rm redaxo.zip
+
+            # start mysql service, create a database called redaxo5, apply config patch
+            - name: Init database
+              run: |
+                  sudo /etc/init.d/mysql start
+                  mysql -uroot -h127.0.0.1 -proot -e 'create database redaxo5;'
+
+            # run REDAXO setup with the following parameters
+            # Language: de
+            # DB password: root
+            # Create DB: no
+            # Admin username: admin
+            # Admin password: adminpassword
+            # Error E-mail: test@redaxo.invalid
+            - name: Setup REDAXO
+              run: |
+                  php redaxo_cms/redaxo/bin/console setup:run -n --lang=de_de --agree-license --db-host=127.0.0.1 --db-name=redaxo5 --db-password=root --db-createdb=no --db-setup=normal --admin-username=admin --admin-password=adminpassword --error-email=test@redaxo.invalid --ansi
+                  php redaxo_cms/redaxo/bin/console config:set --type boolean debug.enabled true
+                  php redaxo_cms/redaxo/bin/console config:set --type boolean debug.throw_always_exception true
+
+            # copy Addon files, ignore some directories...
+            # install the addon
+            # if the addon name does not match the repository name, ${{ github.event.repository.name }} must be replaced with the addon name
+            # if additional addons are needed, they can be installed via the console commands
+            # see: https://www.redaxo.org/doku/main/basis-addons#console
+            - name: Copy and install Addons
+              run: |
+                  rsync -av --exclude='./vendor' --exclude='.github' --exclude='.git' --exclude='redaxo_cms' './' 'redaxo_cms/redaxo/src/addons/${{ github.event.repository.name }}'
+                  redaxo_cms/redaxo/bin/console package:install '${{ github.event.repository.name }}'
+
+            # install dependencies from composer.json
+            - name: Install test dependencies
+              working-directory: redaxo_cms/redaxo/src/addons/${{ github.event.repository.name }}
+              env:
+                  COMPOSER: composer.json
+              run: composer install --prefer-dist --no-progress
+
+            - name: Setup Problem Matchers for PHPUnit
+              run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+            # run unit tests, see composer.json
+            - name: Run phpunit
+              working-directory: redaxo_cms/redaxo/src/addons/${{ github.event.repository.name }}
+              run: composer test

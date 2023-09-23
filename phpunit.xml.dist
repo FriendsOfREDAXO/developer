@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd"
+    bootstrap=".tools/bootstrap.php"
+    beStrictAboutOutputDuringTests="true"
+    beStrictAboutTodoAnnotatedTests="true"
+    failOnWarning="true"
+    failOnRisky="true"
+    colors="true"
+    stderr="true"
+    defaultTestSuite="unit">
+    <php>
+        <ini name="error_reporting" value="E_ALL"/>
+        <ini name="display_errors" value="1"/>
+    </php>
+    <testsuites>
+        <testsuite name="unit">
+            <directory suffix="_test.php">tests/unit</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
