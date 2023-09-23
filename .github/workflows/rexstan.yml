@@ -27,7 +27,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: gd, intl, pdo_mysql
+          extensions: gd, intl, pdo_mysql, iconv
           coverage: none # disable xdebug, pcov
 
       # download the latest REDAXO release and unzip it
