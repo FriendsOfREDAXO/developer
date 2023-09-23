@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
  */
 class synchronize_test extends TestCase
 {
-    public function synchronizeModule()
+    public function testSynchronizeModule()
     {
         //create module
         $sql = rex_sql::factory();
@@ -21,7 +21,7 @@ class synchronize_test extends TestCase
         rex_developer_manager::synchronize();
 
         //check if module folder exists
-        self::assertDirectoryExists('../../../data/addons/developer/modules/unittest [1]');
+        self::assertDirectoryExists('../../../data/addons/developer/modules/unittest [1]','Module folder does not exist');
 
         //delete module
         $sql = rex_sql::factory();
