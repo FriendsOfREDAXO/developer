@@ -1,8 +1,6 @@
 <?php
 
-/**
- *  @var rex_addon $this
- */
+/** @var rex_addon $this */
 
 if (method_exists('rex', 'getConsole') && rex::getConsole()) {
     return;
@@ -16,7 +14,7 @@ if (
     !rex::isBackend() && $this->getConfig('sync_frontend') ||
     rex::getUser() && rex::isBackend() && $this->getConfig('sync_backend')
 ) {
-    rex_extension::register('PACKAGES_INCLUDED', function () {
+    rex_extension::register('PACKAGES_INCLUDED', static function () {
         if (rex::isDebugMode() || ($user = rex_backend_login::createUser()) && $user->isAdmin()) {
             rex_developer_manager::start();
         }
@@ -31,7 +29,7 @@ rex_extension::register('EDITOR_URL', function (rex_extension_point $ep) {
     $type = $match[1];
     $id = $match[2];
 
-    if (!$this->getConfig($type.'s')) {
+    if (!$this->getConfig($type . 's')) {
         return null;
     }
 
@@ -43,7 +41,7 @@ rex_extension::register('EDITOR_URL', function (rex_extension_point $ep) {
         $subtype = $match[3];
     }
 
-    $path = rtrim(rex_developer_manager::getBasePath(), '/\\').'/'.$type.'s';
+    $path = rtrim(rex_developer_manager::getBasePath(), '/\\') . '/' . $type . 's';
 
     if (!$files = rex_developer_synchronizer::glob("$path/*/$id.rex_id", GLOB_NOSORT)) {
         return null;
