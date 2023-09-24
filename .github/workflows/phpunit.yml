@@ -80,4 +80,4 @@ jobs:
             # run unit tests, see composer.json
             - name: Run phpunit
               working-directory: redaxo_cms/redaxo/src/addons/${{ github.event.repository.name }}
-              run: composer test
+              run: composer unit-test
