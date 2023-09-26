@@ -1,9 +1,4 @@
 {
-    "name": "friendsofredaxo/mform",
-    "type": "redaxo-addon",
-    "extra": {
-        "installer-name": "mform"
-    },
     "require-dev": {
         "redaxo/php-cs-fixer-config": "^2.0",
         "friendsofphp/php-cs-fixer": "^3.14",
