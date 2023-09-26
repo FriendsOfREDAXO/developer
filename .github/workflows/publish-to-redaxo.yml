@@ -10,8 +10,15 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
-            -   uses: FriendsOfREDAXO/installer-action@v1
-                with:
-                    myredaxo-username: ${{ secrets.MYREDAXO_USERNAME }}
-                    myredaxo-api-key: ${{ secrets.MYREDAXO_API_KEY }}
-                    description: ${{ github.event.release.body }}
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: "8.2"
+            - uses: ramsey/composer-install@v2
+              with:
+                  composer-options: "--no-dev"
+            - uses: FriendsOfREDAXO/installer-action@v1
+              with:
+                  myredaxo-username: ${{ secrets.MYREDAXO_USERNAME }}
+                  myredaxo-api-key: ${{ secrets.MYREDAXO_API_KEY }}
+                  description: ${{ github.event.release.body }}
+

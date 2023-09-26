@@ -1,27 +1,27 @@
 <?php
 
 /**
- * Abstract base class for synchronizers
+ * Abstract base class for synchronizers.
  *
  * @author gharlan
  */
 abstract class rex_developer_synchronizer
 {
-    const ID_FILE     = '.rex_id';
-    const IGNORE_FILE = '.rex_ignore';
+    public const ID_FILE = '.rex_id';
+    public const IGNORE_FILE = '.rex_ignore';
 
     /** Force the current status in db  */
-    const FORCE_DB = 1;
+    public const FORCE_DB = 1;
 
     /** Force the current status in file system */
-    const FORCE_FILES = 2;
+    public const FORCE_FILES = 2;
 
     protected $dirname;
     protected $baseDir;
     protected $files;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string   $dirname Name of directory, which will be used for this synchronizer
      * @param string[] $files   Array of file names, which will be synchronized within each item directory
@@ -35,14 +35,14 @@ abstract class rex_developer_synchronizer
     }
 
     /**
-     * The method should return all items from the base system which should be synchronized to the file system
+     * The method should return all items from the base system which should be synchronized to the file system.
      *
      * @return rex_developer_synchronizer_item[]
      */
     abstract protected function getItems();
 
     /**
-     * The method is called, when a new item is created by the file system
+     * The method is called, when a new item is created by the file system.
      *
      * Use the method to add the new item to the base system. The method should return the new ID of the item.
      *
@@ -52,34 +52,30 @@ abstract class rex_developer_synchronizer
     abstract protected function addItem(rex_developer_synchronizer_item $item);
 
     /**
-     * The method is called, when an existing item is edited by the file system
+     * The method is called, when an existing item is edited by the file system.
      *
      * Use the method to edit the item in the base system
-     *
-     * @param rex_developer_synchronizer_item $item
      */
     abstract protected function editItem(rex_developer_synchronizer_item $item);
 
     /**
-     * The method is called, when an existing item is deleted by the file system (`FORCE_FILES` is activated)
+     * The method is called, when an existing item is deleted by the file system (`FORCE_FILES` is activated).
      *
      * Use the method to delete the item in the base system
-     *
-     * @param rex_developer_synchronizer_item $item
      */
     protected function deleteItem(rex_developer_synchronizer_item $item)
     {
     }
 
     /**
-     * Runs the synchronizer
+     * Runs the synchronizer.
      *
      * @param bool $force Flag, whether the synchronizers should run in force mode (`rex_developer_synchronizer::FORCE_DB/FILES`)
      */
     public function run($force = false)
     {
-        $idLists = rex_config::get('developer', 'items', array());
-        $idList = isset($idLists[$this->dirname]) ? $idLists[$this->dirname] : array();
+        $idLists = rex_config::get('developer', 'items', []);
+        $idList = $idLists[$this->dirname] ?? [];
 
         if (isset($idList[0])) {
             $idList = array_flip($idList);
@@ -87,7 +83,7 @@ abstract class rex_developer_synchronizer
 
         $origIdList = $idList;
 
-        list($existing, $new) = $this->getNewAndExistingDirs();
+        [$existing, $new] = $this->getNewAndExistingDirs();
         $this->synchronizeReceivedItems($idList, $existing, $force);
         $this->removeItems($idList, $existing, $force);
         $this->addNewItems($idList, $existing, true);
@@ -101,8 +97,8 @@ abstract class rex_developer_synchronizer
 
     private function getNewAndExistingDirs()
     {
-        $existing = array();
-        $new = array();
+        $existing = [];
+        $new = [];
         $dirs = self::glob($this->baseDir . '*', GLOB_ONLYDIR | GLOB_NOSORT | GLOB_MARK);
         if (is_array($dirs)) {
             foreach ($dirs as $dir) {
@@ -115,7 +111,7 @@ abstract class rex_developer_synchronizer
                         if (isset($existing[$id])) {
                             trigger_error(
                                 'There are two item directories with the same ID: "' . $existing[$id] . '" and "' . basename($dir) . '"',
-                                E_USER_ERROR
+                                E_USER_ERROR,
                             );
                         }
                         $existing[$id] = basename($dir);
@@ -125,7 +121,7 @@ abstract class rex_developer_synchronizer
                 }
             }
         }
-        return array($existing, $new);
+        return [$existing, $new];
     }
 
     private function synchronizeReceivedItems(&$idList, &$existing, $force = false)
@@ -151,7 +147,7 @@ abstract class rex_developer_synchronizer
                 $dirBase = self::getFilename($name);
 
                 if (rex_config::get('developer', 'dir_suffix')) {
-                    $dirBase .= ' ['.$id.']';
+                    $dirBase .= ' [' . $id . ']';
                 }
 
                 $dir = $dirBase;
@@ -174,8 +170,8 @@ abstract class rex_developer_synchronizer
             $lastUpdated = self::FORCE_DB !== $force && isset($idList[$id]) ? $idList[$id] : 0;
             $updated = self::FORCE_FILES === $force ? 0 : max(1, $item->getUpdated());
             $dbUpdated = $updated;
-            $updateFiles = array();
-            $files = array();
+            $updateFiles = [];
+            $files = [];
             $prefix = '';
             if (rex_config::get('developer', 'prefix')) {
                 $prefix = $id . '.' . $name . '.';
@@ -183,9 +179,9 @@ abstract class rex_developer_synchronizer
             foreach ($this->files as $file) {
                 $filePath = self::getFile($dir, $file, $prefix, rex_config::get('developer', 'rename'));
                 $files[] = $filePath;
-                
+
                 $fileMtime = @filemtime($filePath);
-                $fileExists = $fileMtime !== false;
+                $fileExists = false !== $fileMtime;
                 $fileUpdated = self::FORCE_DB !== $force && $fileExists ? $fileMtime : 0;
 
                 if ($dbUpdated > $fileUpdated && $dbUpdated > $lastUpdated || !$fileExists) {
@@ -229,7 +225,7 @@ abstract class rex_developer_synchronizer
     {
         foreach ($dirs as $i => $dir) {
             $dir = $this->baseDir . $dir . '/';
-            $addFiles = array();
+            $addFiles = [];
             $add = false;
             $updated = time();
             foreach ($this->files as $file) {
@@ -252,7 +248,7 @@ abstract class rex_developer_synchronizer
     }
 
     /**
-     * Gets the real path for an item file
+     * Gets the real path for an item file.
      *
      * Item files can be prefixed by the user, so e.g. "example.template.php" will match the item file "template.php"
      *
@@ -283,7 +279,7 @@ abstract class rex_developer_synchronizer
     }
 
     /**
-     * Replaces special chars
+     * Replaces special chars.
      *
      * @param string $name
      * @return string
@@ -292,9 +288,9 @@ abstract class rex_developer_synchronizer
     {
         if (!rex_config::get('developer', 'umlauts')) {
             $name = str_replace(
-                array('Ä',  'Ö',  'Ü',  'ä',  'ö',  'ü',  'ß'),
-                array('Ae', 'Oe', 'Ue', 'ae', 'oe', 'ue', 'ss'),
-                $name
+                ['Ä',  'Ö',  'Ü',  'ä',  'ö',  'ü',  'ß'],
+                ['Ae', 'Oe', 'Ue', 'ae', 'oe', 'ue', 'ss'],
+                $name,
             );
             $name = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $name);
         }
@@ -306,7 +302,7 @@ abstract class rex_developer_synchronizer
     }
 
     /**
-     * Checks whether the filenames are equal (independent of UTF8 NFC and NFD)
+     * Checks whether the filenames are equal (independent of UTF8 NFC and NFD).
      *
      * @param string $filename1
      * @param string $filename2
@@ -314,8 +310,8 @@ abstract class rex_developer_synchronizer
      */
     protected static function equalFilenames($filename1, $filename2)
     {
-        $search = array("A\xcc\x88", "O\xcc\x88", "U\xcc\x88", "a\xcc\x88", "o\xcc\x88", "u\xcc\x88");
-        $replace = array('Ä', 'Ö', 'Ü', 'ä', 'ö', 'ü');
+        $search = ["A\xcc\x88", "O\xcc\x88", "U\xcc\x88", "a\xcc\x88", "o\xcc\x88", "u\xcc\x88"];
+        $replace = ['Ä', 'Ö', 'Ü', 'ä', 'ö', 'ü'];
         $filename1 = str_replace($search, $replace, $filename1);
         $filename2 = str_replace($search, $replace, $filename2);
 
@@ -324,7 +320,7 @@ abstract class rex_developer_synchronizer
 
     public static function glob($pattern, $flags = 0)
     {
-        $pattern = str_replace(['[',']',"\f[","\f]"], ["\f[","\f]",'[[]','[]]'], $pattern);
+        $pattern = str_replace(['[', ']', "\f[", "\f]"], ["\f[", "\f]", '[[]', '[]]'], $pattern);
         return glob($pattern, $flags);
     }
 }
