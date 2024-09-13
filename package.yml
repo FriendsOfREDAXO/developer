@@ -6,6 +6,7 @@ supportpage: https://github.com/FriendsOfREDAXO/developer
 page:
     title: translate:name
     perm: admin
+    icon: rex-icon fa-code
     subpages:
         settings: { title: translate:settings }
         readme: { title: translate:readme, subPath: README.md }
