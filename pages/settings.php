@@ -41,8 +41,7 @@ if (rex_plugin::get('structure', 'content')->isAvailable()) {
     $formElements[] = $n;
 }
 
-$yformEmail = rex_plugin::get('yform', 'email');
-if ($yformEmail->isAvailable() && rex_string::versionCompare($yformEmail->getVersion(), '3.4b1', '>=')) {
+if (rex_developer_manager::isYFormEmailAvailable()) {
     $n = [];
     $n['label'] = '<label for="rex-developer-yform-email">' . $this->i18n('yform_email') . '</label>';
     $n['field'] = '<input type="checkbox" id="rex-developer-yform-email" name="config[yform_email]" value="1" ' . ($this->getConfig('yform_email') ? ' checked="checked"' : '') . ' />';

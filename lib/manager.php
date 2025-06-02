@@ -124,8 +124,7 @@ abstract class rex_developer_manager
             );
         }
 
-        $yformEmail = rex_plugin::get('yform', 'email');
-        if ($yformEmail->isAvailable() && rex_string::versionCompare($yformEmail->getVersion(), '3.4b1', '>=') && $addon->getConfig('yform_email')) {
+        if (self::isYFormEmailAvailable() && $addon->getConfig('yform_email')) {
             $synchronizer = new rex_developer_synchronizer_default(
                 'yform_email',
                 rex::getTable('yform_email_template'),
@@ -190,5 +189,17 @@ abstract class rex_developer_manager
         } else {
             array_walk(self::$synchronizers[$type], $run);
         }
+    }
+
+    public static function isYFormEmailAvailable(): bool
+    {
+        $yform = rex_addon::get('yform');
+        if ($yform->isAvailable() && rex_string::versionCompare($yform->getVersion(), '5.0-dev', '>=')) {
+            return true;
+        }
+
+        $yformEmail = $yform->getPlugin('email');
+
+        return $yformEmail->isAvailable() && rex_string::versionCompare($yformEmail->getVersion(), '3.4b1', '>=');
     }
 }
