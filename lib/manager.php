@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Developer Manager class
+ * Developer Manager class.
  *
  * @author gharlan
  */
 abstract class rex_developer_manager
 {
-    const START_EARLY = 0;
-    const START_LATE  = 1;
+    public const START_EARLY = 0;
+    public const START_LATE = 1;
 
-    private static $synchronizers = array(
-        self::START_EARLY => array(),
-        self::START_LATE  => array()
-    );
+    private static $synchronizers = [
+        self::START_EARLY => [],
+        self::START_LATE => [],
+    ];
 
     private static $basePath;
 
@@ -28,7 +28,7 @@ abstract class rex_developer_manager
     }
 
     /**
-     * Registers a new synchronizer
+     * Registers a new synchronizer.
      *
      * @param rex_developer_synchronizer $synchronizer The synchronizer object
      * @param int                        $start        Flag, whether the synchronizer should start at the end of the request
@@ -39,7 +39,7 @@ abstract class rex_developer_manager
     }
 
     /**
-     * Registers the default synchronizers for templates, modules and actions
+     * Registers the default synchronizers for templates, modules and actions.
      */
     private static function registerDefault()
     {
@@ -53,19 +53,19 @@ abstract class rex_developer_manager
         $structureContent = rex_plugin::get('structure', 'content');
 
         if ($structureContent->isAvailable() && $addon->getConfig('templates')) {
-            $metadata = array();
+            $metadata = [];
             if (rex_string::versionCompare($structureContent->getVersion(), '2.9', '>=')) {
-                $metadata = array('key' => 'string');
+                $metadata = ['key' => 'string'];
             }
-            $metadata = array_merge($metadata, array('active' => 'boolean', 'attributes' => 'json'));
+            $metadata = array_merge($metadata, ['active' => 'boolean', 'attributes' => 'json']);
 
             $synchronizer = new rex_developer_synchronizer_default(
                 'templates',
                 rex::getTable('template'),
-                array('content' => 'template.php'),
-                $metadata
+                ['content' => 'template.php'],
+                $metadata,
             );
-            $callback = function (rex_developer_synchronizer_item $item) {
+            $callback = static function (rex_developer_synchronizer_item $item) {
                 $template = new rex_template($item->getId());
                 $template->deleteCache();
             };
@@ -73,30 +73,30 @@ abstract class rex_developer_manager
             $synchronizer->setDeletedCallback($callback);
             self::register(
                 $synchronizer,
-                $page == 'templates' && ((($function == 'add' || $function == 'edit') && $save == 'ja') || $function == 'delete') ? self::START_LATE : self::START_EARLY
+                'templates' == $page && ((('add' == $function || 'edit' == $function) && 'ja' == $save) || 'delete' == $function) ? self::START_LATE : self::START_EARLY,
             );
         }
 
         if ($structureContent->isAvailable() && $addon->getConfig('modules')) {
-            $metadata = array();
+            $metadata = [];
             if (rex_string::versionCompare($structureContent->getVersion(), '2.10', '>=')) {
-                $metadata = array('key' => 'string');
+                $metadata = ['key' => 'string'];
             }
 
             $synchronizer = new rex_developer_synchronizer_default(
                 'modules',
                 rex::getTable('module'),
-                array('input' => 'input.php', 'output' => 'output.php'),
-                $metadata
+                ['input' => 'input.php', 'output' => 'output.php'],
+                $metadata,
             );
-            $callback = function (rex_developer_synchronizer_item $item) {
+            $callback = static function (rex_developer_synchronizer_item $item) {
                 $sql = rex_sql::factory();
                 $sql->setQuery('
                     SELECT     DISTINCT(article.id)
-                    FROM       '.rex::getTable('article').' article
-                    LEFT JOIN  '.rex::getTable('article_slice').' slice
+                    FROM       ' . rex::getTable('article') . ' article
+                    LEFT JOIN  ' . rex::getTable('article_slice') . ' slice
                     ON         article.id = slice.article_id
-                    WHERE      slice.module_id='.$item->getId()
+                    WHERE      slice.module_id=' . $item->getId(),
                 );
                 for ($i = 0, $rows = $sql->getRows(); $i < $rows; ++$i) {
                     rex_article_cache::delete($sql->getValue('article.id'));
@@ -107,7 +107,7 @@ abstract class rex_developer_manager
             $synchronizer->setDeletedCallback($callback);
             self::register(
                 $synchronizer,
-                $page == 'modules/modules' && ((($function == 'add' || $function == 'edit') && $save == '1') || $function == 'delete') ? self::START_LATE : self::START_EARLY
+                'modules/modules' == $page && ((('add' == $function || 'edit' == $function) && '1' == $save) || 'delete' == $function) ? self::START_LATE : self::START_EARLY,
             );
         }
 
@@ -115,12 +115,12 @@ abstract class rex_developer_manager
             $synchronizer = new rex_developer_synchronizer_default(
                 'actions',
                 rex::getTable('action'),
-                array('preview' => 'preview.php', 'presave' => 'presave.php', 'postsave' => 'postsave.php'),
-                array('previewmode' => 'int', 'presavemode' => 'int', 'postsavemode' => 'int')
+                ['preview' => 'preview.php', 'presave' => 'presave.php', 'postsave' => 'postsave.php'],
+                ['previewmode' => 'int', 'presavemode' => 'int', 'postsavemode' => 'int'],
             );
             self::register(
                 $synchronizer,
-                $page == 'modules/actions' && ((($function == 'add' || $function == 'edit') && $save == '1') || $function == 'delete') ? self::START_LATE : self::START_EARLY
+                'modules/actions' == $page && ((('add' == $function || 'edit' == $function) && '1' == $save) || 'delete' == $function) ? self::START_LATE : self::START_EARLY,
             );
         }
 
@@ -128,19 +128,19 @@ abstract class rex_developer_manager
             $synchronizer = new rex_developer_synchronizer_default(
                 'yform_email',
                 rex::getTable('yform_email_template'),
-                array('body' => 'body.php', 'body_html' => 'body_html.php'),
-                array('mail_from' => 'string', 'mail_from_name' => 'string', 'mail_reply_to' => 'string', 'mail_reply_to_name' => 'string', 'subject' => 'string', 'attachments' => 'string')
+                ['body' => 'body.php', 'body_html' => 'body_html.php'],
+                ['mail_from' => 'string', 'mail_from_name' => 'string', 'mail_reply_to' => 'string', 'mail_reply_to_name' => 'string', 'subject' => 'string', 'attachments' => 'string'],
             );
             $synchronizer->setCommonCreateUpdateColumns(false);
             self::register(
                 $synchronizer,
-                $page == 'yform/email/index' && ($function == 'add' || $function == 'edit' || $function == 'delete') ? self::START_LATE : self::START_EARLY
+                'yform/email/index' == $page && ('add' == $function || 'edit' == $function || 'delete' == $function) ? self::START_LATE : self::START_EARLY,
             );
         }
     }
 
     /**
-     * Starts the main developer process
+     * Starts the main developer process.
      *
      * The method registers the default synchronizers and the extensions which will start the synchronizer objects
      *
@@ -154,24 +154,24 @@ abstract class rex_developer_manager
 
         if (method_exists('rex', 'getConsole') && rex::getConsole()) {
             self::synchronize(null, $force);
-        } elseif (rex_be_controller::getCurrentPagePart(1) === 'backup') {
-            rex_extension::register('BACKUP_AFTER_DB_IMPORT', function () {
-                rex_developer_manager::synchronize(null, rex_developer_synchronizer::FORCE_DB);
+        } elseif ('backup' === rex_be_controller::getCurrentPagePart(1)) {
+            rex_extension::register('BACKUP_AFTER_DB_IMPORT', static function () {
+                self::synchronize(null, rex_developer_synchronizer::FORCE_DB);
             });
-        } elseif (rex_be_controller::getCurrentPagePart(1) === 'developer' && rex_get('function', 'string') === 'update') {
-            rex_extension::register('RESPONSE_SHUTDOWN', function () {
-                rex_developer_manager::synchronize(null, rex_developer_synchronizer::FORCE_DB);
+        } elseif ('developer' === rex_be_controller::getCurrentPagePart(1) && 'update' === rex_get('function', 'string')) {
+            rex_extension::register('RESPONSE_SHUTDOWN', static function () {
+                self::synchronize(null, rex_developer_synchronizer::FORCE_DB);
             });
         } else {
             self::synchronize(self::START_EARLY, $force);
-            rex_extension::register('RESPONSE_SHUTDOWN', function () use ($force) {
-                rex_developer_manager::synchronize(self::START_LATE, $force);
+            rex_extension::register('RESPONSE_SHUTDOWN', static function () use ($force) {
+                self::synchronize(self::START_LATE, $force);
             });
         }
     }
 
     /**
-     * Runs the synchronizer objects
+     * Runs the synchronizer objects.
      *
      * @param int|null $type  Flag, which synchronizers should start. If the value is null, all synchronizers will start
      * @param bool|int $force Flag, whether the synchronizers should run in force mode (`rex_developer_synchronizer::FORCE_DB/FILES`)
@@ -179,10 +179,10 @@ abstract class rex_developer_manager
      */
     public static function synchronize($type = null, $force = false)
     {
-        $run = function (rex_developer_synchronizer $synchronizer) use ($force) {
+        $run = static function (rex_developer_synchronizer $synchronizer) use ($force) {
             $synchronizer->run($force);
         };
-        if ($type === null) {
+        if (null === $type) {
             foreach (self::$synchronizers as $synchronizers) {
                 array_walk($synchronizers, $run);
             }
