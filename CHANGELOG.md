@@ -1,6 +1,12 @@
 Changelog
 =========
 
+Version 3.9.3 – 02.06.2025
+--------------------------
+
+* YForm 5 wird unterstützt bzgl. E-Mail-Templates-Synchronisation (@gharlan)
+* Navigations-Icon optimiert (@alxndr-w)
+
 Version 3.9.2 – 02.01.2023
 --------------------------
 
