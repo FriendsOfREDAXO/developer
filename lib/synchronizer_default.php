@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Synchronizer class for default synchronizers
+ * Synchronizer class for default synchronizers.
  *
  * Default synchronize will synchronize a database table to the file system.
  * The columns can be synchronized to single files or together to a metadata YAML file.
@@ -10,7 +10,7 @@
  */
 class rex_developer_synchronizer_default extends rex_developer_synchronizer
 {
-    const METADATA_FILE = 'metadata.yml';
+    public const METADATA_FILE = 'metadata.yml';
 
     protected $table;
     protected $columns;
@@ -24,24 +24,24 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
     protected $commonCreateUpdateColumns = true;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string   $dirname  Name of directory, which will be used for this synchronizer
      * @param string   $table    Table name
      * @param string[] $files    An associative array column=>file which contains the columns that should be synchronized to single files
      * @param string[] $metadata An associative array column=>type which contains the columns (and their content type) that should be synchronized together to the metadata file
      */
-    public function __construct($dirname, $table, array $files, array $metadata = array())
+    public function __construct($dirname, $table, array $files, array $metadata = [])
     {
         $this->table = $table;
         $this->columns = array_flip($files);
-        $this->metadata = array_merge(array('name' => 'string'), $metadata);
+        $this->metadata = array_merge(['name' => 'string'], $metadata);
         $files[] = self::METADATA_FILE;
         parent::__construct($dirname, $files);
     }
 
     /**
-     * Sets a callback function which will be called if a new item is added by the file system
+     * Sets a callback function which will be called if a new item is added by the file system.
      *
      * @param callable $callback
      */
@@ -51,7 +51,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
     }
 
     /**
-     * Sets a callback function which will be called if an existing item is edited by the file system
+     * Sets a callback function which will be called if an existing item is edited by the file system.
      *
      * @param callable $callback
      */
@@ -61,7 +61,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
     }
 
     /**
-     * Sets a callback function which will be called if an existing item is deleted by the file system
+     * Sets a callback function which will be called if an existing item is deleted by the file system.
      *
      * @param callable $callback
      */
@@ -71,7 +71,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
     }
 
     /**
-     * Sets the name of the ID column
+     * Sets the name of the ID column.
      *
      * @param string $idColumn Column name
      */
@@ -81,7 +81,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
     }
 
     /**
-     * Sets the name of the column which contains the name of the item
+     * Sets the name of the column which contains the name of the item.
      *
      * @param string $nameColumn Column name
      */
@@ -91,7 +91,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
     }
 
     /**
-     * Sets the name of the column which contains the updated timestamp
+     * Sets the name of the column which contains the updated timestamp.
      *
      * @param string $updatedColumn Column name
      */
@@ -101,7 +101,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
     }
 
     /**
-     * Sets whether the table has the common create and update columns (createdate, createuser, updatedate, updateuser)
+     * Sets whether the table has the common create and update columns (createdate, createuser, updatedate, updateuser).
      *
      * @param bool $commonCreateUpdateColumns
      */
@@ -115,9 +115,6 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function getItems()
     {
         $defaultLang = rex::getProperty('lang');
@@ -127,7 +124,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         }
 
         try {
-            $items = array();
+            $items = [];
             $sql = rex_sql::factory();
             $sql->setQuery('SELECT * FROM ' . $sql->escapeIdentifier($this->table));
             for ($i = 0, $rows = $sql->getRows(); $i < $rows; ++$i, $sql->next()) {
@@ -136,11 +133,11 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
                 foreach ($this->columns as $file => $column) {
                     $item->setFile($file, $sql->getValue($column));
                 }
-                $metadata = array();
+                $metadata = [];
                 foreach ($this->metadata as $column => $type) {
                     $metadata[$column] = self::cast($sql->getValue($column), $type);
                 }
-                $item->setFile(self::METADATA_FILE, function() use ($metadata) {
+                $item->setFile(self::METADATA_FILE, static function () use ($metadata) {
                     return rex_string::yamlEncode($metadata);
                 });
                 $items[] = $item;
@@ -154,16 +151,13 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         return $items;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function addItem(rex_developer_synchronizer_item $item)
     {
         $sql = rex_sql::factory();
         $id = $item->getId();
         if ($id) {
             $sql->setQuery('SELECT ' . $sql->escapeIdentifier($this->idColumn) . ' FROM ' . $sql->escapeIdentifier($this->table) . ' WHERE ' . $sql->escapeIdentifier($this->idColumn) . ' = ' . $id);
-            if ($sql->getRows() == 0) {
+            if (0 == $sql->getRows()) {
                 $sql->setValue($this->idColumn, $id);
             }
         }
@@ -201,9 +195,6 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         return $id;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function editItem(rex_developer_synchronizer_item $item)
     {
         $sql = rex_sql::factory();
@@ -234,9 +225,6 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function deleteItem(rex_developer_synchronizer_item $item)
     {
         $sql = rex_sql::factory();
@@ -250,7 +238,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
     }
 
     /**
-     * Casts a value by the given type
+     * Casts a value by the given type.
      *
      * @param string $value Value
      * @param string $type  Type
@@ -280,7 +268,7 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
     }
 
     /**
-     * Converts a value from the given type to a string
+     * Converts a value from the given type to a string.
      *
      * @param mixed  $value Value
      * @param string $type  Type

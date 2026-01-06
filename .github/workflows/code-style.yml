@@ -1,0 +1,43 @@
+name: PHP-CS-Fixer
+
+on:
+    push:
+        branches: [ master, main ]
+    pull_request:
+        branches: [ master, main ]
+
+permissions:
+    contents: read
+
+jobs:
+    code-style:
+        if: github.event.pull_request.draft == false
+
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write  # for Git to git apply
+
+        steps:
+            -   uses: actions/checkout@v3
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '8.2'
+                    extensions: gd, intl, pdo_mysql
+                    coverage: none # disable xdebug, pcov
+
+            # install dependencies from composer.json
+            -   name: Install test dependencies
+                env:
+                    COMPOSER: composer.json
+                run: composer install --prefer-dist --no-progress
+
+            # run php-cs-fixer
+            -   name: Run PHP CS Fixer
+                run: composer cs-fix
+
+            # commit and push fixed files
+            -   uses: stefanzweifel/git-auto-commit-action@v4
+                with:
+                    commit_message: Apply php-cs-fixer changes

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class for synchronizer items
+ * Class for synchronizer items.
  *
  * @author gharlan
  */
@@ -13,14 +13,14 @@ class rex_developer_synchronizer_item
     protected $files;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param int      $id      Item ID
      * @param string   $name    Item name
      * @param int      $updated Update timestamp
      * @param string[] $files   Array of the item files and their content (file=>content)
      */
-    public function __construct($id, $name, $updated, array $files = array())
+    public function __construct($id, $name, $updated, array $files = [])
     {
         $this->id = $id;
         $this->name = $name;
@@ -29,7 +29,7 @@ class rex_developer_synchronizer_item
     }
 
     /**
-     * Sets the ID
+     * Sets the ID.
      *
      * @param int $id
      */
@@ -39,7 +39,7 @@ class rex_developer_synchronizer_item
     }
 
     /**
-     * Returns the ID
+     * Returns the ID.
      *
      * @return int
      */
@@ -49,7 +49,7 @@ class rex_developer_synchronizer_item
     }
 
     /**
-     * Sets the name
+     * Sets the name.
      *
      * @param string $name
      */
@@ -59,7 +59,7 @@ class rex_developer_synchronizer_item
     }
 
     /**
-     * Returns the name
+     * Returns the name.
      *
      * @return string
      */
@@ -69,7 +69,7 @@ class rex_developer_synchronizer_item
     }
 
     /**
-     * Sets the update timestamp
+     * Sets the update timestamp.
      *
      * @param int $updated
      */
@@ -79,7 +79,7 @@ class rex_developer_synchronizer_item
     }
 
     /**
-     * Returns the update timestamp
+     * Returns the update timestamp.
      *
      * @return int
      */
@@ -89,7 +89,7 @@ class rex_developer_synchronizer_item
     }
 
     /**
-     * Sets the item files and their content
+     * Sets the item files and their content.
      *
      * @param string[] $files Array of item files and their content (file=>content)
      */
@@ -99,7 +99,7 @@ class rex_developer_synchronizer_item
     }
 
     /**
-     * Sets the content of an item file
+     * Sets the content of an item file.
      *
      * @param string $file File name
      * @param string|callable():string $content Content
@@ -110,7 +110,7 @@ class rex_developer_synchronizer_item
     }
 
     /**
-     * Returns all item files and their content
+     * Returns all item files and their content.
      *
      * @return string[] Array of all item files and their content (file=>content)
      */
@@ -120,7 +120,7 @@ class rex_developer_synchronizer_item
     }
 
     /**
-     * Returns the content of the given item file
+     * Returns the content of the given item file.
      *
      * @param string $file File name
      * @return string Content
