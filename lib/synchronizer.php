@@ -301,6 +301,7 @@ abstract class rex_developer_synchronizer
 
         $name = preg_replace('@[\\\\|:<>?*"\'+]@', '', $name);
         $name = strtr($name, '[]/', '()-');
+        $name = strtr($name, ' ', '_');
 
         return ltrim(rtrim($name, ' .'));
     }
