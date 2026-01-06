@@ -265,10 +265,10 @@ class rex_developer_synchronizer_default extends rex_developer_synchronizer
         switch ($type) {
             case 'bool':
             case 'boolean':
-                return (boolean) $value;
+                return (bool) $value;
             case 'int':
             case 'integer':
-                return (integer) $value;
+                return (int) $value;
             case 'serialize':
                 return unserialize($value);
             case 'json':
